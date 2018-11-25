@@ -4,6 +4,7 @@ import domain.Card;
 import domain.GameExtended;
 import domain.Player;
 import domain.Game;
+import interfaces.AppServerInterface;
 import interfaces.DispatcherInterface;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -22,9 +23,9 @@ import java.rmi.registry.Registry;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import static controller.MainClient.appServerServiceName;
 import static controller.SceneController.viewController;
-import static domain.Constants.DISPATCH_PORT;
-import static domain.Constants.IP;
+import static domain.Constants.*;
 
 
 public class LobbyController {
@@ -73,18 +74,15 @@ public class LobbyController {
         //Tab 3
 
         theme.getItems().removeAll(theme.getItems());
-        theme.getItems().addAll("default",
-                "Emma Watson", "Harry Potter");
+        theme.getItems().addAll("default", "Emma Watson", "Harry Potter");
         theme.getSelectionModel().select("default");
 
         sizeGame.getItems().removeAll(sizeGame.getItems());
-        sizeGame.getItems().addAll("2x3",
-                "4x4", "6x6");
+        sizeGame.getItems().addAll("2x3", "4x4", "6x6");
         sizeGame.getSelectionModel().select("4x4");
 
         numberOfPlayer.getItems().removeAll(numberOfPlayer.getItems());
-        numberOfPlayer.getItems().addAll("2 Players",
-                "3 Players", "4 Players");
+        numberOfPlayer.getItems().addAll("2 Players", "3 Players", "4 Players");
         numberOfPlayer.getSelectionModel().select("2 Players");
 
 
@@ -93,10 +91,10 @@ public class LobbyController {
     private ArrayList<Player> loadPlayers(){
         ArrayList<Player>allPlayers=new ArrayList<>();
         try {
-            Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
-            DispatcherInterface dispatch = (DispatcherInterface) registry.lookup("dispatchService");
+            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
+            AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
 
-            allPlayers = dispatch.getAllPlayers();
+            allPlayers = appServer.getAllPlayers();
 
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
@@ -107,10 +105,10 @@ public class LobbyController {
     private ArrayList<Game> loadGames(){
         ArrayList<Game> allGames = new ArrayList<>();
         try {
-            Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
-            DispatcherInterface dispatch = (DispatcherInterface) registry.lookup("dispatchService");
+            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
+            AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
 
-            allGames = dispatch.getAllGames();
+            allGames = appServer.getAllGames();
 
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
@@ -119,16 +117,25 @@ public class LobbyController {
     }
 
     private void loadT1(){
+
+        for ( int i = 0; i<ranking.getItems().size(); i++) {
+            ranking.getItems().clear();
+        }
+
         ArrayList<Player>allPlayers = loadPlayers();
 
         //Heeft getters en setters nodig van player voor opbouw ervan !!!!!
         ranking.getItems().addAll(allPlayers);
-
         ranking.getSortOrder().add(totalPointColum);
 
     }
 
     public void loadT2(){
+
+        for ( int i = 0; i<currentGames.getItems().size(); i++) {
+            currentGames.getItems().clear();
+        }
+
         ArrayList<Game>allGames = loadGames();
 
         currentGames.getItems().addAll(allGames);
@@ -152,10 +159,10 @@ public class LobbyController {
 
         ArrayList<Card>gameCards=new ArrayList<>();
         try {
-            Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
-            DispatcherInterface dispatch = (DispatcherInterface) registry.lookup("dispatchService");
+            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
+            AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
 
-            gameCards = dispatch.shuffleCards(size);
+            gameCards = appServer.shuffleCards(size);
 
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();

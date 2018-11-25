@@ -1,6 +1,6 @@
 package controller;
 
-
+import interfaces.AppServerInterface;
 import interfaces.DispatcherInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import static controller.MainClient.appServerServiceName;
 import static controller.SceneController.viewController;
 import static domain.Constants.*;
 
@@ -38,10 +39,10 @@ public class LoginController {
             String username=textUsername.getText();
             String password=textPassword.getText();
 
-            Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
-            DispatcherInterface dispatch = (DispatcherInterface) registry.lookup("dispatchService");
+            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
+            AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
 
-            String token = dispatch.authenticatePlayer(username,password);
+            String token = appServer.authenticatePlayer(username,password);
 
             if(token != null){
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);

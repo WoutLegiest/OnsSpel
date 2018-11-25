@@ -17,16 +17,6 @@ public interface DataBaseInterface extends Remote {
     String registerPlayer(String username, String password, String email) throws RemoteException,
             UserExistsException, SQLException;
 
-    boolean isValidUsername(String username) throws RemoteException, SQLException;
-
-    String addToken(String username) throws RemoteException;
-
-    String getTokenValid(String username) throws RemoteException;
-
-    String generateStorngPasswordHash(String password) throws RemoteException;
-
-    boolean validatePassword(String originalPassword, String storedPassword) throws RemoteException;
-
     ArrayList<Player> getAllPlayers() throws RemoteException;
 
     ArrayList<Game> getAllGames() throws RemoteException;

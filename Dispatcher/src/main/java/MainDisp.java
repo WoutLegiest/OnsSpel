@@ -8,11 +8,17 @@ import static domain.Constants.DISPATCH_PORT;
 
 public class MainDisp {
 
-    public static void main(String[] args) throws RemoteException {
+    public static void main(String[] args)  {
 
-        DispatcherInterface dispatcherImp = new Dispatcher();
-        Registry registry = LocateRegistry.createRegistry(DISPATCH_PORT);
-        registry.rebind("dispatchService", dispatcherImp);
+        try {
+            DispatcherInterface dispatcherImp = new DispatcherImpl();
+            Registry registry = LocateRegistry.createRegistry(DISPATCH_PORT);
+            registry.rebind("dispatchService", dispatcherImp);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         System.out.println("Dispatch gekoppeld op poort: " + DISPATCH_PORT);
+
+
     }
 }

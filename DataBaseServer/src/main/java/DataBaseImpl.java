@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 
-public class DataBaseConnector extends UnicastRemoteObject implements DataBaseInterface{
+public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterface{
 
     Connection conn;
     Statement stmt;
 
-    public DataBaseConnector() throws RemoteException {
+    public DataBaseImpl() throws RemoteException {
 
         try {
             //Class.forName("org.sqlite.JDBC");
@@ -71,14 +71,13 @@ public class DataBaseConnector extends UnicastRemoteObject implements DataBaseIn
      */
     @Override
     public String registerPlayer(String username, String password, String email) throws RemoteException, UserExistsException, SQLException {
-        boolean isValid = isValidUsername(username);
 
-        if(isValid)
+        if(isValidUsername(username))
             throw new UserExistsException();
 
         Timestamp today = new Timestamp(System.currentTimeMillis());
 
-        String passwordHashed = generateStorngPasswordHash(password);
+        String passwordHashed = generateStrongPasswordHash(password);
         String sql = "INSERT INTO player (username,password,email, totalScore, joinDate) VALUES(?,?,?,?,?)";
 
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -92,26 +91,25 @@ public class DataBaseConnector extends UnicastRemoteObject implements DataBaseIn
 
 
         return addToken(username);
-
     }
 
-    @Override
-    public boolean isValidUsername(String username) throws SQLException {
+    private boolean isValidUsername(String username) {
 
-        String sql = "SELECT * FROM player WHERE username= ? ;";
-        PreparedStatement pstmt  = conn.prepareStatement(sql);
-        pstmt.setString(1,username);
+        String sql = "SELECT * FROM player WHERE username='" + username + "';";
 
-        ResultSet rs = stmt.executeQuery(sql);
-
-        if(rs.next())
-            return true;
-        else
-            return false;
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next())
+                return true;
+            else
+                return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
-    @Override
-    public String addToken(String username){
+    private String addToken(String username){
 
         long now = System.currentTimeMillis();
         int tokenNumber = new Random().nextInt(999);
@@ -131,8 +129,7 @@ public class DataBaseConnector extends UnicastRemoteObject implements DataBaseIn
         return String.valueOf(tokenNumber);
     }
 
-    @Override
-    public String getTokenValid(String username) {
+    private String getTokenValid(String username) {
 
         String sql = "SELECT * FROM player WHERE username='" + username + "';";
 
@@ -238,8 +235,7 @@ public class DataBaseConnector extends UnicastRemoteObject implements DataBaseIn
      * @param password
      * @return
      */
-    @Override
-    public String generateStorngPasswordHash(String password) throws RemoteException {
+    private String generateStrongPasswordHash(String password) throws RemoteException {
         int iterations = 200;
         char[] chars = password.toCharArray();
         try {
@@ -256,8 +252,7 @@ public class DataBaseConnector extends UnicastRemoteObject implements DataBaseIn
 
     }
 
-    @Override
-    public boolean validatePassword(String originalPassword, String storedPassword) {
+    private boolean validatePassword(String originalPassword, String storedPassword) {
         String[] parts = storedPassword.split(":");
         int iterations = Integer.parseInt(parts[0]);
         try {
@@ -305,7 +300,5 @@ public class DataBaseConnector extends UnicastRemoteObject implements DataBaseIn
             return hex;
 
     }
-
-
 
 }

@@ -12,16 +12,10 @@ import java.util.ArrayList;
 
 public interface DispatcherInterface extends Remote {
 
-    void registerDataBaseServer() throws RemoteException;
+    void registerDataBaseServer(String serviceName) throws RemoteException;
+    void registerAppServer(String serviceName) throws RemoteException;
 
-    String authenticatePlayer(String username, String token) throws SQLException, RemoteException;
-
-    String registerPlayer(String username, String password, String email) throws RemoteException, UserExistsException, SQLException;
-
-    ArrayList<Player> getAllPlayers() throws RemoteException;
-
-    ArrayList<Game> getAllGames()throws RemoteException;
-
-    ArrayList<Card> shuffleCards(int range)throws RemoteException;
+    String getAppServerServiceName() throws RemoteException;
+    String getDataBaseServerServiceName() throws RemoteException;
 
 }

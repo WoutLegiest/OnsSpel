@@ -1,6 +1,7 @@
 package controller;
 
 import exceptions.UserExistsException;
+import interfaces.AppServerInterface;
 import interfaces.DispatcherInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,10 +22,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 
+import static controller.MainClient.appServerServiceName;
 import static controller.SceneController.viewController;
-import static domain.Constants.DISPATCH_PORT;
-import static domain.Constants.ICON_PATH;
-import static domain.Constants.IP;
+import static domain.Constants.*;
 
 public class RegisterController {
 
@@ -46,10 +46,10 @@ public class RegisterController {
         String token = null;
 
         try{
-            Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
-            DispatcherInterface dispatch = (DispatcherInterface) registry.lookup("dispatchService");
+            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
+            AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
 
-            token = dispatch.registerPlayer(username,password,email);
+            token = appServer.registerPlayer(username,password,email);
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Registy completed");
