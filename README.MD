@@ -5,4 +5,4 @@
 
 Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Dell en natuurlijk Frank onze postduif
 
-**Frank is jammergenoeg overleden vorige week toen hij te lui was en dus rooksignalen wou sturen. Maarja Frank is een duif en tijdens het aansteken van het vuur heeft hij zichzelf geroosterd. Want ja, nog eens, Frank is een duif
+** Frank is jammergenoeg overleden vorige week toen hij te lui was en dus rooksignalen wou sturen. Maarja Frank is een duif en tijdens het aansteken van het vuur heeft hij zichzelf geroosterd. Want ja, nog eens, Frank is een duif
