@@ -30,12 +30,14 @@ public class DataBaseConnector extends UnicastRemoteObject implements DataBaseIn
             String url = "jdbc:sqlite:" + workingDir + "\\.db\\database1.db";
             if (conn == null || conn.isClosed()) {
                 conn = DriverManager.getConnection(url);
-                System.out.println("connection opened");
+                stmt  = conn.createStatement();
+
             }
         }catch (SQLException e) {
             System.out.println(e.getMessage());
             System.out.println("error in connect() methode");
         }
+        System.out.println("connection opened");
     }
 
     @Override
@@ -69,16 +71,15 @@ public class DataBaseConnector extends UnicastRemoteObject implements DataBaseIn
      */
     @Override
     public String registerPlayer(String username, String password, String email) throws RemoteException, UserExistsException, SQLException {
+        boolean isValid = isValidUsername(username);
 
-        if(isValidUsername(username))
+        if(isValid)
             throw new UserExistsException();
 
         Timestamp today = new Timestamp(System.currentTimeMillis());
 
-
         String passwordHashed = generateStorngPasswordHash(password);
-        //System.out.println(passwordHashed);
-        String sql = "INSERT INTO Player (username,password,email, totalScore, joinDate) VALUES(?,?,?,?,?)";
+        String sql = "INSERT INTO player (username,password,email, totalScore, joinDate) VALUES(?,?,?,?,?)";
 
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, username);
@@ -97,7 +98,10 @@ public class DataBaseConnector extends UnicastRemoteObject implements DataBaseIn
     @Override
     public boolean isValidUsername(String username) throws SQLException {
 
-        String sql = "SELECT * FROM player WHERE username='" + username + "';";
+        String sql = "SELECT * FROM player WHERE username= ? ;";
+        PreparedStatement pstmt  = conn.prepareStatement(sql);
+        pstmt.setString(1,username);
+
         ResultSet rs = stmt.executeQuery(sql);
 
         if(rs.next())
