@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane minHeight="300.0" minWidth="300.0" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LobbyController">
+    <children>
+        <TabPane prefHeight="600.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab text="Player Ranking">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="195.0" prefWidth="248.0">
+                            <children>
+                                <Button fx:id="refreshbuttont1" layoutX="13.0" layoutY="14.0" mnemonicParsing="false" onAction="#refreshT1" text="Refresh" />
+                                <TableView fx:id="ranking" layoutX="13.0" layoutY="47.0" prefHeight="506.0" prefWidth="574.0">
+                                    <columns>
+                                        <TableColumn fx:id="usernameColum" prefWidth="75.0" text="Username" />
+                                        <TableColumn fx:id="totalPointColum" prefWidth="120.0" text="Total Point" />
+                                        <TableColumn fx:id="dateLastGameColum" prefWidth="140.0" resizable="false" text="Date last game" />
+                                        <TableColumn fx:id="dateJoinColum" prefWidth="140.0" resizable="false" text="Joint on" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Current Games">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="195.0" prefWidth="248.0">
+                            <children>
+                                <Button fx:id="refreshbuttont2" layoutX="13.0" layoutY="14.0" mnemonicParsing="false" onAction="#refreshT2" text="Refresh" />
+                                <TableView fx:id="currentgames" layoutX="13.0" layoutY="47.0" prefHeight="506.0" prefWidth="574.0">
+                                    <columns>
+                                        <TableColumn fx:id="gameNr" prefWidth="75.0" text="Game id" />
+                                        <TableColumn fx:id="gameOwner" prefWidth="120.0" text="Game Owner" />
+                                        <TableColumn fx:id="players" prefWidth="140.0" resizable="false" text="Players" />
+                                        <TableColumn fx:id="join" prefWidth="140.0" resizable="false" text="Join" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Create new game">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <Label layoutX="69.0" layoutY="76.0" text="Theme" />
+                                <Label layoutX="70.0" layoutY="132.0" text="Size of board" />
+                                <Label layoutX="69.0" layoutY="183.0" text="Number of player" />
+                                <ChoiceBox fx:id="theme" layoutX="349.0" layoutY="71.0" prefWidth="150.0" />
+                                <ChoiceBox fx:id="sizeGame" layoutX="349.0" layoutY="127.0" prefWidth="150.0" />
+                                <ChoiceBox fx:id="numberOfPlayer" layoutX="349.0" layoutY="178.0" prefWidth="150.0" />
+                                <Button fx:id="buttonStartGame" layoutX="261.0" layoutY="360.0" mnemonicParsing="false" onAction="#createGame" text="Start Game" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </children>
+</AnchorPane>

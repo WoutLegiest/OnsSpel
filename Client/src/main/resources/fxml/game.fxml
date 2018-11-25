@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane minHeight="300.0" minWidth="300.0" prefHeight="900.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameController">
+   <children>
+      <TitledPane animated="false" layoutX="13.0" prefHeight="637.0" prefWidth="572.0" text="Game">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="518.0" prefWidth="598.0">
+               <children>
+                  <GridPane fx:id="grid" layoutX="14.0" layoutY="14.0" prefHeight="583.0" prefWidth="543.0">
+                    
+                  </GridPane>
+               </children></AnchorPane>
+        </content>
+      </TitledPane>
+      <TitledPane layoutX="14.0" layoutY="644.0" prefHeight="246.0" prefWidth="572.0" text="Score">
+         <content>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <TableView layoutX="356.0" layoutY="14.0" prefHeight="181.0" prefWidth="200.0">
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="player" />
+                      <TableColumn prefWidth="75.0" text="score" />
+                    </columns>
+                  </TableView>
+                  <Label fx:id="labelPlayerTurn" alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="30.0" prefWidth="186.0" text="Players Turn:" textAlignment="CENTER">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="playerLabel" layoutX="14.0" layoutY="44.0" prefHeight="143.0" prefWidth="190.0">
+                     <font>
+                        <Font size="72.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </content>
+      </TitledPane>
+   </children>
+</AnchorPane>
