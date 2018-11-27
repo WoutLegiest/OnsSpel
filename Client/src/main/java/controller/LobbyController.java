@@ -14,6 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import threads.ScoreBoardThread;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -86,6 +87,10 @@ public class LobbyController {
         numberOfPlayer.getSelectionModel().select("2 Players");
 
 
+        //ScoreBoardThread thread = new ScoreBoardThread();
+        //thread.run();
+
+
     }
 
     private ArrayList<Player> loadPlayers(){
@@ -118,8 +123,10 @@ public class LobbyController {
 
     private void loadT1(){
 
-        for ( int i = 0; i<ranking.getItems().size(); i++) {
-            ranking.getItems().clear();
+        if(ranking != null){
+            for ( int i = 0; i<ranking.getItems().size(); i++) {
+                ranking.getItems().clear();
+            }
         }
 
         ArrayList<Player>allPlayers = loadPlayers();
@@ -130,7 +137,7 @@ public class LobbyController {
 
     }
 
-    public void loadT2(){
+    private void loadT2(){
 
         for ( int i = 0; i<currentGames.getItems().size(); i++) {
             currentGames.getItems().clear();
@@ -143,11 +150,11 @@ public class LobbyController {
 
     }
 
-    public void refreshT1(ActionEvent actionEvent){
+    public void refreshT1(){
         loadT1();
     }
 
-    public void refreshT2(ActionEvent actionEvent){
+    public void refreshT2(){
         loadT2();
     }
 
