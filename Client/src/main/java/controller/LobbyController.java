@@ -36,6 +36,8 @@ public class LobbyController {
     private Player player;
     private String token;
 
+    private ScoreBoardThread thread;
+
     @FXML private Button buttonLogout;
 
     //Tab 1
@@ -93,8 +95,7 @@ public class LobbyController {
         numberOfPlayer.getItems().addAll("2 Players", "3 Players", "4 Players");
         numberOfPlayer.getSelectionModel().select("2 Players");
 
-
-        Thread thread = new ScoreBoardThread(this);
+        thread = new ScoreBoardThread(this);
         thread.start();
     }
 
@@ -212,6 +213,8 @@ public class LobbyController {
 
         player = null;
         token = null;
+
+        thread.stopThread();
 
         try {
             viewController.setViewToLogin();
