@@ -46,49 +46,6 @@ public class MainClient extends Application {
     }
 
 
-    /*
-    @Override
-    public void start(Stage stage) throws Exception {
-        new Thread(() -> {
-            try {
-                SVGGlyphLoader.loadGlyphsFont(MainClient.class.getResourceAsStream("/fonts/icomoon.svg"),
-                        "icomoon.svg");
-            } catch (IOException ioExc) {
-                ioExc.printStackTrace();
-            }
-        }).start();
-
-        Flow flow = new Flow(MainController.class);
-        DefaultFlowContainer container = new DefaultFlowContainer();
-        flowContext = new ViewFlowContext();
-        flowContext.register("Stage", stage);
-        flow.createHandler(flowContext).start(container);
-
-        JFXDecorator decorator = new JFXDecorator(stage, container.getView());
-        decorator.setCustomMaximize(true);
-        decorator.setGraphic(new SVGGlyph(""));
-
-        stage.setTitle("JFoenix Demo");
-
-        double width = 800;
-        double height = 600;
-        try {
-            Rectangle2D bounds = Screen.getScreens().get(0).getBounds();
-            width = bounds.getWidth() / 2.5;
-            height = bounds.getHeight() / 1.35;
-        }catch (Exception e){ }
-
-        Scene scene = new Scene(decorator, width, height);
-        final ObservableList<String> stylesheets = scene.getStylesheets();
-        stylesheets.addAll(MainClient.class.getResource("/css/jfoenix-fonts.css").toExternalForm(),
-                MainClient.class.getResource("/css/jfoenix-design.css").toExternalForm(),
-                MainClient.class.getResource("/css/jfoenix-main-demo.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
-    }
-    */
-
-
     public static void main(String[] args) {
         launch(args);
     }
