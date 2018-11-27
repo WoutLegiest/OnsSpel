@@ -1,5 +1,7 @@
 package controller;
 
+import domain.GameExtended;
+import domain.Player;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -43,10 +45,12 @@ public final class SceneController {
 
     }
 
-    public void setViewToLobby(String username) throws IOException {
+    public void setViewToLobby(String username,String sessieToken) throws IOException {
 
-
-        Parent root = FXMLLoader.load(getClass().getResource("../fxml/lobby.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader( getClass().getResource("../fxml/lobby.fxml"));
+        Parent root = (Parent)fxmlLoader.load();
+        LobbyController controller =fxmlLoader.<LobbyController>getController();
+        controller.setCredentials(username,sessieToken);
         Scene newScene = new Scene(root, 600, 600);
         GUI.setScene(newScene);
         GUI.setTitle("Lobby");
@@ -55,11 +59,14 @@ public final class SceneController {
 
     }
 
-    public void setViewToGame() throws IOException {
+    public void setViewToGame(GameExtended gameExtended, Player player, String token) throws IOException {
 
-        Parent root = FXMLLoader.load(getClass().getResource("../fxml/game.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader( getClass().getResource("../fxml/game.fxml"));
+        Parent root = (Parent)fxmlLoader.load();
+        GameController controller =fxmlLoader.<GameController>getController();
+        controller.setCredentials(gameExtended,player,token);
         GUI.setTitle("Memory Game");
-        Scene newScene = new Scene(root, 450, 450);
+        Scene newScene = new Scene(root, 900, 600);
         GUI.setScene(newScene);
 
         GUI.show();

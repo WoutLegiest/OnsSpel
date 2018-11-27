@@ -17,6 +17,8 @@ public interface AppServerInterface extends Remote {
 
     String registerPlayer(String username, String password, String email) throws RemoteException, UserExistsException, SQLException;
 
+    Player getPlayer(String username, String token)throws SQLException, RemoteException;
+
     ArrayList<Player> getAllPlayers() throws RemoteException;
 
     ArrayList<Game> getAllGames()throws RemoteException;

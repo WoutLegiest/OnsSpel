@@ -21,6 +21,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -30,6 +31,11 @@ import static domain.Constants.*;
 
 
 public class LobbyController {
+
+    //Player credentials
+    private Player player;
+    private String token;
+
 
     //Tab 1
     @FXML private TableView<Player> ranking;
@@ -91,6 +97,21 @@ public class LobbyController {
         //thread.run();
 
 
+    }
+
+    public void setCredentials(String username, String token){
+        this.token=token;
+
+        try {
+            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
+            AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
+
+            player = appServer.getPlayer(username,token);
+        } catch (RemoteException | NotBoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private ArrayList<Player> loadPlayers(){
@@ -162,7 +183,7 @@ public class LobbyController {
         int size=Integer.parseInt(String.valueOf(sizeGame.getValue().charAt(0)));
         int numberOfPlayers = Integer.parseInt(String.valueOf(numberOfPlayer.getValue().charAt(0)));
 
-        Game game = new Game(0,numberOfPlayers,size);
+        Game game = new Game(player.getId(),numberOfPlayers,size);
 
         ArrayList<Card>gameCards=new ArrayList<>();
         try {
@@ -180,7 +201,7 @@ public class LobbyController {
         GameExtended gameExtended=new GameExtended(game,gameCards,gamePlayers);
 
         try {
-            viewController.setViewToGame();
+            viewController.setViewToGame(gameExtended, player, token);
         } catch (IOException e) {
             e.printStackTrace();
         }

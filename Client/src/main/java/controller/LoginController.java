@@ -55,7 +55,7 @@ public class LoginController {
 
                 alert.showAndWait();
 
-                viewController.setViewToLobby(username);
+                viewController.setViewToLobby(username, token);
             }
             else{
                 Alert alert = new Alert(Alert.AlertType.ERROR);

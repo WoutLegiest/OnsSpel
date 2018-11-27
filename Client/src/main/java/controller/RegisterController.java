@@ -61,7 +61,7 @@ public class RegisterController {
 
             alert.showAndWait();
 
-            viewController.setViewToLobby(username);
+            viewController.setViewToLobby(username, token);
 
 
         } catch (UserExistsException e){
