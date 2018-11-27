@@ -94,9 +94,8 @@ public class LobbyController {
         numberOfPlayer.getSelectionModel().select("2 Players");
 
 
-        //ScoreBoardThread thread = new ScoreBoardThread();
-        //thread.run();
-
+        Thread thread = new ScoreBoardThread(this);
+        thread.start();
     }
 
     public void setCredentials(String username, String token){
@@ -149,6 +148,8 @@ public class LobbyController {
         }
 
         ArrayList<Player>allPlayers = loadPlayers();
+
+
 
         //Heeft getters en setters nodig van player voor opbouw ervan !!!!!
         ranking.getItems().addAll(allPlayers);
