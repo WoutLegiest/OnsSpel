@@ -229,6 +229,18 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         return allCards;
     }
 
+    @Override
+    public Player getPlayer(String username, String token) throws RemoteException {
+        ArrayList<Player>allPlayers=getAllPlayers();
+        //TODO: change this horrible written function (Sorry Wouter my bad).
+        for(Player player: allPlayers){
+            if(player.getUsername().equals(username)&&player.getToken().equals(token)){
+                return player;
+            }
+        }
+        return null;
+    }
+
 
     /**
      * Shout out to: https://howtodoinjava.com/security/how-to-generate-secure-password-hash-md5-sha-pbkdf2-bcrypt-examples/

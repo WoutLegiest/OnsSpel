@@ -23,5 +23,7 @@ public interface DataBaseInterface extends Remote {
 
     ArrayList<Card> getAllCards()throws RemoteException;
 
+    Player getPlayer(String username, String token)throws RemoteException;
+
 
  }
