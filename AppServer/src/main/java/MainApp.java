@@ -19,6 +19,10 @@ public class MainApp {
 
     //Is het de bedoeling dan dat elke appserver\dbs gekoppeld is aan zijn eigen Service ?
 
+    /**
+     * Start up the registry of the AppServer en initionlasie and bound a first appServer to it
+     * @param serviceName
+     */
     public static void startRegistry(String serviceName){
         //TODO: service naam veranderen naar int, zo zijn de 6** appSerivce en dan 4** de databasen
 
@@ -33,6 +37,26 @@ public class MainApp {
         }
     }
 
+    /**
+     * Generates a new AppServer and bind to the Appserver registry
+     * @param serviceName name of the appServer
+     */
+    public static void startUpNewServer(String serviceName){
+
+        try {
+            AppServerInterface appServerImp = new AppServerImpl();
+            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
+            registry.rebind(serviceName, appServerImp);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Method who registers the AppServer at the dispatcher.
+     * @param serviceName name of the appServer
+     */
     public static void registerDispatcher(String serviceName){
 
         try{

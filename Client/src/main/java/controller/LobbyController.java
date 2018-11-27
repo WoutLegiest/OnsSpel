@@ -107,9 +107,7 @@ public class LobbyController {
             AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
 
             player = appServer.getPlayer(username,token);
-        } catch (RemoteException | NotBoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
+        } catch (RemoteException | NotBoundException | SQLException e) {
             e.printStackTrace();
         }
     }

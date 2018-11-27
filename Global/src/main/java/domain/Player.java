@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 
 public class Player implements Serializable {
 
+    private static final long serialVersionUID = -6933077249723747340L;
+
     private final int id;
     private final String username;
     private final String password;
@@ -24,14 +26,14 @@ public class Player implements Serializable {
         this.token = token;
     }
 
-    public Player(String username, int totalScore, Timestamp joinDate) {
+    public Player(String username, int totalScore, Timestamp joinDate, String email, String token) {
         id = 0;
         this.username = username;
         this.totalScore = totalScore;
         this.joinDate = joinDate;
         password = null;
-        email = null;
-        token = null;
+        this.email = email;
+        this.token = token;
     }
 
     public Player(Player other) {

@@ -44,7 +44,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
     public String authenticatePlayer(String username, String password) throws SQLException {
 
         String sql = "SELECT * FROM player WHERE username='" + username + "';";
-        System.out.println(sql);
+        //System.out.println(sql);
         ResultSet rs = stmt.executeQuery(sql);
 
         while(rs.next()){
@@ -87,7 +87,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         pstmt.setInt(4, 0);
         pstmt.setTimestamp(5, today);
         pstmt.executeUpdate();
-        System.out.println("Goed toegevoegd");
+        //System.out.println("Goed toegevoegd");
 
 
         return addToken(username);
@@ -168,8 +168,12 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
                 String username = rs.getString("username");
                 int totalScore = rs.getInt("totalScore");
                 Timestamp date = rs.getTimestamp("joinDate");
+                String fullToken = rs.getString("token");
+                String email = rs.getString("email");
 
-                allPlayers.add(new Player(username,totalScore,date));
+                String[] parts= fullToken.split(":");
+
+                allPlayers.add(new Player(username,totalScore,date, email ,parts[1]));
             }
 
         } catch (SQLException e) {
