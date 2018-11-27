@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 
-<AnchorPane minHeight="300.0" minWidth="300.0" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LobbyController">
+<AnchorPane minHeight="300.0" minWidth="300.0" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LobbyController">
     <children>
-        <TabPane prefHeight="600.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+        <TabPane prefHeight="600.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
                 <Tab text="Player Ranking">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="195.0" prefWidth="248.0">
                             <children>
                                 <Button fx:id="refreshbuttont1" layoutX="13.0" layoutY="14.0" mnemonicParsing="false" onAction="#refreshT1" text="Refresh" />
-                                <TableView fx:id="ranking" layoutX="13.0" layoutY="47.0" prefHeight="506.0" prefWidth="574.0">
+                                <TableView fx:id="ranking" layoutX="13.0" layoutY="47.0" prefHeight="506.0" prefWidth="574.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
                                     <columns>
                                         <TableColumn fx:id="usernameColum" prefWidth="75.0" text="Username" />
                                         <TableColumn fx:id="totalPointColum" prefWidth="120.0" text="Total Point" />
@@ -36,7 +37,7 @@
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="195.0" prefWidth="248.0">
                             <children>
                                 <Button fx:id="refreshbuttont2" layoutX="13.0" layoutY="14.0" mnemonicParsing="false" onAction="#refreshT2" text="Refresh" />
-                                <TableView fx:id="currentgames" layoutX="13.0" layoutY="47.0" prefHeight="506.0" prefWidth="574.0">
+                                <TableView fx:id="currentgames" layoutX="13.0" layoutY="47.0" prefHeight="506.0" prefWidth="574.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
                                     <columns>
                                         <TableColumn fx:id="gameNr" prefWidth="75.0" text="Game id" />
                                         <TableColumn fx:id="gameOwner" prefWidth="120.0" text="Game Owner" />
@@ -65,5 +66,14 @@
                 </Tab>
             </tabs>
         </TabPane>
+        <HBox prefHeight="27.0" prefWidth="67.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="2.0">
+            <children>
+                <Button  fx:id="buttonLogout" prefHeight="27.0" prefWidth="79.0" onAction="#logout" text="Log out" textAlignment="RIGHT">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Button>
+            </children>
+        </HBox>
     </children>
 </AnchorPane>

@@ -36,6 +36,7 @@ public class LobbyController {
     private Player player;
     private String token;
 
+    @FXML private Button buttonLogout;
 
     //Tab 1
     @FXML private TableView<Player> ranking;
@@ -95,7 +96,6 @@ public class LobbyController {
 
         //ScoreBoardThread thread = new ScoreBoardThread();
         //thread.run();
-
 
     }
 
@@ -205,6 +205,18 @@ public class LobbyController {
         }
 
 
+    }
+
+    public void logout(ActionEvent actionEvent){
+
+        player = null;
+        token = null;
+
+        try {
+            viewController.setViewToLogin();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     static class XCell extends ListCell<String> {
