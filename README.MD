@@ -1,3 +1,5 @@
+[![HitCount](http://hits.dwyl.io/WoutLegiest/OnsSpel.svg)](http://hits.dwyl.io/WoutLegiest/OnsSpel)
+
 # Project Memory Game: Distributed
 
 *Na Project Unicorn brengen dezelfde makers u iets nieuw: OnsSpel. Mede mogelijk gemaakt door Wauwter Legiest & Pellie Reyniers*
