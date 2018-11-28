@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/WoutLegiest/OnsSpel.png?branch=master)](https://travis-ci.org/WoutLegiest/OnsSpel)
 [![HitCount](http://hits.dwyl.io/WoutLegiest/OnsSpel.svg)](http://hits.dwyl.io/WoutLegiest/OnsSpel)
 
 # Project Memory Game: Distributed
