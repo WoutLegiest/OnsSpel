@@ -65,20 +65,29 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
     @Override
     public ArrayList<Card> shuffleCards(int range, String theme) throws RemoteException {
-        ArrayList<Card> cardsByTheme= dataBase.getCardsByTheme(theme);
+        ArrayList<Card> cardsByTheme= cardsByTheme(theme);
+        //System.out.println("CardByTheme is er " + cardsByTheme.size());
         int numberOfCards=range*range/2;
         ArrayList<Card> gameCards=new ArrayList<>();
         Random rand = new Random();
 
         for (int i=0;i<numberOfCards;i++){
-            int index= rand.nextInt(cardsByTheme.size());
+            int index= rand.nextInt(Math.abs(cardsByTheme.size()));
             Card tempCard=cardsByTheme.remove(index);
+            //System.out.println(tempCard.getIdcard());
             gameCards.add(tempCard);
             gameCards.add(tempCard);
+            //System.out.println(i);
         }
         Collections.shuffle(gameCards);
 
+        //System.out.println("Voor het teruggeven" + gameCards.size());
         return gameCards;
+    }
+
+    @Override
+    public ArrayList<Card> cardsByTheme(String theme)throws RemoteException{
+        return dataBase.getCardsByTheme(theme);
     }
 
 }

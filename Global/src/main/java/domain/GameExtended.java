@@ -1,8 +1,12 @@
 package domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class GameExtended {
+public class GameExtended implements Serializable {
+
+    private static final long serialVersionUID = -7010078965463558136L;
+
     private final Game game;
     private final ArrayList<Card>cards;
     private final ArrayList<Player>players;

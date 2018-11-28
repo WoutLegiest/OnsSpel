@@ -1,5 +1,6 @@
 package controller;
 
+import domain.Card;
 import domain.GameExtended;
 import domain.Player;
 import javafx.fxml.FXMLLoader;
@@ -59,12 +60,12 @@ public final class SceneController {
 
     }
 
-    public void setViewToGame(GameExtended gameExtended, Player player, String token) throws IOException {
+    public void setViewToGame(GameExtended gameExtended, Player player, String token, Card cover) throws IOException {
 
         FXMLLoader fxmlLoader = new FXMLLoader( getClass().getResource("../fxml/game.fxml"));
         Parent root = (Parent)fxmlLoader.load();
         GameController controller =fxmlLoader.<GameController>getController();
-        controller.setCredentials(gameExtended,player,token);
+        controller.setCredentials(gameExtended,player,token,cover);
         GUI.setTitle("Memory Game");
         Scene newScene = new Scene(root, 900, 600);
         GUI.setScene(newScene);

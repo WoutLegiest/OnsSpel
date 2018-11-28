@@ -1,6 +1,11 @@
 package domain;
 
-public class Card {
+import java.io.Serializable;
+
+public class Card implements Serializable {
+
+    private static final long serialVersionUID = 7582974674626563766L;
+
     private final int idcard;
     private final String path;
     private final int thema;

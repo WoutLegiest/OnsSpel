@@ -2,7 +2,12 @@ package domain;
 
 import javafx.scene.control.Button;
 
-public class Game {
+import java.io.Serializable;
+
+public class Game implements Serializable {
+
+    private static final long serialVersionUID = 4081852501232595249L;
+
     private final int idGame;
     private final int owner;
     private final int maxNumberOfPlayers;

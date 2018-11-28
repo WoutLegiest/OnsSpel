@@ -233,7 +233,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
             while(rs.next()){
                 int idCard = rs.getInt("idcard");
                 String path = rs.getString("path");
-                int thema = rs.getInt("thema");
+                int thema = rs.getInt("theme");
 
                 allCards.add(new Card(idCard,path, thema));
             }

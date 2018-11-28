@@ -10,6 +10,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -19,6 +20,7 @@ public class GameController {
     private GameExtended game;
     private Player player;
     private String token;
+    private Card cover;
 
     //Game Grid
     @FXML
@@ -31,11 +33,11 @@ public class GameController {
 
     }
 
-    public void setCredentials(GameExtended gameExtended, Player player, String token){
+    public void setCredentials(GameExtended gameExtended, Player player, String token, Card cover){
         this.game=gameExtended;
         this.player=player;
         this.token=token;
-
+        this.cover=cover;
         makeGrid();
 
     }
@@ -52,7 +54,8 @@ public class GameController {
             gridGame.getRowConstraints().add(new RowConstraints(cellHeight));
         }
 
-        Image image = new Image("/images/upmLogo.png");
+        File f = new File(cover.getPath());
+        Image image = new Image(f.toURI().toString());
 
         int rowIndex =0, columnIndex=0;
         ArrayList<Card> cards=game.getCards();

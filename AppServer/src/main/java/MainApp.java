@@ -1,6 +1,8 @@
 import interfaces.AppServerInterface;
 import interfaces.DispatcherInterface;
+import javafx.scene.image.Image;
 
+import java.io.File;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;

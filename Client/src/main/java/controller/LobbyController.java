@@ -84,7 +84,7 @@ public class LobbyController {
         //Tab 3
 
         theme.getItems().removeAll(theme.getItems());
-        theme.getItems().addAll("default", "Emma Watson", "Harry Potter");
+        theme.getItems().addAll("default", "Emma Watson", "Mario Bros");
         theme.getSelectionModel().select("default");
 
         sizeGame.getItems().removeAll(sizeGame.getItems());
@@ -183,16 +183,24 @@ public class LobbyController {
         int size=Integer.parseInt(String.valueOf(sizeGame.getValue().charAt(0)));
         int numberOfPlayers = Integer.parseInt(String.valueOf(numberOfPlayer.getValue().charAt(0)));
         String themeString=theme.getValue();
+        if(themeString.equals("default")){
+            themeString="bh";
+        }else if(themeString.equals("Emma Watson")){
+            themeString="EMMA";
+        }else{
+            themeString="mario";
+        }
 
         Game game = new Game(player.getId(),numberOfPlayers,size);
 
         ArrayList<Card>gameCards=new ArrayList<>();
+        Card cover=null;
         try {
             Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
             AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
 
             gameCards = appServer.shuffleCards(size, themeString);
-
+            cover= appServer.cardsByTheme(themeString.concat("_cover")).get(0);
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
         }
@@ -202,7 +210,7 @@ public class LobbyController {
         GameExtended gameExtended=new GameExtended(game,gameCards,gamePlayers);
 
         try {
-            viewController.setViewToGame(gameExtended, player, token);
+            viewController.setViewToGame(gameExtended, player, token, cover);
         } catch (IOException e) {
             e.printStackTrace();
         }
