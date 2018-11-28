@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/WoutLegiest/OnsSpel.png?branch=master)](https://travis-ci.org/WoutLegiest/OnsSpel)
+[![start with why](https://img.shields.io/badge/start%20with-why%3F-brightgreen.svg?style=flat)](https://giphy.com/gifs/YkuzftfzdoPOE)
 [![HitCount](http://hits.dwyl.io/WoutLegiest/OnsSpel.svg)](http://hits.dwyl.io/WoutLegiest/OnsSpel)
 
 # Project Memory Game: Distributed
