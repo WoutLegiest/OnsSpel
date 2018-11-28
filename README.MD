@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/WoutLegiest/OnsSpel.png?branch=master)](https://travis-ci.org/WoutLegiest/OnsSpel)
 [![Known Vulnerabilities](https://snyk.io/test/github/WoutLegiest/OnsSpel/badge.svg?targetFile=pom.xml)](https://snyk.io/test/github/WoutLegiest/OnsSpel?targetFile=pom.xml)
+[![Coverage Status](https://coveralls.io/repos/github/WoutLegiest/OnsSpel/badge.svg?branch=master)](https://coveralls.io/github/WoutLegiest/OnsSpel?branch=master)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 [![HitCount](http://hits.dwyl.io/WoutLegiest/OnsSpel.svg)](http://hits.dwyl.io/WoutLegiest/OnsSpel)
 [![start with why](https://img.shields.io/badge/start%20with-why%3F-brightgreen.svg?style=flat)](https://giphy.com/gifs/YkuzftfzdoPOE)
