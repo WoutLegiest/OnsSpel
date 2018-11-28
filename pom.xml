@@ -116,4 +116,17 @@
         <maven.compiler.target>10</maven.compiler.target>
     </properties>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>4.3.0</version>
+                <configuration>
+                    <repoToken>7aplq3sU7xPXM67CFtadQPonq8duw5tWc</repoToken>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
