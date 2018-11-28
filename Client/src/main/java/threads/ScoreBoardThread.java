@@ -17,6 +17,7 @@ public class ScoreBoardThread extends Thread{
     public void stopThread() {
         running.set(false);
     }
+
     public synchronized void run(){
 
         running.set(true);
