@@ -26,8 +26,9 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
 
         try {
             //Class.forName("org.sqlite.JDBC");
+
             String workingDir = System.getProperty("user.dir");
-            String url = "jdbc:sqlite:" + workingDir + "\\.db\\database1.db";
+            String url = "jdbc:sqlite:" + workingDir + "/.db/database1.db";
             if (conn == null || conn.isClosed()) {
                 conn = DriverManager.getConnection(url);
                 stmt  = conn.createStatement();
@@ -213,6 +214,16 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
     @Override
     public ArrayList<Card> getAllCards() throws RemoteException {
         String sql = "SELECT * FROM card";
+        return processCards(sql);
+    }
+
+    @Override
+    public ArrayList<Card> getCardsByTheme(String theme) throws RemoteException{
+        String sql = "SELECT * FROM card WHERE theme='" + theme + "';";
+        return processCards(sql);
+    }
+
+    private ArrayList<Card> processCards(String sql) {
 
         ArrayList<Card> allCards = new ArrayList<>();
 
@@ -222,8 +233,9 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
             while(rs.next()){
                 int idCard = rs.getInt("idcard");
                 String path = rs.getString("path");
+                int thema = rs.getInt("thema");
 
-                allCards.add(new Card(idCard,path));
+                allCards.add(new Card(idCard,path, thema));
             }
 
         } catch (SQLException e) {

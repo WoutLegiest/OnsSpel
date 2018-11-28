@@ -14,6 +14,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 import static domain.Constants.*;
 
@@ -63,13 +64,17 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
     }
 
     @Override
-    public ArrayList<Card> shuffleCards(int range) throws RemoteException {
-        ArrayList<Card> allCards= dataBase.getAllCards();
+    public ArrayList<Card> shuffleCards(int range, String theme) throws RemoteException {
+        ArrayList<Card> cardsByTheme= dataBase.getCardsByTheme(theme);
         int numberOfCards=range*range/2;
         ArrayList<Card> gameCards=new ArrayList<>();
+        Random rand = new Random();
+
         for (int i=0;i<numberOfCards;i++){
-            gameCards.add(allCards.get(i));
-            gameCards.add(allCards.get(i));
+            int index= rand.nextInt(cardsByTheme.size());
+            Card tempCard=cardsByTheme.remove(index);
+            gameCards.add(tempCard);
+            gameCards.add(tempCard);
         }
         Collections.shuffle(gameCards);
 

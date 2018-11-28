@@ -182,6 +182,7 @@ public class LobbyController {
     public void createGame(ActionEvent actionEvent){
         int size=Integer.parseInt(String.valueOf(sizeGame.getValue().charAt(0)));
         int numberOfPlayers = Integer.parseInt(String.valueOf(numberOfPlayer.getValue().charAt(0)));
+        String themeString=theme.getValue();
 
         Game game = new Game(player.getId(),numberOfPlayers,size);
 
@@ -190,7 +191,7 @@ public class LobbyController {
             Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
             AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
 
-            gameCards = appServer.shuffleCards(size);
+            gameCards = appServer.shuffleCards(size, themeString);
 
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
