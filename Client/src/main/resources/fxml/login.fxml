@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<AnchorPane prefHeight="320.0" prefWidth="320.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
+<AnchorPane prefHeight="320.0" prefWidth="320.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.LoginController">
    <children>
       <Button fx:id="buttonLogin" layoutX="135.0" layoutY="186.0" mnemonicParsing="false" onAction="#login" text="Login" />
       <Button fx:id="buttonRegister" layoutX="127.0" layoutY="265.0" mnemonicParsing="false" onAction="#toRegister" prefHeight="25.0" prefWidth="62.0" rotate="180.0" text="Register" textAlignment="JUSTIFY" textFill="RED">
