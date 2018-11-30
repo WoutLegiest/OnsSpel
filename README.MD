@@ -8,7 +8,7 @@
 
 # Project Memory Game: Distributed
 
-*Na Project Unicorn brengen dezelfde makers u iets nieuw: OnsSpel. Mede mogelijk gemaakt door Wauwter Legiest & Pellie Reyniers*
+*Na Project Unicorn brengen dezelfde makers u iets nieuw: OnsSpel. Mede mogelijk gemaakt door Wauwter Legiest & Pellie Reyniers, alias Dreamteam -Boris*
 
 
 Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Dell en natuurlijk Frank onze postduif
