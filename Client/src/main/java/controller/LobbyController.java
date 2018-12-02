@@ -208,6 +208,7 @@ public class LobbyController {
         ArrayList<Player>gamePlayers= new ArrayList<>();
 
         GameExtended gameExtended=new GameExtended(game,gameCards,gamePlayers);
+        gameExtended.addPlayer(player);
 
         try {
             viewController.setViewToGame(gameExtended, player, token, cover);
