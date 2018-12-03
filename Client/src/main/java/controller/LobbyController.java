@@ -56,7 +56,7 @@ public class LobbyController {
     @FXML private TableColumn<Game, String> players;
     @FXML private TableColumn<Game, String> freeSpots;
     @FXML private TableColumn<Game, Boolean> join;
-    @FXML private TableColumn<Game, Button> watch;
+    @FXML private TableColumn<Game, Boolean> watch;
 
     //Tab 3
     @FXML private Button buttonStartGame;
@@ -171,8 +171,24 @@ public class LobbyController {
 
         // create a cell value factory with an add button for each row in the table.
         join.setCellFactory(new Callback<TableColumn<Game, Boolean>, TableCell<Game, Boolean>>() {
-            @Override public TableCell<Game, Boolean> call(TableColumn<Game, Boolean> personBooleanTableColumn) {
-                return new ButtonCell(currentGames);
+            @Override
+            public TableCell<Game, Boolean> call(TableColumn<Game, Boolean> personBooleanTableColumn) {
+                return new ButtonCellJoin(currentGames);
+            }
+        });
+
+        watch.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Game, Boolean>, ObservableValue<Boolean>>() {
+            @Override
+            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Game, Boolean> features) {
+                return new SimpleBooleanProperty(features.getValue() != null);
+            }
+        });
+
+        // create a cell value factory with an add button for each row in the table.
+        watch.setCellFactory(new Callback<TableColumn<Game, Boolean>, TableCell<Game, Boolean>>() {
+            @Override
+            public TableCell<Game, Boolean> call(TableColumn<Game, Boolean> personBooleanTableColumn) {
+                return new ButtonCellWatch(currentGames);
             }
         });
 
@@ -263,17 +279,42 @@ public class LobbyController {
 
 }
 
-class ButtonCell extends TableCell<Game, Boolean> {
+class ButtonCellJoin extends TableCell<Game, Boolean> {
 
     final Button cellButton = new Button("Remove");
 
-    ButtonCell(final TableView tblView){
+    ButtonCellJoin(final TableView tblView){
 
         cellButton.setOnAction(new EventHandler<ActionEvent>(){
 
             @Override
             public void handle(ActionEvent t) {
                 System.out.println("Sassy");
+            }
+        });
+    }
+
+    //Display button if the row is not empty
+    @Override
+    protected void updateItem(Boolean t, boolean empty) {
+        super.updateItem(t, empty);
+        if(!empty){
+            setGraphic(cellButton);
+        }
+    }
+}
+
+class ButtonCellWatch extends TableCell<Game, Boolean> {
+
+    final Button cellButton = new Button("Remove");
+
+    ButtonCellWatch(final TableView tblView){
+
+        cellButton.setOnAction(new EventHandler<ActionEvent>(){
+
+            @Override
+            public void handle(ActionEvent t) {
+                System.out.println("Sassy^2");
             }
         });
     }
