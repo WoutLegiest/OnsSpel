@@ -3,10 +3,14 @@ package controller;
 import domain.Card;
 import domain.GameExtended;
 import domain.Player;
+import domain.Turn;
+import interfaces.AppServerInterface;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -16,7 +20,15 @@ import javafx.scene.paint.Color;
 
 import java.io.File;
 import java.net.URL;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
+
+import static controller.MainClient.appServerServiceName;
+import static domain.Constants.APPSERVER_PORT;
+import static domain.Constants.IP;
 
 public class GameController {
 
@@ -32,6 +44,8 @@ public class GameController {
     private ArrayList<ImageView> images;
     private ArrayList<Card> cards;
     private Image coverImage;
+
+    private Turn turn;
 
     //Game Grid
     @FXML
@@ -53,6 +67,7 @@ public class GameController {
         this.cover=cover;
         makeGrid();
         setLabels();
+        turn=null;
 
     }
 
@@ -122,14 +137,54 @@ public class GameController {
             int idButtonInt=Integer.parseInt(idButton);
             Button button= buttons.get(idButtonInt);
             ImageView newIV=choseNewIV(button, idButtonInt);
+            if(turn==null){
+                turn=new Turn(player,cards.get(idButtonInt));
+                changeView(button,newIV);
+            }else if(turn.getCard2()==null){
+                turn.setCard2(cards.get(idButtonInt));
+                changeView(button,newIV);
+                String title=null;
+                String contentText=null;
+                if(turn.isCorrect()){
+                    title= "Correct move!";
+                    contentText= "You have gained a point, congrats made";
+                }else {
+                    title="False move";
+                    contentText="Try again next time!";
+                }
+                Registry registry = null;
+                try {
+                    registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
+                    AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
+                    appServer.pushTurn(game.getGame().getIdGame(),turn);
 
-            button.setGraphic(newIV);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (NotBoundException e) {
+                    e.printStackTrace();
+                }
+
+
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle( title);
+                alert.setHeaderText(null);
+                alert.setContentText(contentText);
+                alert.showAndWait();
+
+
+            }
+
+
         }
     }
 
+    private void changeView(Button button, ImageView newIV) {
+        button.setGraphic(newIV);
+    }
+
     private boolean checkForTurn(){
-        //TODO: logic met database connecteren om te checken wie zijn beurt het is.
-        return true;
+        if(player.getId()==game.getCurrentPlayerTurn().getId())return true;
+        else return false;
     }
 
     private ImageView choseNewIV(Button button, int id){
@@ -140,8 +195,7 @@ public class GameController {
     private void setLabels(){
         StringBuilder stringBuilder=new StringBuilder();
         Color color;
-        //TODO: verander van enkel in het begin werkende naar check op turn.
-        if(player.getId()==game.getPlayers().get(0).getId()){
+        if(checkForTurn()){
             stringBuilder.append(player.getUsername());
             stringBuilder.append(": Your Turn!");
             color=Color.GREEN;

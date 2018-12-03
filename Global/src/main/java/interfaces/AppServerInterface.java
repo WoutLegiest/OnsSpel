@@ -1,9 +1,6 @@
 package interfaces;
 
-import domain.Card;
-import domain.Game;
-import domain.GameExtended;
-import domain.Player;
+import domain.*;
 import exceptions.UserExistsException;
 
 import java.rmi.Remote;
@@ -31,5 +28,7 @@ public interface AppServerInterface extends Remote {
     int gameCreated( int owner, int maxNumberOfPlayer, int size) throws RemoteException;
 
     void gameCreatedExtended(GameExtended gameExtended) throws RemoteException;
+
+    void pushTurn(int gameId, Turn turn)throws RemoteException;
 
 }

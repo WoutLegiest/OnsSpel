@@ -218,7 +218,7 @@ public class LobbyController {
             cover= appServer.cardsByTheme(themeString.concat("_cover")).get(0);
             ArrayList<Player>gamePlayers= new ArrayList<>();
 
-            GameExtended gameExtended=new GameExtended(game,gameCards,gamePlayers);
+            GameExtended gameExtended=new GameExtended(game,gameCards,gamePlayers,player);
             gameExtended.addPlayer(player);
 
             appServer.gameCreatedExtended(gameExtended);

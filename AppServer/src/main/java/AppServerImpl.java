@@ -1,7 +1,4 @@
-import domain.Card;
-import domain.Game;
-import domain.GameExtended;
-import domain.Player;
+import domain.*;
 import exceptions.UserExistsException;
 import interfaces.AppServerInterface;
 import interfaces.DataBaseInterface;
@@ -105,6 +102,21 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
         games.add(gameExtended);
         dataBase.saveGame(gameExtended);
 
+    }
+
+    @Override
+    public void pushTurn(int gameId, Turn turn) throws RemoteException {
+        for (GameExtended gameExtended: games){
+            if(gameExtended.getGame().getIdGame()==gameId){
+                gameExtended.addTurn(turn);
+                performTurn(gameExtended);
+                return;
+            }
+        }
+    }
+
+    private void performTurn(GameExtended gameExtended){
+        //todo: gameExtended moet een array bij houden met de clients, dewe clients moeten update turn kunnen uitvoeren.
     }
 
 

@@ -16,6 +16,12 @@ public class Turn implements Serializable {
         this.card2 = card2;
     }
 
+    public Turn(Player player, Card card1) {
+        this.player = player;
+        this.card1 = card1;
+        this.card2 = null;
+    }
+
     public Turn(Turn turn) {
         this.player=turn.player;
         this.card1=turn.card1;
