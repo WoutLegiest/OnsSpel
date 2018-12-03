@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 import static controller.MainClient.appServerServiceName;
 import static controller.SceneController.viewController;
+import static controller.MainClient.myIndexNumberServerOne;
 import static domain.Constants.*;
 
 
@@ -210,7 +211,7 @@ public class LobbyController {
 
 
             GameExtended gameExtended=new GameExtended(game,gameCards,gamePlayers,player);
-            gameExtended.addPlayer(player);
+            gameExtended.addPlayer(player, myIndexNumberServerOne);
 
             appServer.gameCreatedExtended(gameExtended);
 

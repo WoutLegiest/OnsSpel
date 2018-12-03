@@ -10,6 +10,8 @@ public class GameExtended implements Serializable {
     private final Game game;
     private final ArrayList<Card>cards;
     private final ArrayList<Player>players;
+    private ArrayList<Integer>clientIndexes;
+    private ArrayList<Boolean>correctCards;
     private Player currentPlayerTurn;
     private ArrayList<Turn> turns;
 
@@ -18,6 +20,8 @@ public class GameExtended implements Serializable {
         this.cards=null;
         this.players=null;
         this.currentPlayerTurn=null;
+        clientIndexes=new ArrayList<>();
+        correctCards= new ArrayList<>();
         turns=new ArrayList<>();
     }
 
@@ -26,16 +30,65 @@ public class GameExtended implements Serializable {
         this.cards = cards;
         this.players = players;
         this.currentPlayerTurn=currentPlayerTurn;
+        clientIndexes=new ArrayList<>();
+        correctCards= new ArrayList<>();
+        for(Card card: cards){
+            correctCards.add(false);
+        }
         turns=new ArrayList<>();
     }
 
     public GameExtended(GameExtended gameExtended) {
-        this.game=gameExtended.game;
-        this.cards=gameExtended.cards;
-        this.players=gameExtended.players;
-        this.currentPlayerTurn=gameExtended.currentPlayerTurn;
-        this.turns=gameExtended.turns;
+        this.game = gameExtended.game;
+        this.cards = gameExtended.cards;
+        this.players = gameExtended.players;
+        this.currentPlayerTurn = gameExtended.currentPlayerTurn;
+        this.clientIndexes = gameExtended.clientIndexes;
+        this.correctCards = gameExtended.correctCards;
+        this.turns = gameExtended.turns;
     }
+
+    /**
+     * Method that adds a player to a game in the correct way.
+     * @param player Player in need to be added.
+     * @param indexClient Index of the corresponding client.
+     */
+    public void addPlayer(Player player, int indexClient) {
+        players.add(player);
+        game.increaseNumberOfPlayers();
+        addClientIndex(indexClient);
+    }
+
+    public boolean addTurn(Turn turn){
+        turns.add(turn);
+        if(turn.checkTurn(cards)){
+            correctCards.set(turn.getCard1(),true);
+            correctCards.set(turn.getCard2(),true);
+            return true;
+        }
+        return false;
+    }
+
+    public void addClientIndex(int clientIndex){
+        clientIndexes.add(clientIndex);
+    }
+
+    public void nextPlayer(){
+        int nextPlayerIndex=-1;
+        for(int i=0;i<players.size();i++){
+            if(currentPlayerTurn.getId()==players.get(i).getId()){
+                nextPlayerIndex=i;
+            }
+        }
+
+        if(nextPlayerIndex==players.size()-1) nextPlayerIndex=0;
+        else nextPlayerIndex++;
+
+        currentPlayerTurn=players.get(nextPlayerIndex);
+    }
+
+
+    //-----getters and setters-----//
 
     public Game getGame() {
         return game;
@@ -57,11 +110,6 @@ public class GameExtended implements Serializable {
         this.turns = turns;
     }
 
-    public void addPlayer(Player player) {
-        players.add(player);
-        game.increaseNumberOfPlayers();
-    }
-
     public Player getCurrentPlayerTurn() {
         return currentPlayerTurn;
     }
@@ -70,7 +118,19 @@ public class GameExtended implements Serializable {
         this.currentPlayerTurn = currentPlayerTurn;
     }
 
-    public void addTurn(Turn turn){
-        turns.add(turn);
+    public ArrayList<Integer> getClientIndexes() {
+        return clientIndexes;
+    }
+
+    public void setClientIndexes(ArrayList<Integer> clientIndexes) {
+        this.clientIndexes = clientIndexes;
+    }
+
+    public ArrayList<Boolean> getCorrectCards() {
+        return correctCards;
+    }
+
+    public void setCorrectCards(ArrayList<Boolean> correctCards) {
+        this.correctCards = correctCards;
     }
 }

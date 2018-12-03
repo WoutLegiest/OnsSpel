@@ -1,6 +1,7 @@
 import domain.*;
 import exceptions.UserExistsException;
 import interfaces.AppServerInterface;
+import interfaces.ClientInterface;
 import interfaces.DataBaseInterface;
 import interfaces.DispatcherInterface;
 
@@ -21,10 +22,12 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
     private DataBaseInterface dataBase;
     private ArrayList<GameExtended> games;
+    private ArrayList<ClientInterface> clientList;
 
     public AppServerImpl() throws RemoteException {
 
         games=new ArrayList<>();
+        clientList=new ArrayList<>();
 
         try{
             Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
@@ -38,6 +41,17 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
         catch(NotBoundException | RemoteException e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public int registerForCallback(ClientInterface callbackClientObject) throws RemoteException {
+        if (!(clientList.contains(callbackClientObject))) {
+            clientList.add(callbackClientObject);
+
+            System.out.println("Registered new client ");
+            return clientList.indexOf(callbackClientObject);
+        }
+        return -1;
     }
 
     @Override
@@ -109,14 +123,23 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
         for (GameExtended gameExtended: games){
             if(gameExtended.getGame().getIdGame()==gameId){
                 gameExtended.addTurn(turn);
-                performTurn(gameExtended);
+                performTurn(gameExtended,turn);
+                gameExtended.nextPlayer();
                 return;
             }
         }
     }
 
-    private void performTurn(GameExtended gameExtended){
-        //todo: gameExtended moet een array bij houden met de clients, dewe clients moeten update turn kunnen uitvoeren.
+    private void performTurn(GameExtended gameExtended, Turn turn){
+        for(int i=0;i<gameExtended.getPlayers().size();i++){
+            if(gameExtended.getPlayers().get(i).getId()!=turn.getPlayer().getId()){
+                try {
+                    clientList.get(gameExtended.getClientIndexes().get(i)).performOtherPlayerTurn(turn);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 

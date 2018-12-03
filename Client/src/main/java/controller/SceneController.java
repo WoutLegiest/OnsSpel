@@ -3,6 +3,7 @@ package controller;
 import domain.Card;
 import domain.GameExtended;
 import domain.Player;
+import interfaces.ClientInterface;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

@@ -25,8 +25,10 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import static controller.MainClient.appServerServiceName;
+import static controller.MainClient.clientImpl;
 import static domain.Constants.APPSERVER_PORT;
 import static domain.Constants.IP;
 
@@ -65,6 +67,7 @@ public class GameController {
         this.player=player;
         this.token=token;
         this.cover=cover;
+        clientImpl.setGameController(this);
         makeGrid();
         setLabels();
         turn=null;
@@ -131,27 +134,42 @@ public class GameController {
     }
 
     private void performClick(String idButton){
-        boolean clickPossible=checkForTurn();
+        //check if a player is allowed to perform a turn.
+        boolean myTurn=checkForTurn();
+        //save which button is clicked
+        int idButtonInt=Integer.parseInt(idButton);
+        //check if card isn't allready out of the game.
+        boolean clickPossible=checkIfCardIsPossible(idButtonInt);
 
-        if(clickPossible){
-            int idButtonInt=Integer.parseInt(idButton);
-            Button button= buttons.get(idButtonInt);
-            ImageView newIV=choseNewIV(button, idButtonInt);
+        if(myTurn && clickPossible){
+
+            //perform the turn
             if(turn==null){
-                turn=new Turn(player,cards.get(idButtonInt));
-                changeView(button,newIV);
-            }else if(turn.getCard2()==null){
-                turn.setCard2(cards.get(idButtonInt));
-                changeView(button,newIV);
+
+                turn=new Turn(player,idButtonInt);
+                //change view of card
+                changeView(idButtonInt);
+
+            }else if(turn.getCard2()==-1){
+
+                turn.setCard2(idButtonInt);
+                changeView(idButtonInt);
                 String title=null;
                 String contentText=null;
+
+                //perform feedback to the user.
                 if(turn.isCorrect()){
                     title= "Correct move!";
-                    contentText= "You have gained a point, congrats made";
+                    contentText= "You have gained a point, congrats mate";
                 }else {
                     title="False move";
                     contentText="Try again next time!";
+                    //wrong guess, flip the cards again.
+                    changeView(turn.getCard1());
+                    changeView(turn.getCard2());
                 }
+
+                // send turn to app server
                 Registry registry = null;
                 try {
                     registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
@@ -169,12 +187,21 @@ public class GameController {
                 alert.setContentText(contentText);
                 alert.showAndWait();
 
+                game.nextPlayer();
+                setLabels();
+
 
             }
         }
     }
 
-    private void changeView(Button button, ImageView newIV) {
+    private boolean checkIfCardIsPossible(int idButton) {
+        return !game.getCorrectCards().get(idButton);
+    }
+
+    private void changeView(int idButton) {
+        Button button= buttons.get(idButton);
+        ImageView newIV=choseNewIV(button, idButton);
         button.setGraphic(newIV);
     }
 
@@ -188,6 +215,9 @@ public class GameController {
         else return makeImageView(coverImage,-1);
     }
 
+    /**
+     * Method to set the label on the bottom of the screen, indicating which player is currently playing.
+     */
     private void setLabels(){
         StringBuilder stringBuilder=new StringBuilder();
         Color color;
@@ -197,18 +227,63 @@ public class GameController {
             color=Color.GREEN;
 
         }else{
+            stringBuilder.append(game.getCurrentPlayerTurn().getUsername());
             stringBuilder.append("Not Your Turn!");
             color=Color.RED;
         }
-        Background background=new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
-        turnLabel.setBackground(background);
-        turnLabel.setText(stringBuilder.toString());
-        turnLabel.setTextFill(Color.WHITE);
+
+        changeTurnLabel(color,stringBuilder.toString());
 
     }
 
-    //TODO: add score functionaliteit
+    private void changeTurnLabel(Color color, String text) {
+        Background background=new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
+        turnLabel.setBackground(background);
+        turnLabel.setText(text);
+        turnLabel.setTextFill(Color.WHITE);
+    }
+
+    private void setLabelDuringMove(){
+        changeTurnLabel(Color.BLUE,"Performing turn of player: " + game.getCurrentPlayerTurn().getUsername());
+    }
+
+    /**
+     * Perform a turn by another player.
+     * @param turn turn to process.
+     */
+    public void performOtherTurn(Turn turn){
+        game.addTurn(turn);
+        game.setCurrentPlayerTurn(turn.getPlayer());
+        setLabelDuringMove();
+
+        changeView(turn.getCard1());
+        changeView(turn.getCard2());
+
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //if move done is not correct, flip cards again.
+        if(!turn.checkTurn(game.getCards())){
+            changeView(turn.getCard1());
+            changeView(turn.getCard2());
+        }
+
+        game.nextPlayer();
+        setLabels();
+
+    }
+
+    public void yourTurn(){
+
+    }
 
 
+    public void updateScoreTable() {
+    }
 
+    public void updateChat(String message) {
+    }
 }

@@ -25,6 +25,7 @@ import java.sql.SQLException;
 
 public class LoginController {
 
+
     @FXML private Button buttonLogin;
     @FXML private Button buttonRegister;
     @FXML private TextField textUsername;
@@ -43,6 +44,7 @@ public class LoginController {
 
             Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
             AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
+
 
             String token = appServer.authenticatePlayer(username,password);
 
