@@ -5,10 +5,14 @@ import domain.GameExtended;
 import domain.Player;
 import domain.Game;
 import interfaces.AppServerInterface;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 import threads.ScoreBoardThread;
 
 import java.io.IOException;
@@ -51,7 +55,7 @@ public class LobbyController {
     @FXML private TableColumn<Game, String> gameOwner;
     @FXML private TableColumn<Game, String> players;
     @FXML private TableColumn<Game, String> freeSpots;
-    @FXML private TableColumn<Game, Button> join;
+    @FXML private TableColumn<Game, Boolean> join;
     @FXML private TableColumn<Game, Button> watch;
 
     //Tab 3
@@ -158,6 +162,20 @@ public class LobbyController {
 
     private void loadT2(){
 
+        join.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Game, Boolean>, ObservableValue<Boolean>>() {
+            @Override
+            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Game, Boolean> features) {
+                return new SimpleBooleanProperty(features.getValue() != null);
+            }
+        });
+
+        // create a cell value factory with an add button for each row in the table.
+        join.setCellFactory(new Callback<TableColumn<Game, Boolean>, TableCell<Game, Boolean>>() {
+            @Override public TableCell<Game, Boolean> call(TableColumn<Game, Boolean> personBooleanTableColumn) {
+                return new ButtonCell(currentGames);
+            }
+        });
+
         if(currentGames!=null){
             for ( int i = 0; i<currentGames.getItems().size(); i++) {
                 currentGames.getItems().clear();
@@ -243,4 +261,29 @@ public class LobbyController {
         }
     }
 
+}
+
+class ButtonCell extends TableCell<Game, Boolean> {
+
+    final Button cellButton = new Button("Remove");
+
+    ButtonCell(final TableView tblView){
+
+        cellButton.setOnAction(new EventHandler<ActionEvent>(){
+
+            @Override
+            public void handle(ActionEvent t) {
+                System.out.println("Sassy");
+            }
+        });
+    }
+
+    //Display button if the row is not empty
+    @Override
+    protected void updateItem(Boolean t, boolean empty) {
+        super.updateItem(t, empty);
+        if(!empty){
+            setGraphic(cellButton);
+        }
+    }
 }

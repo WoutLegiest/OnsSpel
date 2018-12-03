@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane minHeight="300.0" minWidth="300.0" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.LobbyController">
+<AnchorPane minHeight="300.0" minWidth="300.0" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LobbyController">
     <children>
         <TabPane prefHeight="600.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
@@ -37,12 +37,12 @@
                             <children>
                                 <TableView fx:id="currentGames" layoutX="13.0" layoutY="47.0" prefHeight="506.0" prefWidth="574.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
                                     <columns>
-                                        <TableColumn fx:id="gameNr" maxWidth="55.0" minWidth="55.0" prefWidth="55.0" text="Game id" />
-                                        <TableColumn fx:id="gameOwner" maxWidth="125.0" minWidth="125.0" prefWidth="125.0" text="Game Owner" />
-                                        <TableColumn fx:id="players" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" text="Players" />
-                                        <TableColumn fx:id="freeSpots" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" text="Free Spots" />
-                                        <TableColumn fx:id="join" maxWidth="131.0" minWidth="131.0" prefWidth="131.0" resizable="false" text="Join" />
-                                        <TableColumn fx:id="watch" maxWidth="131.0" minWidth="131.0" prefWidth="131.0" text="Column X" />
+                                        <TableColumn fx:id="gameNr" maxWidth="72.43634033203125" minWidth="55.0" prefWidth="72.43634033203125" text="Game id" />
+                                        <TableColumn fx:id="gameOwner" maxWidth="125.0" minWidth="98.61822509765625" prefWidth="98.61822509765625" text="Game Owner" />
+                                        <TableColumn fx:id="players" maxWidth="88.14540100097656" minWidth="50.0" prefWidth="88.14540100097656" resizable="false" text="Max Player" />
+                                        <TableColumn fx:id="freeSpots" maxWidth="118.69093322753906" minWidth="75.0" prefWidth="93.3818359375" text="Free Spots" />
+                                        <TableColumn fx:id="join" maxWidth="131.0" minWidth="88.1453857421875" prefWidth="98.6180419921875" resizable="false" text="Join" />
+                                        <TableColumn fx:id="watch" maxWidth="131.0" minWidth="112.58187866210938" prefWidth="121.30917358398438" text="Watch" />
                                     </columns>
                                 </TableView>
                             </children>
