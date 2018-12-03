@@ -13,18 +13,18 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.GridPane?>
 
-<AnchorPane fx:id="rootGame" maxHeight="600" maxWidth="900" minHeight="600" minWidth="900" prefHeight="600" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameController">
+<AnchorPane fx:id="rootGame" maxHeight="600" maxWidth="900" minHeight="600" minWidth="900" prefHeight="600" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameController">
    <children>
-      <SplitPane fx:id="splitGame" dividerPositions="0.75" layoutX="4.0" layoutY="45.0" prefHeight="549.0" prefWidth="891.0">
+      <SplitPane fx:id="splitGame" dividerPositions="0.744988864142539" layoutX="4.0" layoutY="45.0" prefHeight="560.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0" SplitPane.resizableWithParent="false">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <AnchorPane minHeight="550.0" minWidth="650.0" prefHeight="160.0" prefWidth="100.0">
                <children>
                   <Label fx:id="turnLabel" contentDisplay="CENTER" layoutY="523.0" prefHeight="27.0" prefWidth="663.0" text="TURN LABEL" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <GridPane fx:id="gridGame" prefHeight="517.0" prefWidth="663.0">
+                  <GridPane fx:id="gridGame" minHeight="520.0" minWidth="660.0" prefHeight="517.0" prefWidth="663.0">
 
                   </GridPane>
                </children></AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <AnchorPane maxWidth="225.0" minHeight="550.0" minWidth="225.0" prefHeight="160.0" prefWidth="225.0">
                <children>
                   <TitledPane collapsible="false" layoutX="9.0" layoutY="14.0" prefHeight="250.0" prefWidth="200.0" text="Score">
                      <content>
@@ -66,10 +66,6 @@
             </AnchorPane>
         </items>
       </SplitPane>
-      <ToolBar fx:id="toolbarGame" layoutY="-6.0" prefHeight="40.0" prefWidth="900.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <items>
-          <Button fx:id="refreshGameButton" mnemonicParsing="false" text="Refresh" />
-        </items>
-      </ToolBar>
+      <ToolBar fx:id="toolbarGame" layoutY="-6.0" prefHeight="40.0" prefWidth="900.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
    </children>
 </AnchorPane>

@@ -8,11 +8,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<?import com.jfoenix.controls.JFXButton?>
 <AnchorPane prefHeight="320.0" prefWidth="320.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.LoginController">
    <children>
       <Button fx:id="buttonLogin" layoutX="135.0" layoutY="186.0" mnemonicParsing="false" onAction="#login" text="Login" />
-      <Button fx:id="buttonRegister" layoutX="127.0" layoutY="265.0" mnemonicParsing="false" onAction="#toRegister" prefHeight="25.0" prefWidth="62.0" rotate="180.0" text="Register" textAlignment="JUSTIFY" textFill="RED">
+      <Button fx:id="buttonRegister" layoutX="122.0" layoutY="265.0" mnemonicParsing="false" onAction="#toRegister" prefHeight="30.0" prefWidth="81.0" rotate="180.0" text="Register" textAlignment="JUSTIFY" textFill="RED">
          <effect>
             <Glow />
          </effect>
@@ -22,8 +21,8 @@
             <Font name="Comic Sans MS Bold" size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="textUsername" layoutX="131.0" layoutY="95.0" />
-      <PasswordField fx:id="textPassword" layoutX="131.0" layoutY="139.0" />
+      <TextField fx:id="textUsername" layoutX="131.0" layoutY="95.0" text="r" />
+      <PasswordField fx:id="textPassword" layoutX="131.0" layoutY="139.0" text="r" />
       <Label layoutX="33.0" layoutY="100.0" text="Username:" />
       <Label layoutX="33.0" layoutY="144.0" text="Password:" />
       <Label layoutX="29.0" layoutY="233.0" text="Nog geen account ? Duw eens op de rode knop" />

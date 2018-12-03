@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class Turn implements Serializable {
 
+    private static final long serialVersionUID = 8826448052622567993L;
 
     private static final long serialVersionUID = 8826448052622567993L;
 

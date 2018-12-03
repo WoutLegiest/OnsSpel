@@ -26,10 +26,9 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
     public DataBaseImpl() throws RemoteException {
 
         try {
-            //Class.forName("org.sqlite.JDBC");
-
             String workingDir = System.getProperty("user.dir");
             String url = "jdbc:sqlite:" + workingDir + "/.db/database1.db";
+
             if (conn == null || conn.isClosed()) {
                 conn = DriverManager.getConnection(url);
                 stmt  = conn.createStatement();
