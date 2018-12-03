@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.GridPane?>
 
-<AnchorPane fx:id="rootGame" maxHeight="600" maxWidth="900" minHeight="600" minWidth="900" prefHeight="600" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameController">
+<AnchorPane fx:id="rootGame" maxHeight="600" maxWidth="900" minHeight="600" minWidth="900" prefHeight="600" prefWidth="900.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.GameController">
    <children>
-      <SplitPane fx:id="splitGame" dividerPositions="0.744988864142539" layoutX="4.0" layoutY="45.0" prefHeight="560.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0" SplitPane.resizableWithParent="false">
+      <SplitPane fx:id="splitGame" dividerPositions="0.7483296213808464" layoutX="4.0" layoutY="45.0" prefHeight="560.0" prefWidth="900.0" stylesheets="@../css/game.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0" SplitPane.resizableWithParent="false">
         <items>
           <AnchorPane minHeight="550.0" minWidth="650.0" prefHeight="160.0" prefWidth="100.0">
                <children>
