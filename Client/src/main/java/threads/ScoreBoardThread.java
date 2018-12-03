@@ -28,13 +28,12 @@ public class ScoreBoardThread extends Thread{
                 wait(5000);
 
                 //Gewone threads classen met JavaFx
-                Platform.runLater(new Runnable() {
-                    @Override public void run() {
+                Platform.runLater(() -> {
                         //System.out.println("Uitgevoerd");
                         lc.refreshT1();
-                        //lc.refreshT2();
-                    }
-                });
+                        lc.refreshT2();
+                    });
+
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

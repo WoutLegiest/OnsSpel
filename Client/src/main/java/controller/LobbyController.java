@@ -5,15 +5,10 @@ import domain.GameExtended;
 import domain.Player;
 import domain.Game;
 import interfaces.AppServerInterface;
-import interfaces.DispatcherInterface;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import threads.ScoreBoardThread;
 
 import java.io.IOException;
@@ -55,15 +50,15 @@ public class LobbyController {
     @FXML private TableColumn<Game, Integer> gameNr;
     @FXML private TableColumn<Game, String> gameOwner;
     @FXML private TableColumn<Game, String> players;
+    @FXML private TableColumn<Game, String> freeSpots;
     @FXML private TableColumn<Game, Button> join;
-
+    @FXML private TableColumn<Game, Button> watch;
 
     //Tab 3
     @FXML private Button buttonStartGame;
     @FXML private ChoiceBox<String> theme;
     @FXML private ChoiceBox<String> sizeGame;
     @FXML private ChoiceBox<String> numberOfPlayer;
-
 
     @FXML
     public void initialize() {
@@ -78,9 +73,12 @@ public class LobbyController {
 
         //Tab2
         gameNr.setCellValueFactory(new PropertyValueFactory<Game,Integer>("idGame"));
-        gameOwner.setCellValueFactory(new PropertyValueFactory<Game,String>("owner"));
+        gameOwner.setCellValueFactory(new PropertyValueFactory<Game,String>("ownerUsername"));
         players.setCellValueFactory(new PropertyValueFactory<Game, String>("maxNumberOfPlayers"));
-        join.setCellValueFactory(new PropertyValueFactory<Game,Button>("join"));
+        freeSpots.setCellValueFactory(new PropertyValueFactory<Game, String>("curNumberOfPlayers"));
+        //join.setCellValueFactory(new PropertyValueFactory<Game,Button>("join"));
+
+        loadT2();
 
         //Tab 3
 
@@ -151,8 +149,6 @@ public class LobbyController {
         }
 
         ArrayList<Player>allPlayers = loadPlayers();
-
-
 
         //Heeft getters en setters nodig van player voor opbouw ervan !!!!!
         ranking.getItems().addAll(allPlayers);

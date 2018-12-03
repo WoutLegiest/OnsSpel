@@ -191,6 +191,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
 
     @Override
     public ArrayList<Game> getAllGames() throws RemoteException {
+
         String sql = "SELECT * FROM game";
 
         ArrayList<Game> allGames = new ArrayList<>();
@@ -208,6 +209,22 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
             }
 
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            for(Game game: allGames){
+                int owner = game.getOwner();
+
+                sql = "SELECT username FROM player WHERE id=" + owner + ";";
+
+                ResultSet rs = stmt.executeQuery(sql);
+
+                rs.next();
+                game.setOwnerUsername(rs.getString("username"));
+
+            }
+        }catch (SQLException e) {
             e.printStackTrace();
         }
 

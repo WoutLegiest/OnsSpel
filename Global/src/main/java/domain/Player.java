@@ -56,7 +56,6 @@ public class Player implements Serializable {
         return username;
     }
 
-
     public String getEmail() {
         return email;
     }
