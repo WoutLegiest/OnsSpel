@@ -140,6 +140,7 @@ public class GameController {
     private void setLabels(){
         StringBuilder stringBuilder=new StringBuilder();
         Color color;
+        //TODO: verander van enkel in het begin werkende naar check op turn.
         if(player.getId()==game.getPlayers().get(0).getId()){
             stringBuilder.append(player.getUsername());
             stringBuilder.append(": Your Turn!");
@@ -155,6 +156,9 @@ public class GameController {
         turnLabel.setTextFill(Color.WHITE);
 
     }
+
+    //TODO: add score functionaliteit
+
 
 
 }

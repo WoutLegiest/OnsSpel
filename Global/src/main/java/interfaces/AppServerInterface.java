@@ -2,6 +2,7 @@ package interfaces;
 
 import domain.Card;
 import domain.Game;
+import domain.GameExtended;
 import domain.Player;
 import exceptions.UserExistsException;
 
@@ -26,5 +27,7 @@ public interface AppServerInterface extends Remote {
     ArrayList<Card> shuffleCards(int range, String theme)throws RemoteException;
 
     ArrayList<Card> cardsByTheme(String theme)throws RemoteException;
+
+    void gameCreated(GameExtended gameExtended)throws RemoteException;
 
 }

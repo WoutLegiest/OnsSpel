@@ -2,6 +2,7 @@ package interfaces;
 
 import domain.Card;
 import domain.Game;
+import domain.GameExtended;
 import domain.Player;
 import exceptions.UserExistsException;
 
@@ -26,6 +27,8 @@ public interface DataBaseInterface extends Remote {
     ArrayList<Card> getCardsByTheme(String theme)throws RemoteException;
 
     Player getPlayer(String username, String token)throws RemoteException;
+
+    void saveGame(GameExtended gameExtended) throws RemoteException;
 
 
  }

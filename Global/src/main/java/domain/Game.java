@@ -13,11 +13,7 @@ public class Game implements Serializable {
     private final int maxNumberOfPlayers;
     private final int curNumberOfPlayers;
     private final int size;
-    private final Button join;
 
-    public Button getJoin() {
-        return join;
-    }
 
     public Game(int idGame, int owner, int maxNumberOfPlayers, int curNumberOfPlayers, int size, Button join) {
         this.idGame = idGame;
@@ -25,20 +21,17 @@ public class Game implements Serializable {
         this.maxNumberOfPlayers = maxNumberOfPlayers;
         this.curNumberOfPlayers = curNumberOfPlayers;
         this.size=size;
-        this.join = join;
     }
 
     public Game(int idGame, int owner, int maxNumberOfPlayers, int size) {
         this.idGame = idGame;
         this.owner = owner;
         this.maxNumberOfPlayers = maxNumberOfPlayers;
-        this.join = new Button();
         this.curNumberOfPlayers=0;
         this.size=size;
     }
 
     public Game(int owner, int maxNumberOfPlayers, int size) {
-        this.join = new Button();
         idGame=-1;
         this.owner = owner;
         this.maxNumberOfPlayers = maxNumberOfPlayers;
@@ -53,7 +46,6 @@ public class Game implements Serializable {
         this.maxNumberOfPlayers=game.maxNumberOfPlayers;
         this.curNumberOfPlayers=game.curNumberOfPlayers;
         this.size=game.size;
-        this.join = game.join;
     }
 
     public int getIdGame() {

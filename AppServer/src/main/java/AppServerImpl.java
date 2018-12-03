@@ -1,5 +1,6 @@
 import domain.Card;
 import domain.Game;
+import domain.GameExtended;
 import domain.Player;
 import exceptions.UserExistsException;
 import interfaces.AppServerInterface;
@@ -11,6 +12,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,8 +23,11 @@ import static domain.Constants.*;
 public class AppServerImpl extends UnicastRemoteObject implements AppServerInterface {
 
     private DataBaseInterface dataBase;
+    private ArrayList<GameExtended> games;
 
     public AppServerImpl() throws RemoteException {
+
+        games=new ArrayList<>();
 
         try{
             Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
@@ -31,6 +36,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
             registry = LocateRegistry.getRegistry(IP, DATABASE_PORT);
             dataBase = (DataBaseInterface) registry.lookup(dbServiceName);
+
         }
         catch(NotBoundException | RemoteException e){
             e.printStackTrace();
@@ -89,5 +95,13 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
     public ArrayList<Card> cardsByTheme(String theme)throws RemoteException{
         return dataBase.getCardsByTheme(theme);
     }
+
+    @Override
+    public void gameCreated(GameExtended gameExtended) throws RemoteException {
+        games.add(gameExtended);
+        dataBase.saveGame(gameExtended);
+
+    }
+
 
 }

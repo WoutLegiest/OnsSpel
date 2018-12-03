@@ -1,5 +1,6 @@
 import domain.Card;
 import domain.Game;
+import domain.GameExtended;
 import domain.Player;
 import exceptions.UserExistsException;
 import interfaces.DataBaseInterface;
@@ -255,6 +256,25 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
             }
         }
         return null;
+    }
+
+    @Override
+    public void saveGame(GameExtended gameExtended) throws RemoteException {
+        String sql = "INSERT INTO game (owner,maxNumberOfPlayers,curNumberOfPlayers, size) VALUES(?,?,?,?)";
+
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, gameExtended.getGame().getOwner());
+            pstmt.setInt(2, gameExtended.getGame().getMaxNumberOfPlayers());
+            pstmt.setInt(3, gameExtended.getGame().getCurNumberOfPlayers());
+            pstmt.setInt(4,gameExtended.getGame().getSize());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 

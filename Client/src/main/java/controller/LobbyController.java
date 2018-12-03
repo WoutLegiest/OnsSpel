@@ -201,20 +201,20 @@ public class LobbyController {
 
             gameCards = appServer.shuffleCards(size, themeString);
             cover= appServer.cardsByTheme(themeString.concat("_cover")).get(0);
+            ArrayList<Player>gamePlayers= new ArrayList<>();
+
+            GameExtended gameExtended=new GameExtended(game,gameCards,gamePlayers);
+            gameExtended.addPlayer(player);
+
+            appServer.gameCreated(gameExtended);
+
+            viewController.setViewToGame(gameExtended, player, token, cover);
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
-        }
-
-        ArrayList<Player>gamePlayers= new ArrayList<>();
-
-        GameExtended gameExtended=new GameExtended(game,gameCards,gamePlayers);
-        gameExtended.addPlayer(player);
-
-        try {
-            viewController.setViewToGame(gameExtended, player, token, cover);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
 
     }

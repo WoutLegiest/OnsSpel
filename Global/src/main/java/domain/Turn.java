@@ -5,6 +5,8 @@ import java.io.Serializable;
 public class Turn implements Serializable {
 
 
+    private static final long serialVersionUID = 8826448052622567993L;
+
     private Player player;
     private Card card1,card2;
     private boolean correct;
