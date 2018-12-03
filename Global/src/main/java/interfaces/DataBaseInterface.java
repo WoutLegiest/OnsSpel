@@ -30,5 +30,5 @@ public interface DataBaseInterface extends Remote {
 
     void saveGame(GameExtended gameExtended) throws RemoteException;
 
-
+    int registerGame(int owner, int maxNumberOfPlayer, int size) throws RemoteException;
  }

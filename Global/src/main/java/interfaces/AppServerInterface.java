@@ -28,6 +28,8 @@ public interface AppServerInterface extends Remote {
 
     ArrayList<Card> cardsByTheme(String theme)throws RemoteException;
 
-    void gameCreated(GameExtended gameExtended)throws RemoteException;
+    int gameCreated( int owner, int maxNumberOfPlayer, int size) throws RemoteException;
+
+    void gameCreatedExtended(GameExtended gameExtended) throws RemoteException;
 
 }

@@ -71,7 +71,8 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
      * @param password
      */
     @Override
-    public String registerPlayer(String username, String password, String email) throws RemoteException, UserExistsException, SQLException {
+    public String registerPlayer(String username, String password, String email) throws RemoteException,
+            UserExistsException, SQLException {
 
         if(isValidUsername(username))
             throw new UserExistsException();
@@ -258,7 +259,39 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
     }
 
     @Override
+    public int registerGame(int owner, int maxNumberOfPlayer, int size) throws RemoteException{
+
+        String sql = "INSERT INTO game (owner,maxNumberOfPlayers, size, curNumberOfPlayers) VALUES(?,?,?,?)";
+
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, owner);
+            pstmt.setInt(2, maxNumberOfPlayer);
+            pstmt.setInt(3, size);
+            pstmt.setInt(4, 1);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        sql = "select last_insert_rowid();";
+
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
     public void saveGame(GameExtended gameExtended) throws RemoteException {
+        //insert Game
         String sql = "INSERT INTO game (owner,maxNumberOfPlayers,curNumberOfPlayers, size) VALUES(?,?,?,?)";
 
         PreparedStatement pstmt = null;
@@ -273,6 +306,34 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
             e.printStackTrace();
         }
 
+        //insert GamePlayers
+        for(int i=0;i<gameExtended.getPlayers().size();i++){
+            pstmt = null;
+            String sqlGamePlayer = "INSERT INTO gameplayer (game_idgame,player_id) VALUES(?,?)";
+            try {
+                pstmt = conn.prepareStatement(sqlGamePlayer);
+                pstmt.setInt(1, gameExtended.getGame().getIdGame());
+                pstmt.setInt(2, gameExtended.getPlayers().get(i).getId());
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //Insert GameCards
+        for(int i=0;i<gameExtended.getCards().size();i++){
+            pstmt = null;
+            String sqlCardgGame = "INSERT INTO cardgame (game_idgame,card_idcard,`index`) VALUES(?,?,?)";
+            try {
+                pstmt = conn.prepareStatement(sqlCardgGame);
+                pstmt.setInt(1, gameExtended.getGame().getIdGame());
+                pstmt.setInt(2, gameExtended.getCards().get(i).getIdcard());
+                pstmt.setInt(3, i);
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 

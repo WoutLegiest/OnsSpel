@@ -77,7 +77,6 @@ public class GameController {
 
         int rowIndex =0, columnIndex=0;
 
-
         buttons =new ArrayList<>();
         int size=game.getGame().getSize();
         for(int i = 0;i<size*size;i++){
@@ -118,6 +117,7 @@ public class GameController {
 
     private void performClick(String idButton){
         boolean clickPossible=checkForTurn();
+
         if(clickPossible){
             int idButtonInt=Integer.parseInt(idButton);
             Button button= buttons.get(idButtonInt);

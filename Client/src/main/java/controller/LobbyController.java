@@ -180,21 +180,36 @@ public class LobbyController {
     }
 
     public void createGame(ActionEvent actionEvent){
+
         int size=Integer.parseInt(String.valueOf(sizeGame.getValue().charAt(0)));
         int numberOfPlayers = Integer.parseInt(String.valueOf(numberOfPlayer.getValue().charAt(0)));
         String themeString=theme.getValue();
-        if(themeString.equals("default")){
+
+        if(themeString.equals("default"))
             themeString="bh";
-        }else if(themeString.equals("Emma Watson")){
+        else if(themeString.equals("Emma Watson"))
             themeString="EMMA";
-        }else{
+        else
             themeString="mario";
+
+        try {
+            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
+            AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
+
+            int GameID = appServer.gameCreated(player.getId(), numberOfPlayers, size);
+
+
+        } catch (RemoteException | NotBoundException e) {
+            e.printStackTrace();
         }
+
+        //Aanmaken van game en plaatsen op de database
 
         Game game = new Game(player.getId(),numberOfPlayers,size);
 
         ArrayList<Card>gameCards=new ArrayList<>();
         Card cover=null;
+
         try {
             Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
             AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
@@ -206,17 +221,13 @@ public class LobbyController {
             GameExtended gameExtended=new GameExtended(game,gameCards,gamePlayers);
             gameExtended.addPlayer(player);
 
-            appServer.gameCreated(gameExtended);
+            appServer.gameCreatedExtended(gameExtended);
 
             viewController.setViewToGame(gameExtended, player, token, cover);
-        } catch (RemoteException | NotBoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+
+        } catch (NotBoundException | IOException e) {
             e.printStackTrace();
         }
-
-
-
     }
 
     public void logout(ActionEvent actionEvent){
@@ -233,37 +244,4 @@ public class LobbyController {
         }
     }
 
-    static class XCell extends ListCell<String> {
-        HBox hbox = new HBox();
-        Label label = new Label("(empty)");
-        Pane pane = new Pane();
-        Button button = new Button("(>)");
-        String lastItem;
-
-        public XCell() {
-            super();
-            hbox.getChildren().addAll(label, pane, button);
-            HBox.setHgrow(pane, Priority.ALWAYS);
-            button.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    System.out.println(lastItem + " : " + event);
-                }
-            });
-        }
-
-        @Override
-        protected void updateItem(String item, boolean empty) {
-            super.updateItem(item, empty);
-            setText(null);  // No text in label of super class
-            if (empty) {
-                lastItem = null;
-                setGraphic(null);
-            } else {
-                lastItem = item;
-                label.setText(item != null ? item : "<null>");
-                setGraphic(hbox);
-            }
-        }
-    }
 }

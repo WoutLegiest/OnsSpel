@@ -2,7 +2,6 @@ package controller;
 
 import exceptions.UserExistsException;
 import interfaces.AppServerInterface;
-import interfaces.DispatcherInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -13,18 +12,15 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.rmi.AccessException;
 import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.sql.SQLException;
 
 import static controller.MainClient.appServerServiceName;
 import static controller.SceneController.viewController;
 import static domain.Constants.*;
+
 
 public class RegisterController {
 

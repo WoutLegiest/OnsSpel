@@ -11,7 +11,7 @@ public class Game implements Serializable {
     private final int idGame;
     private final int owner;
     private final int maxNumberOfPlayers;
-    private final int curNumberOfPlayers;
+    private int curNumberOfPlayers;
     private final int size;
 
 
@@ -66,6 +66,10 @@ public class Game implements Serializable {
 
     public int getSize() {
         return size;
+    }
+
+    public void increaseNumberOfPlayers(){
+        curNumberOfPlayers++;
     }
 
 

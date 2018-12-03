@@ -55,5 +55,6 @@ public class GameExtended implements Serializable {
 
     public void addPlayer(Player player) {
         players.add(player);
+        game.increaseNumberOfPlayers();
     }
 }

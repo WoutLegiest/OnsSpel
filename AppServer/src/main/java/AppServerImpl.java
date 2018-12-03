@@ -43,7 +43,6 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
         }
     }
 
-
     @Override
     public String authenticatePlayer(String username, String password) throws RemoteException, SQLException {
         return dataBase.authenticatePlayer(username, password);
@@ -97,11 +96,17 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
     }
 
     @Override
-    public void gameCreated(GameExtended gameExtended) throws RemoteException {
+    public int gameCreated( int owner, int maxNumberOfPlayer, int size) throws RemoteException {
+        return dataBase.registerGame(owner, maxNumberOfPlayer, size);
+    }
+
+    @Override
+    public void gameCreatedExtended(GameExtended gameExtended) throws RemoteException {
         games.add(gameExtended);
         dataBase.saveGame(gameExtended);
 
     }
+
 
 
 }
