@@ -51,8 +51,8 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
     }
 
     @Override
-    public Player getPlayer(String username, String token) throws SQLException, RemoteException {
-        return dataBase.getPlayer(username,token);
+    public Player getPlayer(String username) throws RemoteException {
+        return dataBase.getPlayer(username);
     }
 
     @Override

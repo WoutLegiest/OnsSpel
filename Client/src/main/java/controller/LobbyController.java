@@ -70,7 +70,7 @@ public class LobbyController {
         //Tab 1
         usernameColum.setCellValueFactory(new PropertyValueFactory<Player, String>("username"));
         totalPointColum.setCellValueFactory(new PropertyValueFactory<Player, Integer>("totalScore"));
-        //dateLastGameColum.setCellValueFactory(new PropertyValueFactory<Player, Timestamp>("username"));
+        dateLastGameColum.setCellValueFactory(new PropertyValueFactory<Player, Timestamp>("lastGameDate"));
         dateJoinColum.setCellValueFactory(new PropertyValueFactory<Player, Timestamp>("joinDate"));
 
         loadT1();
@@ -100,13 +100,14 @@ public class LobbyController {
     }
 
     public void setCredentials(String username, String token){
+
         this.token=token;
 
         try {
             Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
             AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
 
-            player = appServer.getPlayer(username,token);
+            player = appServer.getPlayer(username);
         } catch (RemoteException | NotBoundException | SQLException e) {
             e.printStackTrace();
         }
@@ -160,15 +161,15 @@ public class LobbyController {
 
     private void loadT2(){
 
-        for ( int i = 0; i<currentGames.getItems().size(); i++) {
-            currentGames.getItems().clear();
+        if(currentGames!=null){
+            for ( int i = 0; i<currentGames.getItems().size(); i++) {
+                currentGames.getItems().clear();
+            }
         }
 
         ArrayList<Game>allGames = loadGames();
 
         currentGames.getItems().addAll(allGames);
-
-
     }
 
     public void refreshT1(){
@@ -198,25 +199,15 @@ public class LobbyController {
 
             int GameID = appServer.gameCreated(player.getId(), numberOfPlayers, size);
 
+            Game game = new Game(GameID, player.getId(), numberOfPlayers,1,size);
 
-        } catch (RemoteException | NotBoundException e) {
-            e.printStackTrace();
-        }
-
-        //Aanmaken van game en plaatsen op de database
-
-        Game game = new Game(player.getId(),numberOfPlayers,size);
-
-        ArrayList<Card>gameCards=new ArrayList<>();
-        Card cover=null;
-
-        try {
-            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
-            AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
+            ArrayList<Card>gameCards=new ArrayList<>();
+            ArrayList<Player>gamePlayers= new ArrayList<>();
+            Card cover=null;
 
             gameCards = appServer.shuffleCards(size, themeString);
             cover= appServer.cardsByTheme(themeString.concat("_cover")).get(0);
-            ArrayList<Player>gamePlayers= new ArrayList<>();
+
 
             GameExtended gameExtended=new GameExtended(game,gameCards,gamePlayers,player);
             gameExtended.addPlayer(player);
@@ -224,6 +215,17 @@ public class LobbyController {
             appServer.gameCreatedExtended(gameExtended);
 
             viewController.setViewToGame(gameExtended, player, token, cover);
+
+        } catch (NotBoundException | IOException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
+            AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
+
+
 
         } catch (NotBoundException | IOException e) {
             e.printStackTrace();

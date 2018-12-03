@@ -30,7 +30,9 @@ public class LoginController {
     @FXML private TextField textUsername;
     @FXML private PasswordField textPassword;
 
-    public LoginController() {
+    @FXML
+    public void initialize(){
+        buttonLogin.setDefaultButton(true);
     }
 
     public void login(ActionEvent actionEvent){

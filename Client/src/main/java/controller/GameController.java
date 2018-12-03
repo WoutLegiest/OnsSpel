@@ -158,9 +158,7 @@ public class GameController {
                     AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
                     appServer.pushTurn(game.getGame().getIdGame(),turn);
 
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                } catch (NotBoundException e) {
+                } catch (RemoteException | NotBoundException e) {
                     e.printStackTrace();
                 }
 
@@ -173,8 +171,6 @@ public class GameController {
 
 
             }
-
-
         }
     }
 

@@ -9,41 +9,43 @@ public class Player implements Serializable {
 
     private final int id;
     private final String username;
-    private final String password;
     private final String email;
     private final int totalScore;
     private final Timestamp joinDate;
     private final String token;
+    private Timestamp lastGameDate;
 
-    public Player(int id, String username, String password, String email, int totalScore,
-                  Timestamp joinDate, String token) {
+    public Player(int id, String username, String email, int totalScore,
+                  Timestamp joinDate, String token, Timestamp lastGameDate) {
         this.id = id;
         this.username = username;
-        this.password = password;
         this.email = email;
         this.totalScore = totalScore;
         this.joinDate = joinDate;
         this.token = token;
+        this.lastGameDate = lastGameDate;
     }
 
-    public Player(String username, int totalScore, Timestamp joinDate, String email, String token) {
+    public Player(String username, int totalScore, Timestamp joinDate,
+                  String email, String token, Timestamp lastGameDate) {
         id = 0;
         this.username = username;
         this.totalScore = totalScore;
         this.joinDate = joinDate;
-        password = null;
         this.email = email;
         this.token = token;
+        this.lastGameDate= lastGameDate;
     }
 
     public Player(Player other) {
         this.id = other.id;
         this.username = other.username;
-        this.password = other.password;
         this.email = other.email;
         this.totalScore = other.totalScore;
         this.joinDate = other.joinDate;
         this.token = other.token;
+        this.lastGameDate = other.lastGameDate;
+
     }
 
     public int getId() {
@@ -54,9 +56,6 @@ public class Player implements Serializable {
         return username;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
     public String getEmail() {
         return email;
@@ -72,5 +71,13 @@ public class Player implements Serializable {
 
     public String getToken() {
         return token;
+    }
+
+    public Timestamp getLastGameDate() {
+        return lastGameDate;
+    }
+
+    public void setLastGameDate(Timestamp lastGameDate) {
+        this.lastGameDate = lastGameDate;
     }
 }

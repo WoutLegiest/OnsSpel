@@ -17,7 +17,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-
+@SuppressWarnings("Duplicates")
 public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterface{
 
     Connection conn;
@@ -80,7 +80,8 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         Timestamp today = new Timestamp(System.currentTimeMillis());
 
         String passwordHashed = generateStrongPasswordHash(password);
-        String sql = "INSERT INTO player (username,password,email, totalScore, joinDate) VALUES(?,?,?,?,?)";
+        String sql = "INSERT INTO player (username,password,email, totalScore, joinDate) " +
+                "VALUES(?,?,?,?,?)";
 
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, username);
@@ -88,6 +89,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         pstmt.setString(3, email);
         pstmt.setInt(4, 0);
         pstmt.setTimestamp(5, today);
+
         pstmt.executeUpdate();
         //System.out.println("Goed toegevoegd");
 
@@ -172,12 +174,12 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
                 Timestamp date = rs.getTimestamp("joinDate");
                 String fullToken = rs.getString("token");
                 String email = rs.getString("email");
+                Timestamp lastGameDate = rs.getTimestamp("lastGameDate");
 
                 String[] parts= fullToken.split(":");
 
-                allPlayers.add(new Player(username,totalScore,date, email ,parts[1]));
+                allPlayers.add(new Player(username,totalScore,date, email ,parts[1],lastGameDate));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -247,21 +249,41 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
     }
 
     @Override
-    public Player getPlayer(String username, String token) throws RemoteException {
-        ArrayList<Player>allPlayers=getAllPlayers();
-        //TODO: change this horrible written function (Sorry Wouter my bad).
-        for(Player player: allPlayers){
-            if(player.getUsername().equals(username)&&player.getToken().equals(token)){
-                return player;
-            }
+    public Player getPlayer(String username) throws RemoteException {
+
+        String sql = "SELECT * FROM player WHERE username='" + username + "';";
+
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+
+            rs.next();
+
+            int id = rs.getInt("id");
+            String usrnme = rs.getString("username");
+            int totalScore = rs.getInt("totalScore");
+            Timestamp date = rs.getTimestamp("joinDate");
+            String fullToken = rs.getString("token");
+            String email = rs.getString("email");
+            Timestamp lastGameDate = rs.getTimestamp("lastGameDate");
+
+            String[] parts= fullToken.split(":");
+
+            return new Player(id, usrnme, email, totalScore, date, parts[1], lastGameDate );
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
         return null;
     }
 
     @Override
     public int registerGame(int owner, int maxNumberOfPlayer, int size) throws RemoteException{
 
-        String sql = "INSERT INTO game (owner,maxNumberOfPlayers, size, curNumberOfPlayers) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO game (owner,maxNumberOfPlayers, size, curNumberOfPlayers, createDate ) " +
+                "VALUES(?,?,?,?,?)";
+
+        Long now = System.currentTimeMillis();
 
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -270,44 +292,34 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
             pstmt.setInt(2, maxNumberOfPlayer);
             pstmt.setInt(3, size);
             pstmt.setInt(4, 1);
+            pstmt.setLong(5, now);
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        sql = "select last_insert_rowid();";
-
+        sql = "SELECT * FROM game WHERE createDate='" + now + "';";
         try {
             ResultSet rs = stmt.executeQuery(sql);
 
-
+            rs.next();
+            return rs.getInt("idgame");
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return 0;
 
     }
 
     @Override
     public void saveGame(GameExtended gameExtended) throws RemoteException {
-        //insert Game
-        String sql = "INSERT INTO game (owner,maxNumberOfPlayers,curNumberOfPlayers, size) VALUES(?,?,?,?)";
-
-        PreparedStatement pstmt = null;
-        try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, gameExtended.getGame().getOwner());
-            pstmt.setInt(2, gameExtended.getGame().getMaxNumberOfPlayers());
-            pstmt.setInt(3, gameExtended.getGame().getCurNumberOfPlayers());
-            pstmt.setInt(4,gameExtended.getGame().getSize());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
         //insert GamePlayers
-        for(int i=0;i<gameExtended.getPlayers().size();i++){
+        PreparedStatement pstmt;
+        for(int i = 0; i<gameExtended.getPlayers().size(); i++){
             pstmt = null;
             String sqlGamePlayer = "INSERT INTO gameplayer (game_idgame,player_id) VALUES(?,?)";
             try {
@@ -336,7 +348,6 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         }
 
     }
-
 
     /**
      * Shout out to: https://howtodoinjava.com/security/how-to-generate-secure-password-hash-md5-sha-pbkdf2-bcrypt-examples/

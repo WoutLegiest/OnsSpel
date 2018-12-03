@@ -15,7 +15,7 @@ public class Game implements Serializable {
     private final int size;
 
 
-    public Game(int idGame, int owner, int maxNumberOfPlayers, int curNumberOfPlayers, int size, Button join) {
+    public Game(int idGame, int owner, int maxNumberOfPlayers, int curNumberOfPlayers, int size) {
         this.idGame = idGame;
         this.owner = owner;
         this.maxNumberOfPlayers = maxNumberOfPlayers;
