@@ -30,8 +30,8 @@
                      <content>
                         <TableView fx:id="scoreTableGame" prefHeight="200.0" prefWidth="200.0">
                           <columns>
-                            <TableColumn fx:id="playerColumn" prefWidth="98.0" text="Player" />
-                            <TableColumn fx:id="scoreColumn" prefWidth="50.0" text="Score" />
+                            <TableColumn fx:id="usernameColum" prefWidth="98.0" text="Player" />
+                            <TableColumn fx:id="localScoreColumn" prefWidth="50.0" text="Score" />
                               <TableColumn fx:id="turnColumn" prefWidth="50.0" text="Turn" />
                           </columns>
                         </TableView>

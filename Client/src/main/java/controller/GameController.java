@@ -1,18 +1,14 @@
 package controller;
 
-import domain.Card;
-import domain.GameExtended;
-import domain.Player;
-import domain.Turn;
+import domain.*;
 import interfaces.AppServerInterface;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -24,6 +20,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -39,6 +36,7 @@ public class GameController {
     private Player player;
     private Player playerTurn;
     private String token;
+    private GamePlayer gamePlayer;
     private Card cover;
     private double cellHeight;
     private double cellWidth;
@@ -50,16 +48,26 @@ public class GameController {
     private Turn turn;
 
     //Game Grid
-    @FXML
-    private GridPane gridGame;
+    @FXML private GridPane gridGame;
 
-    @FXML
-    private Label turnLabel;
+    @FXML private Label turnLabel;
+
+    @FXML private TableView<GamePlayer> scoreTableGame;
+
+    @FXML private TableColumn<GamePlayer, String> usernameColum;
+    @FXML private TableColumn<GamePlayer,Integer> localScoreColumn;
+    @FXML private TableColumn<GamePlayer, Integer> turnColumn;
+
+
+
 
     @FXML
     public void initialize() {
 
-
+        //ScoreTable
+        usernameColum.setCellValueFactory(new PropertyValueFactory<GamePlayer, String>("username"));
+        localScoreColumn.setCellValueFactory(new PropertyValueFactory<GamePlayer, Integer>("localScore"));
+        turnColumn.setCellValueFactory(new PropertyValueFactory<GamePlayer, Integer>("turnsPlayed"));
     }
 
     public void setCredentials(GameExtended gameExtended, Player player, String token, Card cover){
@@ -67,6 +75,7 @@ public class GameController {
         this.player=player;
         this.token=token;
         this.cover=cover;
+        gamePlayer=new GamePlayer(player);
         clientImpl.setGameController(this);
         makeGrid();
         setLabels();
@@ -158,15 +167,14 @@ public class GameController {
                 String contentText=null;
 
                 //perform feedback to the user.
-                if(turn.isCorrect()){
+                boolean correct=turn.isCorrect();
+                if(correct){
                     title= "Correct move!";
                     contentText= "You have gained a point, congrats mate";
                 }else {
                     title="False move";
                     contentText="Try again next time!";
-                    //wrong guess, flip the cards again.
-                    changeView(turn.getCard1());
-                    changeView(turn.getCard2());
+
                 }
 
                 // send turn to app server
@@ -187,22 +195,28 @@ public class GameController {
                 alert.setContentText(contentText);
                 alert.showAndWait();
 
+                if(!correct) {
+                    //wrong guess, flip the cards again.
+                    changeView(turn.getCard1());
+                    changeView(turn.getCard2());
+                }
+
                 game.nextPlayer();
                 setLabels();
+
+                game.updateGamePlayer(turn);
+                updateScoreTable();
+                turn=null;
 
 
             }
         }
     }
 
+    //-------- checks when button is clicked --------//
+
     private boolean checkIfCardIsPossible(int idButton) {
         return !game.getCorrectCards().get(idButton);
-    }
-
-    private void changeView(int idButton) {
-        Button button= buttons.get(idButton);
-        ImageView newIV=choseNewIV(button, idButton);
-        button.setGraphic(newIV);
     }
 
     private boolean checkForTurn(){
@@ -210,10 +224,20 @@ public class GameController {
         else return false;
     }
 
+    //-------- flip card methods --------//
+
+    private void changeView(int idButton) {
+        Button button= buttons.get(idButton);
+        ImageView newIV=choseNewIV(button, idButton);
+        button.setGraphic(newIV);
+    }
+
     private ImageView choseNewIV(Button button, int id){
         if(button.getGraphic().getId().equals("-1")) return images.get(id);
         else return makeImageView(coverImage,-1);
     }
+
+    //-------- change label methods --------//
 
     /**
      * Method to set the label on the bottom of the screen, indicating which player is currently playing.
@@ -247,17 +271,22 @@ public class GameController {
         changeTurnLabel(Color.BLUE,"Performing turn of player: " + game.getCurrentPlayerTurn().getUsername());
     }
 
+    //-------- callback methods --------//
+
     /**
      * Perform a turn by another player.
      * @param turn turn to process.
      */
     public void performOtherTurn(Turn turn){
         game.addTurn(turn);
-        game.setCurrentPlayerTurn(turn.getPlayer());
+        game.setCurrentPlayerTurn(new GamePlayer(turn.getPlayer()));
         setLabelDuringMove();
 
         changeView(turn.getCard1());
         changeView(turn.getCard2());
+
+        game.updateGamePlayer(turn);
+        updateScoreTable();
 
         try {
             TimeUnit.SECONDS.sleep(10);
@@ -276,14 +305,26 @@ public class GameController {
 
     }
 
+    /**
+     *
+     */
     public void yourTurn(){
-
+        game.setCurrentPlayerTurn(gamePlayer);
     }
 
 
     public void updateScoreTable() {
+
+        scoreTableGame.getItems().addAll(game.getPlayers());
+        scoreTableGame.getSortOrder().add(localScoreColumn);
+
     }
 
     public void updateChat(String message) {
+    }
+
+    public void addPlayer(Player player, int index){
+        game.addPlayer(new GamePlayer(player),index);
+        updateScoreTable();
     }
 }

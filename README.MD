@@ -3,7 +3,7 @@
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 [![HitCount](http://hits.dwyl.io/WoutLegiest/OnsSpel.svg)](http://hits.dwyl.io/WoutLegiest/OnsSpel)
 [![start with why](https://img.shields.io/badge/start%20with-why%3F-brightgreen.svg?style=flat)](https://giphy.com/gifs/YkuzftfzdoPOE)
-[![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
+[![Awesome](https://awesome.re/badge.svg)](https://www.facebook.com/FCTerri/)
 
 
 # Project Memory Game: Distributed
@@ -19,6 +19,9 @@ Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Del
 * Pelle is op zijn lokale git nog aan het prutsen met de finale gui voor het hele gedoe.
 * Schaalbaarheid is nog een probleem voorlopig.
 * Systeem moet nog op threads worden gebouwd.
+* Spelen onmogelijk maken wanneer er nog niet genoeg spelers in de game zitten.
+* Chat in orde brengen.
+* Score table laten werken.
 
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-crayons.svg)](https://forthebadge.com)

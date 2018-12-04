@@ -1,9 +1,6 @@
 package controller;
 
-import domain.Card;
-import domain.GameExtended;
-import domain.Player;
-import domain.Game;
+import domain.*;
 import interfaces.AppServerInterface;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
@@ -233,15 +230,15 @@ public class LobbyController {
             Game game = new Game(GameID, player.getId(), numberOfPlayers,1,size);
 
             ArrayList<Card>gameCards=new ArrayList<>();
-            ArrayList<Player>gamePlayers= new ArrayList<>();
+            ArrayList<GamePlayer>gamePlayers= new ArrayList<>();
             Card cover=null;
 
             gameCards = appServer.shuffleCards(size, themeString);
             cover= appServer.cardsByTheme(themeString.concat("_cover")).get(0);
 
-
-            GameExtended gameExtended=new GameExtended(game,gameCards,gamePlayers,player);
-            gameExtended.addPlayer(player, myIndexNumberServerOne);
+            GamePlayer gamePlayer= new GamePlayer(player);
+            GameExtended gameExtended=new GameExtended(game,gameCards,gamePlayers,gamePlayer);
+            gameExtended.addPlayer(gamePlayer, myIndexNumberServerOne);
 
             appServer.gameCreatedExtended(gameExtended);
 

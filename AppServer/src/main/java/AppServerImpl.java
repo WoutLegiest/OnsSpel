@@ -125,6 +125,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
                 gameExtended.addTurn(turn);
                 performTurn(gameExtended,turn);
                 gameExtended.nextPlayer();
+                gameExtended.updateGamePlayer(turn);
                 return;
             }
         }
