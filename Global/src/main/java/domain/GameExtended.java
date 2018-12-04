@@ -9,10 +9,10 @@ public class GameExtended implements Serializable {
 
     private final Game game;
     private final ArrayList<Card>cards;
-    private final ArrayList<Player>players;
+    private final ArrayList<GamePlayer>players;
     private ArrayList<Integer>clientIndexes;
     private ArrayList<Boolean>correctCards;
-    private Player currentPlayerTurn;
+    private GamePlayer currentPlayerTurn;
     private ArrayList<Turn> turns;
 
     public GameExtended(Game game) {
@@ -25,7 +25,7 @@ public class GameExtended implements Serializable {
         turns=new ArrayList<>();
     }
 
-    public GameExtended(Game game, ArrayList<Card> cards, ArrayList<Player> players, Player currentPlayerTurn) {
+    public GameExtended(Game game, ArrayList<Card> cards, ArrayList<GamePlayer> players, GamePlayer currentPlayerTurn) {
         this.game = game;
         this.cards = cards;
         this.players = players;
@@ -53,7 +53,7 @@ public class GameExtended implements Serializable {
      * @param player Player in need to be added.
      * @param indexClient Index of the corresponding client.
      */
-    public void addPlayer(Player player, int indexClient) {
+    public void addPlayer(GamePlayer player, int indexClient) {
         players.add(player);
         game.increaseNumberOfPlayers();
         addClientIndex(indexClient);
@@ -98,7 +98,7 @@ public class GameExtended implements Serializable {
         return cards;
     }
 
-    public ArrayList<Player> getPlayers() {
+    public ArrayList<GamePlayer> getPlayers() {
         return players;
     }
 
@@ -114,7 +114,7 @@ public class GameExtended implements Serializable {
         return currentPlayerTurn;
     }
 
-    public void setCurrentPlayerTurn(Player currentPlayerTurn) {
+    public void setCurrentPlayerTurn(GamePlayer currentPlayerTurn) {
         this.currentPlayerTurn = currentPlayerTurn;
     }
 
@@ -132,5 +132,16 @@ public class GameExtended implements Serializable {
 
     public void setCorrectCards(ArrayList<Boolean> correctCards) {
         this.correctCards = correctCards;
+    }
+
+    public void updateGamePlayer(Turn turn) {
+        for (GamePlayer player: players){
+            if(player.getId()==turn.getPlayer().getId()){
+                player.increaseTurns();
+                if(turn.checkTurn(cards)){
+                    player.increaseScore();
+                }
+            }
+        }
     }
 }

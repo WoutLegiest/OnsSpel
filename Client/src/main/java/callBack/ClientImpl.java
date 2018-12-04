@@ -2,6 +2,7 @@ package callBack;
 
 import controller.GameController;
 import domain.GameExtended;
+import domain.Player;
 import domain.Turn;
 import interfaces.AppServerInterface;
 import interfaces.ClientInterface;
@@ -41,7 +42,14 @@ public class ClientImpl extends UnicastRemoteObject implements ClientInterface {
         gameController.updateChat(message);
     }
 
+    @Override
+    public void addPlayer(Player player, int index) throws RemoteException {
+        gameController.addPlayer(player,index);
+
+    }
+
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
     }
+
 }

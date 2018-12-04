@@ -1,6 +1,7 @@
 package interfaces;
 
 import domain.GameExtended;
+import domain.Player;
 import domain.Turn;
 
 import java.rmi.Remote;
@@ -19,5 +20,7 @@ public interface ClientInterface extends Remote {
     void updateScoreTable()throws RemoteException;
 
     void receiveMessage(String message) throws RemoteException;
+
+    void addPlayer(Player player, int index) throws RemoteException;
 
 }
