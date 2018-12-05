@@ -38,8 +38,8 @@ public class ClientImpl extends UnicastRemoteObject implements ClientInterface {
     }
 
     @Override
-    public void receiveMessage(String message) throws RemoteException {
-        gameController.updateChat(message);
+    public void receiveMessage(String username, String message) throws RemoteException {
+        gameController.updateChat(username, message);
     }
 
     @Override
