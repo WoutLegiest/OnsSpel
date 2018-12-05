@@ -1,8 +1,7 @@
 package domain;
 
-import javafx.scene.control.Button;
-
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 public class Game implements Serializable {
 
@@ -14,14 +13,16 @@ public class Game implements Serializable {
     private final int maxNumberOfPlayers;
     private int curNumberOfPlayers;
     private final int size;
+    private final Timestamp createDate;
 
-    public Game(int idGame, int owner, String ownerUsername, int maxNumberOfPlayers, int curNumberOfPlayers, int size) {
+    public Game(int idGame, int owner, String ownerUsername, int maxNumberOfPlayers, int curNumberOfPlayers, int size, Timestamp createDate) {
         this.idGame = idGame;
         this.owner = owner;
         this.ownerUsername = ownerUsername;
         this.maxNumberOfPlayers = maxNumberOfPlayers;
         this.curNumberOfPlayers = curNumberOfPlayers;
         this.size = size;
+        this.createDate = createDate;
     }
 
     public Game(int idGame, int owner, int maxNumberOfPlayers, int curNumberOfPlayers, int size) {
@@ -31,6 +32,7 @@ public class Game implements Serializable {
         this.maxNumberOfPlayers = maxNumberOfPlayers;
         this.curNumberOfPlayers = curNumberOfPlayers;
         this.size=size;
+        createDate = null;
     }
 
     public Game(int idGame, String ownerUsername, int maxNumberOfPlayers, int curNumberOfPlayers) {
@@ -40,6 +42,7 @@ public class Game implements Serializable {
         this.maxNumberOfPlayers = maxNumberOfPlayers;
         this.curNumberOfPlayers=curNumberOfPlayers;
         this.size=-1;
+        createDate = null;
     }
 
     public Game(Game game) {
@@ -49,6 +52,7 @@ public class Game implements Serializable {
         this.maxNumberOfPlayers=game.maxNumberOfPlayers;
         this.curNumberOfPlayers=game.curNumberOfPlayers;
         this.size=game.size;
+        createDate = game.createDate;
     }
 
     public Game(int idGame, int owner, int maxNumberOfPlayers, int curNumberOfPlayers) {
@@ -58,6 +62,7 @@ public class Game implements Serializable {
         this.maxNumberOfPlayers = maxNumberOfPlayers;
         this.curNumberOfPlayers = curNumberOfPlayers;
         this.size = -1;
+        createDate = null;
     }
 
     public int getIdGame() {

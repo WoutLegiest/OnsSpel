@@ -87,7 +87,6 @@ public class GameExtended implements Serializable {
         currentPlayerTurn=players.get(nextPlayerIndex);
     }
 
-
     //-----getters and setters-----//
 
     public Game getGame() {

@@ -28,7 +28,10 @@ public interface DataBaseInterface extends Remote {
 
     Player getPlayer(String username)throws RemoteException;
 
-    void saveGame(GameExtended gameExtended) throws RemoteException;
+    void saveGameExtended(GameExtended gameExtended) throws RemoteException;
 
     int registerGame(int owner, int maxNumberOfPlayer, int size) throws RemoteException;
- }
+
+    GameExtended getGameExtended(int gameID) throws RemoteException;
+}
+

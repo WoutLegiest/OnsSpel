@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane minHeight="300.0" minWidth="300.0" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LobbyController">
+<AnchorPane minHeight="300.0" minWidth="300.0" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.LobbyController">
     <children>
-        <TabPane prefHeight="600.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <TabPane prefHeight="600.0" prefWidth="600.0" stylesheets="@../css/lobby.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
                 <Tab text="Player Ranking">
                     <content>
@@ -41,8 +41,8 @@
                                         <TableColumn fx:id="gameOwner" maxWidth="125.0" minWidth="98.61822509765625" prefWidth="98.61822509765625" text="Game Owner" />
                                         <TableColumn fx:id="players" maxWidth="88.14540100097656" minWidth="50.0" prefWidth="88.14540100097656" resizable="false" text="Max Player" />
                                         <TableColumn fx:id="freeSpots" maxWidth="118.69093322753906" minWidth="75.0" prefWidth="93.3818359375" text="Free Spots" />
-                                        <TableColumn fx:id="join" maxWidth="131.0" minWidth="88.1453857421875" prefWidth="98.6180419921875" resizable="false" text="Join" />
-                                        <TableColumn fx:id="watch" maxWidth="131.0" minWidth="112.58187866210938" prefWidth="121.30917358398438" text="Watch" />
+                                        <TableColumn fx:id="join" maxWidth="131.0" minWidth="88.1453857421875" prefWidth="98.6180419921875" resizable="false" styleClass="customButton-column" text="Join" />
+                                        <TableColumn fx:id="watch" maxWidth="131.0" minWidth="112.58187866210938" prefWidth="121.30917358398438" styleClass="customButton-column" text="Watch" />
                                     </columns>
                                 </TableView>
                             </children>

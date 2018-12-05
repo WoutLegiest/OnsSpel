@@ -10,7 +10,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -114,7 +113,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
     @Override
     public void gameCreatedExtended(GameExtended gameExtended) throws RemoteException {
         games.add(gameExtended);
-        dataBase.saveGame(gameExtended);
+        dataBase.saveGameExtended(gameExtended);
 
     }
 

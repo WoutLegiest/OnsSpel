@@ -37,6 +37,16 @@ public class Player implements Serializable {
         this.lastGameDate= lastGameDate;
     }
 
+    public Player(int id) {
+        this.id = id;
+
+        username = null;
+        email = null;
+        totalScore = 0;
+        joinDate = null;
+        token = null;
+    }
+
     public Player(Player other) {
         this.id = other.id;
         this.username = other.username;

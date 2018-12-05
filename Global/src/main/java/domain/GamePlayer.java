@@ -10,6 +10,11 @@ public class GamePlayer extends Player {
         turnsPlayed=0;
     }
 
+    public GamePlayer(int id, int score){
+        super(id);
+        localScore = score;
+    }
+
     public int getLocalScore() {
         return localScore;
     }

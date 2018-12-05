@@ -260,6 +260,10 @@ public class LobbyController {
         }
     }
 
+    public void joinGame(int gameID){
+
+    }
+
     public void logout(ActionEvent actionEvent){
 
         player = null;
@@ -278,17 +282,15 @@ public class LobbyController {
 
 class ButtonCellJoin extends TableCell<Game, Boolean> {
 
-    final Button cellButton = new Button("Remove");
+    private final Button cellButton = new Button("Remove");
+    LobbyController lc;
 
     ButtonCellJoin(final TableView tblView){
 
-        cellButton.setOnAction(new EventHandler<ActionEvent>(){
-
-            @Override
-            public void handle(ActionEvent t) {
-                System.out.println("Sassy");
-            }
-        });
+        cellButton.setOnAction(t -> {
+            System.out.println(getTableView().getItems().get(getIndex()).getIdGame());
+            //lc.joinGame(getTableView().getItems().get(getIndex()).getIdGame());
+                    });
     }
 
     //Display button if the row is not empty

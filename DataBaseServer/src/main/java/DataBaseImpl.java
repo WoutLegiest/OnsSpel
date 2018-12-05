@@ -1,7 +1,4 @@
-import domain.Card;
-import domain.Game;
-import domain.GameExtended;
-import domain.Player;
+import domain.*;
 import exceptions.UserExistsException;
 import interfaces.DataBaseInterface;
 
@@ -300,7 +297,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         String sql = "INSERT INTO game (owner,maxNumberOfPlayers, size, curNumberOfPlayers, createDate ) " +
                 "VALUES(?,?,?,?,?)";
 
-        Long now = System.currentTimeMillis();
+        long now = System.currentTimeMillis();
 
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -332,7 +329,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
     }
 
     @Override
-    public void saveGame(GameExtended gameExtended) throws RemoteException {
+    public void saveGameExtended(GameExtended gameExtended) throws RemoteException {
 
         //insert GamePlayers
         PreparedStatement pstmt;
@@ -363,6 +360,82 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
                 e.printStackTrace();
             }
         }
+
+    }
+
+    @Override
+    public GameExtended getGameExtended(int gameID) throws RemoteException{
+
+        Game game = null;
+        ArrayList<GamePlayer> players = new ArrayList<>();
+        ArrayList<Card> gameCards = new ArrayList<>();
+
+        //Getten van Game
+
+        String sqlGame = "SELECT * FROM game WHERE idgame = ?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sqlGame);
+            pstmt.setInt(1,gameID);
+            ResultSet rs = pstmt.executeQuery(sqlGame);
+
+            rs.next();
+
+            int owner = rs.getInt("owner");
+            int maxNumberOfPlayers= rs.getInt("maxNumberOfPlayers");
+            int curNumberOfPlayers=rs.getInt("curNumberOfPlayers");
+            int size=rs.getInt("size");
+
+            game = new Game(gameID, owner, maxNumberOfPlayers, curNumberOfPlayers, size);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //Getten van Players
+
+        String sqlPlayers = "SELECT * FROM gameplayer WHERE game_idgame = ?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sqlPlayers);
+            pstmt.setInt(1,gameID);
+            ResultSet rs = pstmt.executeQuery(sqlPlayers);
+
+            while(rs.next()){
+
+                int player_id = rs.getInt("player_id");
+                int score = rs.getInt("gameScore");
+
+                players.add(new GamePlayer(player_id, score));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //Getten van Cards
+
+
+        String sqlCard = "SELECT * FROM cardgame\n" +
+                "  INNER JOIN card c on cardgame.card_idcard = c.idcard\n" +
+                "WHERE game_idgame = ?;";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sqlCard);
+            pstmt.setInt(1,gameID);
+            ResultSet rs = pstmt.executeQuery(sqlCard);
+
+            while(rs.next()){
+
+                int idCard = rs.getInt("card_idcard");
+                String path = rs.getString("path");
+                //int themaString = rs.getString("theme");
+
+
+                //gameCards.add(new Card(idCard,path, thema));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return new GameExtended(game, gameCards,players, null);
 
     }
 

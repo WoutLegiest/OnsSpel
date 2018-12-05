@@ -32,6 +32,7 @@ public class MainClient extends Application {
     static String appServerServiceName;
 
     static int myIndexNumberServerOne;
+    static int getMyIndexNumberServerBackup;
 
     static ClientImpl clientImpl;
 
