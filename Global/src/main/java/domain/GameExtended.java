@@ -87,6 +87,21 @@ public class GameExtended implements Serializable {
         currentPlayerTurn=players.get(nextPlayerIndex);
     }
 
+    public void updateGamePlayer(Turn turn) {
+        for (GamePlayer player: players){
+            if(player.getId()==turn.getPlayer().getId()){
+                player.increaseTurns();
+                if(turn.checkTurn(cards)){
+                    player.increaseScore();
+                }
+            }
+        }
+        if (turn.isCorrect()){
+            correctCards.set(turn.getCard1(),true);
+            correctCards.set(turn.getCard2(),true);
+        }
+    }
+
     //-----getters and setters-----//
 
     public Game getGame() {
@@ -133,18 +148,5 @@ public class GameExtended implements Serializable {
         this.correctCards = correctCards;
     }
 
-    public void updateGamePlayer(Turn turn) {
-        for (GamePlayer player: players){
-            if(player.getId()==turn.getPlayer().getId()){
-                player.increaseTurns();
-                if(turn.checkTurn(cards)){
-                    player.increaseScore();
-                }
-            }
-        }
-        if (turn.isCorrect()){
-            correctCards.set(turn.getCard1(),true);
-            correctCards.set(turn.getCard2(),true);
-        }
-    }
+
 }
