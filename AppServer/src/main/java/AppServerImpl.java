@@ -130,6 +130,14 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
         }
     }
 
+    @Override
+    public void serverToClientMessage(String username, String message, int clientIndex, int gameId) throws RemoteException {
+        for (Integer index :findGame(gameId).getClientIndexes()){
+            if(index!=clientIndex) clientList.get(index).receiveMessage(username,message);
+        }
+
+    }
+
     private void performTurn(GameExtended gameExtended, Turn turn){
         for(int i=0;i<gameExtended.getPlayers().size();i++){
             if(gameExtended.getPlayers().get(i).getId()!=turn.getPlayer().getId()){
@@ -140,6 +148,13 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
                 }
             }
         }
+    }
+
+    private GameExtended findGame(int gameId ){
+        for(GameExtended game:games){
+            if (game.getGame().getIdGame()==gameId) return game;
+        }
+        return null;
     }
 
 

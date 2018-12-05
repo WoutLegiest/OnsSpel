@@ -2,8 +2,6 @@ package controller;
 
 import domain.*;
 import interfaces.AppServerInterface;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -14,18 +12,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-import java.io.File;
-import java.net.URL;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import static controller.MainClient.appServerServiceName;
-import static controller.MainClient.clientImpl;
+import static controller.MainClient.*;
 import static domain.Constants.APPSERVER_PORT;
 import static domain.Constants.IP;
 
@@ -33,30 +27,44 @@ public class GameController {
 
     //Game
     private GameExtended game;
+
+    //player
     private Player player;
-    private Player playerTurn;
-    private String token;
     private GamePlayer gamePlayer;
+    private String token;
+
+    //Game specifics
     private Card cover;
+    private Image coverImage;
     private double cellHeight;
     private double cellWidth;
+
     private ArrayList<Button> buttons;
     private ArrayList<ImageView> images;
     private ArrayList<Card> cards;
-    private Image coverImage;
 
+    //Turn
     private Turn turn;
+
+    //Chat
+    private StringBuilder stringBuilder;
 
     //Game Grid
     @FXML private GridPane gridGame;
 
     @FXML private Label turnLabel;
 
+    //score table
     @FXML private TableView<GamePlayer> scoreTableGame;
 
     @FXML private TableColumn<GamePlayer, String> usernameColum;
     @FXML private TableColumn<GamePlayer,Integer> localScoreColumn;
     @FXML private TableColumn<GamePlayer, Integer> turnColumn;
+
+    //chat
+    @FXML private Button chatSendButton;
+    @FXML private TextField chatTextInput;
+    @FXML private TextArea chatScreen;
 
 
 
@@ -68,6 +76,8 @@ public class GameController {
         usernameColum.setCellValueFactory(new PropertyValueFactory<GamePlayer, String>("username"));
         localScoreColumn.setCellValueFactory(new PropertyValueFactory<GamePlayer, Integer>("localScore"));
         turnColumn.setCellValueFactory(new PropertyValueFactory<GamePlayer, Integer>("turnsPlayed"));
+        stringBuilder=new StringBuilder();
+
     }
 
     public void setCredentials(GameExtended gameExtended, Player player, String token, Card cover){
@@ -80,6 +90,8 @@ public class GameController {
         makeGrid();
         setLabels();
         turn=null;
+
+        if(stringBuilder==null) stringBuilder=new StringBuilder();
 
     }
 
@@ -210,6 +222,7 @@ public class GameController {
 
 
             }
+            checkView();
         }
     }
 
@@ -228,13 +241,20 @@ public class GameController {
 
     private void changeView(int idButton) {
         Button button= buttons.get(idButton);
-        ImageView newIV=choseNewIV(button, idButton);
+        ImageView newIV= swapIV(button, idButton);
         button.setGraphic(newIV);
     }
 
-    private ImageView choseNewIV(Button button, int id){
+    private ImageView swapIV(Button button, int id){
         if(button.getGraphic().getId().equals("-1")) return images.get(id);
         else return makeImageView(coverImage,-1);
+    }
+
+    private ImageView choseRightIV(int buttonID){
+        ImageView IV=null;
+        if(game.getCorrectCards().get(buttonID))return images.get(buttonID);
+        else return makeImageView(coverImage,-1);
+
     }
 
     //-------- change label methods --------//
@@ -278,6 +298,8 @@ public class GameController {
      * @param turn turn to process.
      */
     public void performOtherTurn(Turn turn){
+        checkView();
+
         game.addTurn(turn);
         game.setCurrentPlayerTurn(new GamePlayer(turn.getPlayer()));
         setLabelDuringMove();
@@ -303,28 +325,79 @@ public class GameController {
         game.nextPlayer();
         setLabels();
 
+        checkView();
+
     }
 
-    /**
+    /**Indicater for a user when it is his turn.
      *
      */
     public void yourTurn(){
         game.setCurrentPlayerTurn(gamePlayer);
     }
 
-
-    public void updateScoreTable() {
+    /**
+     * Add a newly joined player to the score table.
+     */
+    public void addToScoreTable() {
 
         scoreTableGame.getItems().addAll(game.getPlayers());
         scoreTableGame.getSortOrder().add(localScoreColumn);
 
     }
 
-    public void updateChat(String message) {
+    /**
+     * Update the score table after possible changes
+     */
+    public void updateScoreTable(){
+        scoreTableGame.refresh();
+        scoreTableGame.getSortOrder().add(localScoreColumn);
+    }
+
+    /**
+     * Update the chat view when a user did sent a message.
+     * @param username Username of the player who did sent a message, type String.
+     * @param message Incoming message, type String.
+     */
+    public void updateChat(String username, String message) {
+        stringBuilder.append(player.getUsername()+ ": " + message + "\n");
+        chatScreen.setText(stringBuilder.toString());
+
     }
 
     public void addPlayer(Player player, int index){
         game.addPlayer(new GamePlayer(player),index);
-        updateScoreTable();
+        addToScoreTable();
+        stringBuilder.append(player.getUsername() + " joined the game. \n");
+        chatScreen.setText(stringBuilder.toString());
+
+    }
+
+    private void checkView(){
+        for (int i=0;i<buttons.size();i++){
+            Button button= buttons.get(i);
+            ImageView tempImageView= choseRightIV(i);
+            button.setGraphic(tempImageView);
+        }
+    }
+
+    public void sendChat(){
+        String message=chatTextInput.getText();
+        if(!message.equals("")&&!message.equals(" ")){
+            stringBuilder.append("me: " + message + "\n");
+
+            // send chat message to app server
+            Registry registry = null;
+            try {
+                registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
+                AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
+                appServer.serverToClientMessage(gamePlayer.getUsername(),message, myIndexNumberServerOne, game.getGame().getIdGame());
+
+            } catch (RemoteException | NotBoundException e) {
+                e.printStackTrace();
+            }
+
+        }
+
     }
 }

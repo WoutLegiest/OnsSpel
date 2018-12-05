@@ -19,7 +19,7 @@ public interface ClientInterface extends Remote {
 
     void updateScoreTable()throws RemoteException;
 
-    void receiveMessage(String message) throws RemoteException;
+    void receiveMessage(String username, String message) throws RemoteException;
 
     void addPlayer(Player player, int index) throws RemoteException;
 

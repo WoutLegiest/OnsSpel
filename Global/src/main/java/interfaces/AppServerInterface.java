@@ -33,4 +33,6 @@ public interface AppServerInterface extends Remote {
 
     void pushTurn(int gameId, Turn turn)throws RemoteException;
 
+    void serverToClientMessage(String username, String message, int clientIndex, int gameId)throws RemoteException;
+
 }

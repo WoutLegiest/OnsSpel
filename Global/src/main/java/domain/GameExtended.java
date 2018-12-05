@@ -142,5 +142,9 @@ public class GameExtended implements Serializable {
                 }
             }
         }
+        if (turn.isCorrect()){
+            correctCards.set(turn.getCard1(),true);
+            correctCards.set(turn.getCard2(),true);
+        }
     }
 }

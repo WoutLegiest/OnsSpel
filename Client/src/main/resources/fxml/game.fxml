@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.GridPane?>
 
-<AnchorPane fx:id="rootGame" maxHeight="600" maxWidth="900" minHeight="600" minWidth="900" prefHeight="600" prefWidth="900.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.GameController">
+<AnchorPane fx:id="rootGame" maxHeight="600" maxWidth="900" minHeight="600" minWidth="900" prefHeight="600" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameController">
    <children>
       <SplitPane fx:id="splitGame" dividerPositions="0.7483296213808464" layoutX="4.0" layoutY="45.0" prefHeight="560.0" prefWidth="900.0" stylesheets="@../css/game.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0" SplitPane.resizableWithParent="false">
         <items>
@@ -47,7 +47,7 @@
                                       <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="149.0" prefWidth="200.0">
                                              <children>
-                                                <TextArea layoutX="0.0" layoutY="0.0" prefHeight="149.0" prefWidth="200.0" />
+                                                <TextArea fx:id="chatScreen" layoutX="0.0" layoutY="0.0" prefHeight="149.0" prefWidth="200.0" maxWidth="200.0"/>
                                              </children></AnchorPane>
                                       </content>
                                     </ScrollPane>
@@ -55,8 +55,8 @@
                               </AnchorPane>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                  <children>
-                                    <TextField layoutY="1.0" prefHeight="62.0" prefWidth="146.0" />
-                                    <Button layoutX="146.0" layoutY="1.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="52.0" text="Send" />
+                                    <TextField fx:id="chatTextInput" layoutY="1.0" prefHeight="62.0" prefWidth="146.0" />
+                                    <Button fx:id="chatSendButton" layoutX="146.0" layoutY="1.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="52.0" text="Send" onAction="#sendChat"/>
                                  </children></AnchorPane>
                           </items>
                         </SplitPane>
