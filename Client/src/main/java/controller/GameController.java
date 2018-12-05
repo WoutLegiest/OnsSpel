@@ -20,8 +20,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import static controller.MainClient.*;
-import static domain.Constants.APPSERVER_PORT;
-import static domain.Constants.IP;
+import static domain.Constants.*;
 
 public class GameController {
 
@@ -193,7 +192,7 @@ public class GameController {
                 Registry registry = null;
                 try {
                     registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
-                    AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
+                    AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
                     appServer.pushTurn(game.getGame().getIdGame(),turn);
 
                 } catch (RemoteException | NotBoundException e) {
@@ -390,7 +389,7 @@ public class GameController {
             Registry registry = null;
             try {
                 registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
-                AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
+                AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
                 appServer.serverToClientMessage(gamePlayer.getUsername(),message, myIndexNumberServerOne, game.getGame().getIdGame());
 
             } catch (RemoteException | NotBoundException e) {

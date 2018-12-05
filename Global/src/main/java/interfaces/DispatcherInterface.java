@@ -1,21 +1,16 @@
 package interfaces;
 
-import domain.Card;
-import domain.Game;
-import domain.Player;
-import exceptions.UserExistsException;
+import servers.AppServer;
+import servers.DataBaseServer;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 
 public interface DispatcherInterface extends Remote {
 
-    void registerDataBaseServer(String serviceName) throws RemoteException;
-    void registerAppServer(String serviceName) throws RemoteException;
+    void registerDataBaseServer(int port, String ip) throws RemoteException;
+    void registerAppServer(int port, String ip) throws RemoteException;
 
-    String getAppServerServiceName() throws RemoteException;
-    String getDataBaseServerServiceName() throws RemoteException;
-
+    AppServer getAppServerServiceName() throws RemoteException;
+    DataBaseServer getDataBaseServerServiceName() throws RemoteException;
 }

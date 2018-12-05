@@ -4,6 +4,7 @@ import interfaces.AppServerInterface;
 import interfaces.ClientInterface;
 import interfaces.DataBaseInterface;
 import interfaces.DispatcherInterface;
+import servers.DataBaseServer;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -19,9 +20,14 @@ import static domain.Constants.*;
 
 public class AppServerImpl extends UnicastRemoteObject implements AppServerInterface {
 
-    private DataBaseInterface dataBase;
+    private static final long serialVersionUID = 4015101812358698416L;
+
+    //TODO: Aanpassen van deze dataBaseServer
+
+    private DataBaseServer dataBase;
     private ArrayList<GameExtended> games;
     private ArrayList<ClientInterface> clientList;
+    private ArrayList<AppServerInterface> appServerList;
 
     public AppServerImpl() throws RemoteException {
 
@@ -31,15 +37,17 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
         try{
             Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
             DispatcherInterface dispatcherImp = (DispatcherInterface) registry.lookup(DISPATCH_SERVICE);
-            String dbServiceName = dispatcherImp.getDataBaseServerServiceName();
-
-            registry = LocateRegistry.getRegistry(IP, DATABASE_PORT);
-            dataBase = (DataBaseInterface) registry.lookup(dbServiceName);
+            dataBase = dispatcherImp.getDataBaseServerServiceName();
 
         }
         catch(NotBoundException | RemoteException e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getHello() throws java.rmi.RemoteException{
+        return "Hello";
     }
 
     @Override
@@ -55,27 +63,27 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
     @Override
     public String authenticatePlayer(String username, String password) throws RemoteException, SQLException {
-        return dataBase.authenticatePlayer(username, password);
+        return dataBase.getDataBaseImpl().authenticatePlayer(username, password);
     }
 
     @Override
     public String registerPlayer(String username, String password, String email) throws RemoteException, UserExistsException, SQLException {
-        return dataBase.registerPlayer(username, password,email);
+        return dataBase.getDataBaseImpl().registerPlayer(username, password,email);
     }
 
     @Override
     public Player getPlayer(String username) throws RemoteException {
-        return dataBase.getPlayer(username);
+        return dataBase.getDataBaseImpl().getPlayer(username);
     }
 
     @Override
     public ArrayList<Player> getAllPlayers() throws RemoteException {
-        return dataBase.getAllPlayers();
+        return dataBase.getDataBaseImpl().getAllPlayers();
     }
 
     @Override
     public ArrayList<Game> getAllGames() throws RemoteException {
-        return dataBase.getAllGames();
+        return dataBase.getDataBaseImpl().getAllGames();
     }
 
     @Override
@@ -102,18 +110,18 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
     @Override
     public ArrayList<Card> cardsByTheme(String theme)throws RemoteException{
-        return dataBase.getCardsByTheme(theme);
+        return dataBase.getDataBaseImpl().getCardsByTheme(theme);
     }
 
     @Override
     public int gameCreated( int owner, int maxNumberOfPlayer, int size) throws RemoteException {
-        return dataBase.registerGame(owner, maxNumberOfPlayer, size);
+        return dataBase.getDataBaseImpl().registerGame(owner, maxNumberOfPlayer, size);
     }
 
     @Override
     public void gameCreatedExtended(GameExtended gameExtended) throws RemoteException {
         games.add(gameExtended);
-        dataBase.saveGameExtended(gameExtended);
+        dataBase.getDataBaseImpl().saveGameExtended(gameExtended);
 
     }
 

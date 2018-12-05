@@ -1,10 +1,8 @@
 package callBack;
 
 import controller.GameController;
-import domain.GameExtended;
 import domain.Player;
 import domain.Turn;
-import interfaces.AppServerInterface;
 import interfaces.ClientInterface;
 
 import java.rmi.RemoteException;
@@ -38,8 +36,8 @@ public class ClientImpl extends UnicastRemoteObject implements ClientInterface {
     }
 
     @Override
-    public void receiveMessage(String message) throws RemoteException {
-        gameController.updateChat(message);
+    public void receiveMessage(String username, String message) throws RemoteException {
+        gameController.updateChat(username,message);
     }
 
     @Override

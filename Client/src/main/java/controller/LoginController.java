@@ -1,7 +1,6 @@
 package controller;
 
 import interfaces.AppServerInterface;
-import interfaces.DispatcherInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -11,18 +10,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import static controller.MainClient.appServerServiceName;
 import static controller.SceneController.viewController;
 import static domain.Constants.*;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.sql.SQLException;
 
-
+@SuppressWarnings("Duplicates")
 public class LoginController {
 
 
@@ -43,7 +40,7 @@ public class LoginController {
             String password=textPassword.getText();
 
             Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
-            AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
+            AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
 
             String token = appServer.authenticatePlayer(username,password);

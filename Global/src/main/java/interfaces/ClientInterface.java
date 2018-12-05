@@ -1,12 +1,10 @@
 package interfaces;
 
-import domain.GameExtended;
 import domain.Player;
 import domain.Turn;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 
 /**
  * @author Wouter Legiest on 3/12/2018

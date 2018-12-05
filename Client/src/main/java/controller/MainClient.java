@@ -1,24 +1,13 @@
 package controller;
 
 import callBack.ClientImpl;
-import com.jfoenix.controls.JFXDecorator;
-import com.jfoenix.svg.SVGGlyph;
-import com.jfoenix.svg.SVGGlyphLoader;
 import interfaces.AppServerInterface;
 import interfaces.ClientInterface;
 import interfaces.DispatcherInterface;
-import io.datafx.controller.flow.Flow;
-import io.datafx.controller.flow.container.DefaultFlowContainer;
-import io.datafx.controller.flow.context.FXMLViewFlowContext;
-import io.datafx.controller.flow.context.ViewFlowContext;
 import javafx.application.Application;
-import javafx.collections.ObservableList;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
+import servers.AppServer;
 
-import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -29,7 +18,7 @@ import static domain.Constants.*;
 
 public class MainClient extends Application {
 
-    static String appServerServiceName;
+    static AppServer appServer;
 
     static int myIndexNumberServerOne;
     static int getMyIndexNumberServerBackup;
@@ -45,14 +34,15 @@ public class MainClient extends Application {
         Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
         DispatcherInterface dispatch = (DispatcherInterface) registry.lookup(DISPATCH_SERVICE);
 
-        appServerServiceName = dispatch.getAppServerServiceName();
+        appServer = dispatch.getAppServerServiceName();
 
         ClientInterface callbackObj = new ClientImpl();
-        try {
-            Registry appRegistry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
-            AppServerInterface appServer = (AppServerInterface) appRegistry.lookup(appServerServiceName);
-            myIndexNumberServerOne=appServer.registerForCallback(callbackObj);
 
+        try {
+            Registry appRegistry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
+            AppServerInterface appServer = (AppServerInterface) appRegistry.lookup(APPSERVER_SERVICE);
+
+            myIndexNumberServerOne=appServer.registerForCallback(callbackObj);
 
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
@@ -60,11 +50,6 @@ public class MainClient extends Application {
 
         clientImpl= (ClientImpl) callbackObj;
         viewController.setViewToLogin();
-
-
-
-        //TODO: Hier als dispachter oproepen om de doc van op de server naar de client te kopieren &&
-        //Enkel de methoden in de interface zetten die door de registry moeten worden gebruikt
 
 
     }

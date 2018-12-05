@@ -11,6 +11,8 @@ import java.util.ArrayList;
 //Moeten allemaal throws RemoteException; hebben !!
 public interface AppServerInterface extends Remote {
 
+    String getHello() throws java.rmi.RemoteException;
+
     int registerForCallback(ClientInterface callbackClientObject) throws java.rmi.RemoteException;
 
     String authenticatePlayer(String username, String token) throws SQLException, RemoteException;

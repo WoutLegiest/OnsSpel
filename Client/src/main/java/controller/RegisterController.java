@@ -43,7 +43,7 @@ public class RegisterController {
 
         try{
             Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
-            AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
+            AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
             token = appServer.registerPlayer(username,password,email);
 

@@ -1,3 +1,4 @@
+import domain.Constants;
 import interfaces.DispatcherInterface;
 
 import java.rmi.RemoteException;
@@ -8,6 +9,10 @@ import static domain.Constants.DISPATCH_PORT;
 
 public class MainDisp {
 
+    /**
+     * Makes a registery and bind a dispatcher interface to it.
+     * @param args
+     */
     public static void main(String[] args)  {
 
         try {
@@ -18,7 +23,5 @@ public class MainDisp {
             e.printStackTrace();
         }
         System.out.println("Dispatch gekoppeld op poort: " + DISPATCH_PORT);
-
-
     }
 }

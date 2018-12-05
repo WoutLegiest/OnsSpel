@@ -3,7 +3,6 @@ package controller;
 import domain.Card;
 import domain.GameExtended;
 import domain.Player;
-import interfaces.ClientInterface;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,7 +15,6 @@ import static domain.Constants.ICON_PATH;
 public final class SceneController {
 
     public static final SceneController viewController = new SceneController();
-
     private final Stage GUI = new Stage();
 
     public SceneController() {}

@@ -5,7 +5,6 @@ import interfaces.AppServerInterface;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -105,7 +104,7 @@ public class LobbyController {
 
         try {
             Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
-            AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
+            AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
             player = appServer.getPlayer(username);
         } catch (RemoteException | NotBoundException | SQLException e) {
@@ -117,7 +116,7 @@ public class LobbyController {
         ArrayList<Player>allPlayers=new ArrayList<>();
         try {
             Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
-            AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
+            AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
             allPlayers = appServer.getAllPlayers();
 
@@ -131,7 +130,7 @@ public class LobbyController {
         ArrayList<Game> allGames = new ArrayList<>();
         try {
             Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
-            AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
+            AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
             allGames = appServer.getAllGames();
 
@@ -223,7 +222,7 @@ public class LobbyController {
 
         try {
             Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
-            AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
+            AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
             int GameID = appServer.gameCreated(player.getId(), numberOfPlayers, size);
 
@@ -251,7 +250,7 @@ public class LobbyController {
 
         try {
             Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
-            AppServerInterface appServer = (AppServerInterface) registry.lookup(appServerServiceName);
+            AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
 
 
@@ -261,6 +260,7 @@ public class LobbyController {
     }
 
     public void joinGame(int gameID){
+        //De juiste app server zoeken, dan de game gaan afhalen vanaf daar en zo opbouwen
 
     }
 
@@ -282,14 +282,13 @@ public class LobbyController {
 
 class ButtonCellJoin extends TableCell<Game, Boolean> {
 
-    private final Button cellButton = new Button("Remove");
+    private final Button cellButton = new Button("Join");
     LobbyController lc;
 
     ButtonCellJoin(final TableView tblView){
 
         cellButton.setOnAction(t -> {
-            System.out.println(getTableView().getItems().get(getIndex()).getIdGame());
-            //lc.joinGame(getTableView().getItems().get(getIndex()).getIdGame());
+            lc.joinGame(getTableView().getItems().get(getIndex()).getIdGame());
                     });
     }
 
@@ -305,17 +304,11 @@ class ButtonCellJoin extends TableCell<Game, Boolean> {
 
 class ButtonCellWatch extends TableCell<Game, Boolean> {
 
-    final Button cellButton = new Button("Remove");
+    private final Button cellButton = new Button("Watch");
 
     ButtonCellWatch(final TableView tblView){
 
-        cellButton.setOnAction(new EventHandler<ActionEvent>(){
-
-            @Override
-            public void handle(ActionEvent t) {
-                System.out.println("Sassy^2");
-            }
-        });
+        cellButton.setOnAction(t -> System.out.println("Sassy^2"));
     }
 
     //Display button if the row is not empty

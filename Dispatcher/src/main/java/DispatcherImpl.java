@@ -1,30 +1,26 @@
-import domain.Card;
-import domain.Game;
-import domain.Player;
-import exceptions.UserExistsException;
 import interfaces.AppServerInterface;
 import interfaces.DataBaseInterface;
 import interfaces.DispatcherInterface;
+import servers.AppServer;
+import servers.DataBaseServer;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 
-import static domain.Constants.APPSERVER_PORT;
-import static domain.Constants.DATABASE_PORT;
+import static domain.Constants.*;
 
 public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInterface {
 
-    private ArrayList<String> dataBaseServices;
-    private ArrayList<String> appServerServices;
+    private ArrayList<DataBaseServer> dbServers;
+    private ArrayList<AppServer> appServers;
 
     public DispatcherImpl() throws RemoteException {
-        dataBaseServices = new ArrayList<>();
-        appServerServices = new ArrayList<>();
+        dbServers = new ArrayList<>();
+        appServers = new ArrayList<>();
     }
 
     /**
@@ -33,28 +29,46 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
      * @throws RemoteException
      */
     @Override
-    public void registerDataBaseServer(String serviceName) throws RemoteException{
+    public void registerDataBaseServer(int port, String ip) throws RemoteException{
 
-        dataBaseServices.add(serviceName);
+        try {
+            Registry registry = LocateRegistry.getRegistry(ip, port);
+            DataBaseInterface dataBaseImpl = (DataBaseInterface) registry.lookup(DATABASE_SERVICE);
+            dbServers.add(new DataBaseServer(port, ip, dataBaseImpl));
+
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        }
+
+
         System.out.println("DB toegevoegd aan Dispatch");
     }
 
     @Override
-    public void registerAppServer(String serviceName) throws RemoteException{
+    public void registerAppServer(int port, String ip) throws RemoteException{
 
-        appServerServices.add(serviceName);
+        try {
+            Registry registry = LocateRegistry.getRegistry(ip, port);
+            AppServerInterface appServerInterface = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
+            appServers.add(new AppServer(port, ip, appServerInterface));
+
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        }
+
+
         System.out.println("AppServer toegevoegd aan Dispatch");
     }
 
-    public String getAppServerServiceName() throws RemoteException{
-        return appServerServices.get(0);
+    @Override
+    public AppServer getAppServerServiceName() throws RemoteException {
+        return appServers.get(0);
     }
 
-    public String getDataBaseServerServiceName() throws RemoteException{
-        return dataBaseServices.get(0);
+    @Override
+    public DataBaseServer getDataBaseServerServiceName() throws RemoteException {
+        return dbServers.get(0);
     }
-
-
 
 
 }

@@ -14,24 +14,19 @@ public class MainApp {
 
     public static void main(String[] args) throws RemoteException {
 
-        startRegistry("appService1");
-        registerDispatcher("appService1");
+        startRegistry();
+        registerDispatcher();
 
     }
 
-    //Is het de bedoeling dan dat elke appserver\dbs gekoppeld is aan zijn eigen Service ?
-
     /**
      * Start up the registry of the AppServer en initionlasie and bound a first appServer to it
-     * @param serviceName
      */
-    public static void startRegistry(String serviceName){
-        //TODO: service naam veranderen naar int, zo zijn de 6** appSerivce en dan 4** de databasen
-
+    public static void startRegistry(){
         try{
             AppServerInterface appServerImp = new AppServerImpl();
             Registry registry = LocateRegistry.createRegistry(APPSERVER_PORT);
-            registry.rebind(serviceName, appServerImp);
+            registry.rebind(APPSERVER_SERVICE, appServerImp);
             System.out.println("AppServer gekoppeld op poort: " + APPSERVER_PORT);
         }
         catch(RemoteException re){
@@ -40,31 +35,14 @@ public class MainApp {
     }
 
     /**
-     * Generates a new AppServer and bind to the Appserver registry
-     * @param serviceName name of the appServer
-     */
-    public static void startUpNewServer(String serviceName){
-
-        try {
-            AppServerInterface appServerImp = new AppServerImpl();
-            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
-            registry.rebind(serviceName, appServerImp);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    /**
      * Method who registers the AppServer at the dispatcher.
-     * @param serviceName name of the appServer
      */
-    public static void registerDispatcher(String serviceName){
+    public static void registerDispatcher(){
 
         try{
             Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
             DispatcherInterface dispatcherImp = (DispatcherInterface) registry.lookup(DISPATCH_SERVICE);
-            dispatcherImp.registerAppServer(serviceName);
+            dispatcherImp.registerAppServer(APPSERVER_PORT, IP);
         }
         catch(NotBoundException | RemoteException e){
             e.printStackTrace();
