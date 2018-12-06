@@ -12,6 +12,10 @@ import java.util.ArrayList;
 //Moeten allemaal throws RemoteException; hebben !!
 public interface AppServerInterface extends Remote {
 
+    void sendMessage(String msg) throws RemoteException;
+
+    void receiveMessage(String msg) throws RemoteException;
+
     void addOtherAppServer(AppServerInterface appInterface) throws RemoteException;
 
     void setDataBase(DataBaseServer dataBase) throws RemoteException;

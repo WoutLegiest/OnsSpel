@@ -78,7 +78,6 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
             e.printStackTrace();
         }
         System.out.println("AppServer toegevoegd aan Dispatch");
-
     }
 
     @Override
@@ -89,6 +88,7 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
     @Override
     public DataBaseServer getDataBaseServer() throws RemoteException {
 
+        //Is sorted from smalletst number of AppServers to biggist
         dbServers.sort(Comparator.comparingInt(DataBaseServer::getnAppServers));
 
         return dbServers.get(0);

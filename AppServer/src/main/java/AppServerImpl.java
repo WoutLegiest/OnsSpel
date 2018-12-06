@@ -31,6 +31,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
         games=new ArrayList<>();
         clientList=new ArrayList<>();
+        appServerList = new ArrayList<>();
 
         try{
             Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
@@ -45,6 +46,18 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
     public DataBaseServer getDataBase() throws RemoteException {
         return dataBase;
+    }
+
+    @Override
+    public void sendMessage(String msg) throws RemoteException{
+        for(AppServerInterface asi: appServerList){
+            asi.receiveMessage(msg);
+        }
+    }
+
+    @Override
+    public void receiveMessage(String msg) throws RemoteException{
+        System.out.println(AppServerImpl.class.toString() + "\t" + msg);
     }
 
     @Override
