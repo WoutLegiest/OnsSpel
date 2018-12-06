@@ -10,11 +10,16 @@ import static domain.Constants.*;
 
 public class MainDBS {
 
+    //Beginnen op 27182 enzo
+    private static int dbPort;
 
     public static void main(String[] args) {
+
+        dbPort = Integer.parseInt(args[0]);
+
         startRegistry();
         registerDispatcher();
-        //TODO: Meerdere Databases opstarten door methode meerdere keren uit te voeren
+
     }
 
     /**
@@ -24,13 +29,15 @@ public class MainDBS {
     public static void startRegistry(){
         try{
             DataBaseInterface databaseImp = new DataBaseImpl();
-            Registry registry = LocateRegistry.createRegistry(DATABASE_PORT);
+            Registry registry = LocateRegistry.createRegistry(dbPort);
             registry.rebind(DATABASE_SERVICE, databaseImp);
-            System.out.println("DataBaseServer gekoppeld op poort: " + DATABASE_PORT);
+            System.out.println("DataBaseServer gekoppeld op poort: " + dbPort);
         }
         catch(RemoteException re){
             re.printStackTrace();
         }
+
+
     }
 
     /**
@@ -41,7 +48,7 @@ public class MainDBS {
         try{
             Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
             DispatcherInterface dispatcherImp = (DispatcherInterface) registry.lookup(DISPATCH_SERVICE);
-            dispatcherImp.registerDataBaseServer(DATABASE_PORT, IP);
+            dispatcherImp.registerDataBaseServer(dbPort, IP);
         }
         catch(NotBoundException | RemoteException e){
             e.printStackTrace();

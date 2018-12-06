@@ -3,12 +3,10 @@ package controller;
 import domain.*;
 import interfaces.AppServerInterface;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Callback;
 import threads.ScoreBoardThread;
 
 import java.io.IOException;
@@ -20,9 +18,9 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
-import static controller.MainClient.appServerServiceName;
+import static controller.MainClient.*;
+import static controller.MainClient.appServer;
 import static controller.SceneController.viewController;
-import static controller.MainClient.myIndexNumberServerOne;
 import static domain.Constants.*;
 
 
@@ -103,7 +101,7 @@ public class LobbyController {
         this.token=token;
 
         try {
-            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
+            Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());;
             AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
             player = appServer.getPlayer(username);
@@ -115,7 +113,7 @@ public class LobbyController {
     private ArrayList<Player> loadPlayers(){
         ArrayList<Player>allPlayers=new ArrayList<>();
         try {
-            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
+            Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
             AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
             allPlayers = appServer.getAllPlayers();
@@ -129,7 +127,7 @@ public class LobbyController {
     private ArrayList<Game> loadGames(){
         ArrayList<Game> allGames = new ArrayList<>();
         try {
-            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
+            Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
             AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
             allGames = appServer.getAllGames();
@@ -158,35 +156,15 @@ public class LobbyController {
 
     private void loadT2(){
 
-        join.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Game, Boolean>, ObservableValue<Boolean>>() {
-            @Override
-            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Game, Boolean> features) {
-                return new SimpleBooleanProperty(features.getValue() != null);
-            }
-        });
+        join.setCellValueFactory(features -> new SimpleBooleanProperty(features.getValue() != null));
 
         // create a cell value factory with an add button for each row in the table.
-        join.setCellFactory(new Callback<TableColumn<Game, Boolean>, TableCell<Game, Boolean>>() {
-            @Override
-            public TableCell<Game, Boolean> call(TableColumn<Game, Boolean> personBooleanTableColumn) {
-                return new ButtonCellJoin(currentGames);
-            }
-        });
+        join.setCellFactory(personBooleanTableColumn -> new ButtonCellJoin(currentGames));
 
-        watch.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Game, Boolean>, ObservableValue<Boolean>>() {
-            @Override
-            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Game, Boolean> features) {
-                return new SimpleBooleanProperty(features.getValue() != null);
-            }
-        });
+        watch.setCellValueFactory(features -> new SimpleBooleanProperty(features.getValue() != null));
 
         // create a cell value factory with an add button for each row in the table.
-        watch.setCellFactory(new Callback<TableColumn<Game, Boolean>, TableCell<Game, Boolean>>() {
-            @Override
-            public TableCell<Game, Boolean> call(TableColumn<Game, Boolean> personBooleanTableColumn) {
-                return new ButtonCellWatch(currentGames);
-            }
-        });
+        watch.setCellFactory(personBooleanTableColumn -> new ButtonCellWatch(currentGames));
 
         if(currentGames!=null){
             for ( int i = 0; i<currentGames.getItems().size(); i++) {
@@ -221,7 +199,7 @@ public class LobbyController {
             themeString="mario";
 
         try {
-            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
+            Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
             AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
             int GameID = appServer.gameCreated(player.getId(), numberOfPlayers, size);
@@ -246,21 +224,12 @@ public class LobbyController {
         } catch (NotBoundException | IOException e) {
             e.printStackTrace();
         }
-
-
-        try {
-            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
-            AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
-
-
-
-        } catch (NotBoundException | IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void joinGame(int gameID){
         //De juiste app server zoeken, dan de game gaan afhalen vanaf daar en zo opbouwen
+
+
 
     }
 

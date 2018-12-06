@@ -2,6 +2,7 @@ package interfaces;
 
 import domain.*;
 import exceptions.UserExistsException;
+import servers.DataBaseServer;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -11,7 +12,9 @@ import java.util.ArrayList;
 //Moeten allemaal throws RemoteException; hebben !!
 public interface AppServerInterface extends Remote {
 
-    String getHello() throws java.rmi.RemoteException;
+    void addOtherAppServer(AppServerInterface appInterface) throws RemoteException;
+
+    void setDataBase(DataBaseServer dataBase) throws RemoteException;
 
     int registerForCallback(ClientInterface callbackClientObject) throws java.rmi.RemoteException;
 

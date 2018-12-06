@@ -15,6 +15,8 @@ public class MainDisp {
      */
     public static void main(String[] args)  {
 
+        new Constants();
+
         try {
             DispatcherInterface dispatcherImp = new DispatcherImpl();
             Registry registry = LocateRegistry.createRegistry(DISPATCH_PORT);

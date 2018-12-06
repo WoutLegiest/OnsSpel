@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import static controller.MainClient.appServer;
 import static controller.SceneController.viewController;
 import static domain.Constants.*;
 
@@ -39,7 +40,7 @@ public class LoginController {
             String username=textUsername.getText();
             String password=textPassword.getText();
 
-            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
+            Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
             AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
 

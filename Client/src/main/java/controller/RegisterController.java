@@ -17,7 +17,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.sql.SQLException;
 
-import static controller.MainClient.appServerServiceName;
+import static controller.MainClient.appServer;
 import static controller.SceneController.viewController;
 import static domain.Constants.*;
 
@@ -42,7 +42,7 @@ public class RegisterController {
         String token = null;
 
         try{
-            Registry registry = LocateRegistry.getRegistry(IP, APPSERVER_PORT);
+            Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
             AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
             token = appServer.registerPlayer(username,password,email);

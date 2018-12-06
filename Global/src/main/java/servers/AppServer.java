@@ -14,6 +14,7 @@ public class AppServer  implements Serializable {
     private final int port;
     private final String IP;
     private AppServerInterface appServerImpl;
+    private int nGames;
 
     public AppServer(int port, String IP, AppServerInterface appServerImpl) {
         this.port = port;
@@ -35,5 +36,13 @@ public class AppServer  implements Serializable {
 
     public void setAppServerImpl(AppServerInterface appServerImpl) {
         this.appServerImpl = appServerImpl;
+    }
+
+    public int getnGames() {
+        return nGames;
+    }
+
+    public void setnGames(int nGames) {
+        this.nGames = nGames;
     }
 }

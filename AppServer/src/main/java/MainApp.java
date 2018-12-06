@@ -12,11 +12,14 @@ import static domain.Constants.*;
 
 public class MainApp {
 
+    private static int appPort;
+
     public static void main(String[] args) throws RemoteException {
+
+        appPort = Integer.parseInt(args[0]);
 
         startRegistry();
         registerDispatcher();
-
     }
 
     /**
@@ -25,9 +28,9 @@ public class MainApp {
     public static void startRegistry(){
         try{
             AppServerInterface appServerImp = new AppServerImpl();
-            Registry registry = LocateRegistry.createRegistry(APPSERVER_PORT);
+            Registry registry = LocateRegistry.createRegistry(appPort);
             registry.rebind(APPSERVER_SERVICE, appServerImp);
-            System.out.println("AppServer gekoppeld op poort: " + APPSERVER_PORT);
+            System.out.println("AppServer gekoppeld op poort: " + appPort);
         }
         catch(RemoteException re){
             re.printStackTrace();
@@ -42,7 +45,7 @@ public class MainApp {
         try{
             Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
             DispatcherInterface dispatcherImp = (DispatcherInterface) registry.lookup(DISPATCH_SERVICE);
-            dispatcherImp.registerAppServer(APPSERVER_PORT, IP);
+            dispatcherImp.registerAppServer(appPort, IP);
         }
         catch(NotBoundException | RemoteException e){
             e.printStackTrace();

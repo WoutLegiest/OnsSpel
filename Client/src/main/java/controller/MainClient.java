@@ -34,7 +34,7 @@ public class MainClient extends Application {
         Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
         DispatcherInterface dispatch = (DispatcherInterface) registry.lookup(DISPATCH_SERVICE);
 
-        appServer = dispatch.getAppServerServiceName();
+        appServer = dispatch.getAppServer();
 
         ClientInterface callbackObj = new ClientImpl();
 

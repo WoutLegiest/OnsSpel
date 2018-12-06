@@ -14,6 +14,7 @@ public class DataBaseServer implements Serializable {
     private final int port;
     private final String IP;
     private DataBaseInterface dataBaseImpl;
+    private int nAppServers;
 
     public DataBaseServer(int port, String IP, DataBaseInterface dataBaseImpl) {
         this.port = port;
@@ -35,5 +36,13 @@ public class DataBaseServer implements Serializable {
 
     public void setDataBaseImpl(DataBaseInterface dataBaseImpl) {
         this.dataBaseImpl = dataBaseImpl;
+    }
+
+    public int getnAppServers() {
+        return nAppServers;
+    }
+
+    public void setnAppServers(int nAppServers) {
+        this.nAppServers = nAppServers;
     }
 }

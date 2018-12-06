@@ -2,8 +2,8 @@ import domain.*;
 import exceptions.UserExistsException;
 import interfaces.AppServerInterface;
 import interfaces.ClientInterface;
-import interfaces.DataBaseInterface;
 import interfaces.DispatcherInterface;
+import servers.AppServer;
 import servers.DataBaseServer;
 
 import java.rmi.NotBoundException;
@@ -22,8 +22,6 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
     private static final long serialVersionUID = 4015101812358698416L;
 
-    //TODO: Aanpassen van deze dataBaseServer
-
     private DataBaseServer dataBase;
     private ArrayList<GameExtended> games;
     private ArrayList<ClientInterface> clientList;
@@ -37,7 +35,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
         try{
             Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
             DispatcherInterface dispatcherImp = (DispatcherInterface) registry.lookup(DISPATCH_SERVICE);
-            dataBase = dispatcherImp.getDataBaseServerServiceName();
+            dataBase = dispatcherImp.getDataBaseServer();
 
         }
         catch(NotBoundException | RemoteException e){
@@ -45,9 +43,18 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
         }
     }
 
+    public DataBaseServer getDataBase() throws RemoteException {
+        return dataBase;
+    }
+
     @Override
-    public String getHello() throws java.rmi.RemoteException{
-        return "Hello";
+    public void addOtherAppServer(AppServerInterface appInterface) throws RemoteException{
+        appServerList.add(appInterface);
+    }
+
+    @Override
+    public void setDataBase(DataBaseServer dataBase) throws RemoteException {
+        this.dataBase = dataBase;
     }
 
     @Override
