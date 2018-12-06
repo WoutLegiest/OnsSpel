@@ -37,6 +37,7 @@ public class MainApp {
         try{
             AppServerInterface appServerImp = new AppServerImpl();
             Registry registry = LocateRegistry.createRegistry(appPort);
+
             registry.rebind(APPSERVER_SERVICE, appServerImp);
             System.out.println("AppServer gekoppeld op poort: " + appPort);
         }

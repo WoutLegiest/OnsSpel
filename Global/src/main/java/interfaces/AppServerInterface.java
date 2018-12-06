@@ -2,6 +2,7 @@ package interfaces;
 
 import domain.*;
 import exceptions.UserExistsException;
+import servers.AppServer;
 import servers.DataBaseServer;
 
 import java.rmi.Remote;
@@ -44,4 +45,9 @@ public interface AppServerInterface extends Remote {
 
     void serverToClientMessage(String username, String message, int clientIndex, int gameId)throws RemoteException;
 
+    AppServer findServer(int gameID)throws RemoteException;
+
+    AppServerInterface findGame(int gameID) throws RemoteException;
+
+    GameExtended findGameExtended(int gameId) throws RemoteException;
 }

@@ -8,6 +8,7 @@ public class GameExtended implements Serializable {
     private static final long serialVersionUID = -7010078965463558136L;
 
     private final Game game;
+    private final String theme;
     private final ArrayList<Card>cards;
     private final ArrayList<GamePlayer>players;
     private ArrayList<Integer>clientIndexes;
@@ -17,6 +18,7 @@ public class GameExtended implements Serializable {
 
     public GameExtended(Game game) {
         this.game = game;
+        this.theme = null;
         this.cards=null;
         this.players=null;
         this.currentPlayerTurn=null;
@@ -25,8 +27,9 @@ public class GameExtended implements Serializable {
         turns=new ArrayList<>();
     }
 
-    public GameExtended(Game game, ArrayList<Card> cards, ArrayList<GamePlayer> players, GamePlayer currentPlayerTurn) {
+    public GameExtended(Game game, String theme, ArrayList<Card> cards, ArrayList<GamePlayer> players, GamePlayer currentPlayerTurn) {
         this.game = game;
+        this.theme = theme;
         this.cards = cards;
         this.players = players;
         this.currentPlayerTurn=currentPlayerTurn;
@@ -40,6 +43,7 @@ public class GameExtended implements Serializable {
 
     public GameExtended(GameExtended gameExtended) {
         this.game = gameExtended.game;
+        this.theme = gameExtended.theme;
         this.cards = gameExtended.cards;
         this.players = gameExtended.players;
         this.currentPlayerTurn = gameExtended.currentPlayerTurn;
@@ -106,6 +110,10 @@ public class GameExtended implements Serializable {
 
     public Game getGame() {
         return game;
+    }
+
+    public String getTheme() {
+        return theme;
     }
 
     public ArrayList<Card> getCards() {

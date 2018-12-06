@@ -54,8 +54,15 @@ public class MainClient extends Application {
 
     }
 
-
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static AppServer getAppServer() {
+        return appServer;
+    }
+
+    public static void setAppServer(AppServer appServer) {
+        MainClient.appServer = appServer;
     }
 }

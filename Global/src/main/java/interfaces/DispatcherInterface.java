@@ -12,5 +12,8 @@ public interface DispatcherInterface extends Remote {
     void registerAppServer(int port, String ip) throws RemoteException;
 
     AppServer getAppServer() throws RemoteException;
+
+    AppServer getAppServer(AppServerInterface appServerInterface) throws RemoteException;
+
     DataBaseServer getDataBaseServer() throws RemoteException;
 }

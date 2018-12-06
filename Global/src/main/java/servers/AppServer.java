@@ -3,6 +3,7 @@ package servers;
 import interfaces.AppServerInterface;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author Wouter Legiest on 5/12/2018
@@ -45,4 +46,16 @@ public class AppServer  implements Serializable {
     public void setnGames(int nGames) {
         this.nGames = nGames;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AppServer)) return false;
+        AppServer appServer = (AppServer) o;
+        return getPort() == appServer.getPort() &&
+                getnGames() == appServer.getnGames() &&
+                Objects.equals(getIP(), appServer.getIP()) &&
+                Objects.equals(getAppServerImpl(), appServer.getAppServerImpl());
+    }
 }
+

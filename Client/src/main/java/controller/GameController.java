@@ -111,7 +111,7 @@ public class GameController {
         turn=null;
 
         //initialize chat
-        chatScreen.setTextFill(Color.WHITE);
+        chatScreen.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         stringBuilder.append("You Joined the game! " + "\n");
         chatScreen.setText(stringBuilder.toString());
 
@@ -245,7 +245,7 @@ public class GameController {
 
 
                 Alert alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle( title);
+                alert.setTitle(title);
                 alert.setHeaderText(null);
                 alert.setContentText(contentText);
                 alert.showAndWait();

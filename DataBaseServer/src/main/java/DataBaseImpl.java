@@ -435,7 +435,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
             e.printStackTrace();
         }
         
-        return new GameExtended(game, gameCards,players, null);
+        return new GameExtended(game, null,gameCards,players, null);
 
     }
 

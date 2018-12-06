@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import servers.AppServer;
 import threads.ScoreBoardThread;
 
 import java.io.IOException;
@@ -159,12 +160,12 @@ public class LobbyController {
         join.setCellValueFactory(features -> new SimpleBooleanProperty(features.getValue() != null));
 
         // create a cell value factory with an add button for each row in the table.
-        join.setCellFactory(personBooleanTableColumn -> new ButtonCellJoin(currentGames));
+        join.setCellFactory(personBooleanTableColumn -> new ButtonCellJoin(currentGames, this));
 
         watch.setCellValueFactory(features -> new SimpleBooleanProperty(features.getValue() != null));
 
         // create a cell value factory with an add button for each row in the table.
-        watch.setCellFactory(personBooleanTableColumn -> new ButtonCellWatch(currentGames));
+        watch.setCellFactory(personBooleanTableColumn -> new ButtonCellWatch(currentGames, this));
 
         if(currentGames!=null){
             for ( int i = 0; i<currentGames.getItems().size(); i++) {
@@ -200,9 +201,9 @@ public class LobbyController {
 
         try {
             Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
-            AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
+            AppServerInterface appServerImpl = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
-            int GameID = appServer.gameCreated(player.getId(), numberOfPlayers, size);
+            int GameID = appServerImpl.gameCreated(player.getId(), numberOfPlayers, size);
 
             Game game = new Game(GameID, player.getId(), numberOfPlayers,1,size);
 
@@ -210,14 +211,14 @@ public class LobbyController {
             ArrayList<GamePlayer>gamePlayers= new ArrayList<>();
             Card cover=null;
 
-            gameCards = appServer.shuffleCards(size, themeString);
-            cover= appServer.cardsByTheme(themeString.concat("_cover")).get(0);
+            gameCards = appServerImpl.shuffleCards(size, themeString);
+            cover= appServerImpl.cardsByTheme(themeString.concat("_cover")).get(0);
 
             GamePlayer gamePlayer= new GamePlayer(player);
-            GameExtended gameExtended=new GameExtended(game,gameCards,gamePlayers,gamePlayer);
+            GameExtended gameExtended=new GameExtended(game,themeString,gameCards,gamePlayers,gamePlayer);
             gameExtended.addPlayer(gamePlayer, myIndexNumberServerOne);
 
-            appServer.gameCreatedExtended(gameExtended);
+            appServerImpl.gameCreatedExtended(gameExtended);
 
             viewController.setViewToGame(gameExtended, player, token, cover);
 
@@ -228,8 +229,26 @@ public class LobbyController {
 
     public void joinGame(int gameID){
         //De juiste app server zoeken, dan de game gaan afhalen vanaf daar en zo opbouwen
+        //AppServer die wordt opgeslaan in de Main en  veranderen
+        try {
+            Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
+            AppServerInterface appServerImpl = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
+
+            AppServer gameAppServer = appServerImpl.findServer(gameID);
+
+            if(!appServer.equals(gameAppServer)){
+                setAppServer(gameAppServer);
+            }
+
+            GameExtended gameExtended = gameAppServer.getAppServerImpl().findGameExtended(gameID);
+            Card cover = appServer.getAppServerImpl().cardsByTheme(gameExtended.getTheme().concat("_cover")).get(0);
 
 
+            viewController.setViewToGame(gameExtended, player, token, cover);
+
+        } catch (NotBoundException | IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -246,19 +265,20 @@ public class LobbyController {
             e.printStackTrace();
         }
     }
-
 }
 
 class ButtonCellJoin extends TableCell<Game, Boolean> {
 
     private final Button cellButton = new Button("Join");
-    LobbyController lc;
+    private LobbyController lc;
 
-    ButtonCellJoin(final TableView tblView){
+    ButtonCellJoin(final TableView tblView, LobbyController lobbyC){
+
+        this.lc = lobbyC;
 
         cellButton.setOnAction(t -> {
             lc.joinGame(getTableView().getItems().get(getIndex()).getIdGame());
-                    });
+        });
     }
 
     //Display button if the row is not empty
@@ -274,10 +294,14 @@ class ButtonCellJoin extends TableCell<Game, Boolean> {
 class ButtonCellWatch extends TableCell<Game, Boolean> {
 
     private final Button cellButton = new Button("Watch");
+    private LobbyController lc;
 
-    ButtonCellWatch(final TableView tblView){
+    ButtonCellWatch(final TableView tblView, LobbyController lobbyC){
 
-        cellButton.setOnAction(t -> System.out.println("Sassy^2"));
+        cellButton.setOnAction(t -> {
+            this.lc = lobbyC;
+            System.out.println("Sassy^2");
+        });
     }
 
     //Display button if the row is not empty

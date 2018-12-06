@@ -20,7 +20,7 @@ import static domain.Constants.*;
 
 public class AppServerImpl extends UnicastRemoteObject implements AppServerInterface {
 
-    private static final long serialVersionUID = 4015101812358698416L;
+    //Gene SessionUID
 
     private DataBaseServer dataBase;
     private ArrayList<GameExtended> games;
@@ -160,10 +160,65 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
     @Override
     public void serverToClientMessage(String username, String message, int clientIndex, int gameId) throws RemoteException {
-        for (Integer index :findGame(gameId).getClientIndexes()){
+        for (Integer index :findGameExtended(gameId).getClientIndexes()){
             if(index!=clientIndex) clientList.get(index).receiveMessage(username,message);
         }
 
+    }
+
+    @Override
+    public AppServer findServer(int gameID) throws RemoteException {
+
+        //Moet een AppServer gaan teruggeven, door eerst de server te gaan zoeken waar de game zich bevindt.
+
+        System.out.println("Starten Hier, vanuit de RMI");
+
+        AppServer temp = null;
+
+
+        for(AppServerInterface asi: appServerList){
+            AppServerInterface receive = asi.findGame(gameID);
+
+            if(receive != null) {
+                try {
+                    Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
+                    DispatcherInterface dispatcherImpl = (DispatcherInterface) registry.lookup(DISPATCH_SERVICE);
+
+                    temp = dispatcherImpl.getAppServer(receive);
+
+                } catch (NotBoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        if(temp == null){
+            try {
+                Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
+                DispatcherInterface dispatcherImpl = (DispatcherInterface) registry.lookup(DISPATCH_SERVICE);
+
+                temp = dispatcherImpl.getAppServer(this);
+
+            } catch (NotBoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return temp;
+    }
+
+    @Override
+    public AppServerInterface findGame(int gameID) throws RemoteException{
+
+        System.out.println("Starten van findGame");
+
+        for(GameExtended gameExtended: games){
+            if(gameExtended.getGame().getIdGame()==gameID){
+                System.out.print("Find interface");
+                return this;
+            }
+        }
+        return null;
     }
 
     private void performTurn(GameExtended gameExtended, Turn turn){
@@ -178,13 +233,15 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
         }
     }
 
-    private GameExtended findGame(int gameId ){
+    @Override
+    public GameExtended findGameExtended(int gameId) throws  RemoteException{
+
         for(GameExtended game:games){
-            if (game.getGame().getIdGame()==gameId) return game;
+            if (game.getGame().getIdGame()==gameId)
+                return game;
         }
         return null;
     }
-
 
 
 }
