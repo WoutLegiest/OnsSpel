@@ -21,13 +21,6 @@ public class MainApp {
         startRegistry();
         registerDispatcher();
 
-        try {
-            Registry registry = LocateRegistry.getRegistry(IP, appPort);
-            AppServerInterface appServerInterface = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
-            appServerInterface.sendMessage("Ik kom van hier" + appPort);
-        } catch (NotBoundException e) {
-            e.printStackTrace();
-        }
     }
 
     /**

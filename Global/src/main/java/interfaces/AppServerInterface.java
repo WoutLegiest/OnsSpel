@@ -13,10 +13,6 @@ import java.util.ArrayList;
 //Moeten allemaal throws RemoteException; hebben !!
 public interface AppServerInterface extends Remote {
 
-    void sendMessage(String msg) throws RemoteException;
-
-    void receiveMessage(String msg) throws RemoteException;
-
     void addOtherAppServer(AppServerInterface appInterface) throws RemoteException;
 
     void setDataBase(DataBaseServer dataBase) throws RemoteException;
@@ -42,6 +38,8 @@ public interface AppServerInterface extends Remote {
     void gameCreatedExtended(GameExtended gameExtended) throws RemoteException;
 
     void pushTurn(int gameId, Turn turn)throws RemoteException;
+
+    void addPlayer(Player gp, int index, int gameID) throws RemoteException;
 
     void serverToClientMessage(String username, String message, int clientIndex, int gameId)throws RemoteException;
 

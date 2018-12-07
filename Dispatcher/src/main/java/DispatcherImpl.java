@@ -56,7 +56,6 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
 
         try {
             Registry registry = LocateRegistry.getRegistry(ip, port);
-            System.out.println("Registry is gecreerd");
             AppServerInterface appServerInterface = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
             appServer = new AppServer(port, ip, appServerInterface);
@@ -82,8 +81,8 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
     }
 
     @Override
-    public AppServer getAppServer() throws RemoteException {
-        return appServers.get(0);
+    public AppServer getAppServer(int index) throws RemoteException {
+        return appServers.get(index);
     }
 
     @Override

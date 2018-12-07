@@ -20,6 +20,7 @@ public class MainClient extends Application {
 
     static AppServer appServer;
 
+    static int index;
     static int myIndexNumberServerOne;
     static int getMyIndexNumberServerBackup;
 
@@ -34,7 +35,7 @@ public class MainClient extends Application {
         Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
         DispatcherInterface dispatch = (DispatcherInterface) registry.lookup(DISPATCH_SERVICE);
 
-        appServer = dispatch.getAppServer();
+        appServer = dispatch.getAppServer(index);
 
         ClientInterface callbackObj = new ClientImpl();
 
@@ -55,6 +56,8 @@ public class MainClient extends Application {
     }
 
     public static void main(String[] args) {
+
+        index = Integer.parseInt(args[0]);
         launch(args);
     }
 

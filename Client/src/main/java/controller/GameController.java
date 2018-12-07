@@ -2,6 +2,7 @@ package controller;
 
 import domain.*;
 import interfaces.AppServerInterface;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -23,9 +24,6 @@ import static controller.MainClient.*;
 import static domain.Constants.*;
 
 
-/**
- *
- */
 public class GameController {
 
     //Game
@@ -53,8 +51,6 @@ public class GameController {
     //Chat
     private StringBuilder stringBuilder;
 
-    //FXML links
-
     //Grid
     @FXML private GridPane gridGame;
 
@@ -72,8 +68,6 @@ public class GameController {
     @FXML private TextField chatTextInput;
     @FXML private Label chatScreen;
 
-
-
     @FXML
     public void initialize() {
 
@@ -82,7 +76,7 @@ public class GameController {
         localScoreColumn.setCellValueFactory(new PropertyValueFactory<GamePlayer, Integer>("localScore"));
         turnColumn.setCellValueFactory(new PropertyValueFactory<GamePlayer, Integer>("turnsPlayed"));
         stringBuilder=new StringBuilder();
-
+        turnLabel.setText("Not ready yet");
     }
 
     /**
@@ -195,10 +189,11 @@ public class GameController {
      * @param idButton ID of the button being clicked, type: String.
      */
     private void performClick(String idButton){
+
         //save which button is clicked
         int idButtonInt=Integer.parseInt(idButton);
 
-        //check if a player is allowed to perform a turn.
+        //check if a player is allowed to perform a turn
         boolean myTurn=checkForTurn();
 
         //check if there are enough players.
@@ -215,10 +210,13 @@ public class GameController {
                 //change view of card
                 changeView(idButtonInt);
 
+            //Second turn
             }else if(turn.getCard2()==-1){
 
                 turn.setCard2(idButtonInt);
+
                 changeView(idButtonInt);
+
                 String title=null;
                 String contentText=null;
 
@@ -277,13 +275,11 @@ public class GameController {
     }
 
     private boolean checkForTurn(){
-        if(player.getId()==game.getCurrentPlayerTurn().getId())return true;
-        else return false;
+        return player.getId() == game.getCurrentPlayerTurn().getId();
     }
 
     private boolean checkForOtherPlayers() {
-        if(game.getGame().getCurNumberOfPlayers()==game.getGame().getMaxNumberOfPlayers()) return true;
-        return false;
+        return game.getGame().getCurNumberOfPlayers() == game.getGame().getMaxNumberOfPlayers();
     }
 
     //-------- flip card methods --------//
@@ -291,12 +287,14 @@ public class GameController {
     private void changeView(int idButton) {
         Button button= buttons.get(idButton);
         ImageView newIV= swapIV(button, idButton);
-        button.setGraphic(newIV);
+        Platform.runLater(() ->button.setGraphic(newIV));
     }
 
     private ImageView swapIV(Button button, int id){
-        if(button.getGraphic().getId().equals("-1")) return images.get(id);
-        else return makeImageView(coverImage,-1);
+        if(button.getGraphic().getId().equals("-1"))
+            return images.get(id);
+        else
+            return makeImageView(coverImage,-1);
     }
 
     private ImageView choseRightIV(int buttonID){
@@ -316,12 +314,12 @@ public class GameController {
         Color color;
         if(checkForTurn()){
             stringBuilder.append(player.getUsername());
-            stringBuilder.append(": Your Turn!");
+            stringBuilder.append("\t : Your Turn!");
             color=Color.GREEN;
 
         }else{
             stringBuilder.append(game.getCurrentPlayerTurn().getUsername());
-            stringBuilder.append("Not Your Turn!");
+            stringBuilder.append("\t Not Your Turn!");
             color=Color.RED;
         }
 
@@ -331,9 +329,11 @@ public class GameController {
 
     private void changeTurnLabel(Color color, String text) {
         Background background=new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
-        turnLabel.setBackground(background);
-        turnLabel.setText(text);
-        turnLabel.setTextFill(Color.WHITE);
+        Platform.runLater(() -> {
+            turnLabel.setBackground(background);
+            turnLabel.setText(text);
+            turnLabel.setTextFill(Color.WHITE);
+        });
     }
 
     private void setLabelDuringMove(){
@@ -389,9 +389,11 @@ public class GameController {
      * Add a newly joined player to the score table.
      */
     public void addToScoreTable() {
-        scoreTableGame.getItems().clear();
-        scoreTableGame.getItems().addAll(game.getPlayers());
-        scoreTableGame.getSortOrder().add(localScoreColumn);
+        Platform.runLater(() ->{
+            scoreTableGame.getItems().clear();
+            scoreTableGame.getItems().addAll(game.getPlayers());
+            scoreTableGame.getSortOrder().add(localScoreColumn);
+        });
 
     }
 
@@ -399,8 +401,10 @@ public class GameController {
      * Update the score table after possible changes
      */
     public void updateScoreTable(){
-        scoreTableGame.refresh();
-        scoreTableGame.getSortOrder().add(localScoreColumn);
+        Platform.runLater(() -> {
+            scoreTableGame.refresh();
+            scoreTableGame.getSortOrder().add(localScoreColumn);
+        });
     }
 
     /**
@@ -409,9 +413,8 @@ public class GameController {
      * @param message Incoming message, type String.
      */
     public void updateChat(String username, String message) {
-        stringBuilder.append(player.getUsername()+ ": " + message + "\n");
-        chatScreen.setText(stringBuilder.toString());
-
+        stringBuilder.append(player.getUsername()).append(": ").append(message).append("\n");
+        Platform.runLater(() -> chatScreen.setText(stringBuilder.toString()));
     }
 
     /**
@@ -422,23 +425,22 @@ public class GameController {
     public void addPlayer(Player player, int index){
         game.addPlayer(new GamePlayer(player),index);
         addToScoreTable();
-        stringBuilder.append(player.getUsername() + " joined the game. \n");
-        chatScreen.setText(stringBuilder.toString());
-
+        stringBuilder.append(player.getUsername()).append(" joined the game. \n");
+        Platform.runLater(() ->chatScreen.setText(stringBuilder.toString()));
     }
 
     private void checkView(){
         for (int i=0;i<buttons.size();i++){
             Button button= buttons.get(i);
             ImageView tempImageView= choseRightIV(i);
-            button.setGraphic(tempImageView);
+            Platform.runLater(() -> button.setGraphic(tempImageView));
         }
     }
 
     public void sendChat(){
         String message=chatTextInput.getText();
         chatTextInput.clear();
-        stringBuilder.append("me: " + message + "\n");
+        stringBuilder.append("me: ").append(message).append("\n");
 
         // send chat message to app server
         try {
@@ -449,7 +451,7 @@ public class GameController {
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
         }
-        chatScreen.setText(stringBuilder.toString());
+        Platform.runLater(() ->chatScreen.setText(stringBuilder.toString()));
         if(!message.equals("")&&!message.equals(" ")){
 
 

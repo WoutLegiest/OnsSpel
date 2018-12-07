@@ -20,7 +20,7 @@ import static domain.Constants.*;
 
 public class AppServerImpl extends UnicastRemoteObject implements AppServerInterface {
 
-    //Gene SessionUID
+    //None SessionUID !
 
     private DataBaseServer dataBase;
     private ArrayList<GameExtended> games;
@@ -46,18 +46,6 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
     public DataBaseServer getDataBase() throws RemoteException {
         return dataBase;
-    }
-
-    @Override
-    public void sendMessage(String msg) throws RemoteException{
-        for(AppServerInterface asi: appServerList){
-            asi.receiveMessage(msg);
-        }
-    }
-
-    @Override
-    public void receiveMessage(String msg) throws RemoteException{
-        System.out.println(AppServerImpl.class.toString() + "\t" + msg);
     }
 
     @Override
@@ -159,9 +147,31 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
     }
 
     @Override
+    public void addPlayer(Player gp, int ownIndex, int gameID) throws RemoteException{
+
+        //Lokaal toevoegen
+        GamePlayer temp = new GamePlayer(gp);
+
+        for(GameExtended ge: games){
+            if(ge.getGame().getIdGame() == gameID)
+                ge.addPlayer(temp, ownIndex);
+        }
+
+        //Toevoegen aan al de andere servers
+        for (Integer index :findGameExtended(gameID).getClientIndexes()){
+            if(index!=ownIndex)
+                clientList.get(index).addPlayer(gp,ownIndex);
+        }
+    }
+
+    @Override
     public void serverToClientMessage(String username, String message, int clientIndex, int gameId) throws RemoteException {
+
+        //Dit steund op de lokale kopieren van de gameExtended !
+
         for (Integer index :findGameExtended(gameId).getClientIndexes()){
-            if(index!=clientIndex) clientList.get(index).receiveMessage(username,message);
+            if(index!=clientIndex)
+                clientList.get(index).receiveMessage(username,message);
         }
 
     }
@@ -170,8 +180,6 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
     public AppServer findServer(int gameID) throws RemoteException {
 
         //Moet een AppServer gaan teruggeven, door eerst de server te gaan zoeken waar de game zich bevindt.
-
-        System.out.println("Starten Hier, vanuit de RMI");
 
         AppServer temp = null;
 
@@ -192,6 +200,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
             }
         }
 
+        //Als de appServer niet te vinden is, dan is hij zichzelf
         if(temp == null){
             try {
                 Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
@@ -222,7 +231,9 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
     }
 
     private void performTurn(GameExtended gameExtended, Turn turn){
+
         for(int i=0;i<gameExtended.getPlayers().size();i++){
+
             if(gameExtended.getPlayers().get(i).getId()!=turn.getPlayer().getId()){
                 try {
                     clientList.get(gameExtended.getClientIndexes().get(i)).performOtherPlayerTurn(turn);

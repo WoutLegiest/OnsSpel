@@ -205,7 +205,7 @@ public class LobbyController {
 
             int GameID = appServerImpl.gameCreated(player.getId(), numberOfPlayers, size);
 
-            Game game = new Game(GameID, player.getId(), numberOfPlayers,1,size);
+            Game game = new Game(GameID, player.getId(), numberOfPlayers,0,size);
 
             ArrayList<Card>gameCards=new ArrayList<>();
             ArrayList<GamePlayer>gamePlayers= new ArrayList<>();
@@ -228,19 +228,26 @@ public class LobbyController {
     }
 
     public void joinGame(int gameID){
-        //De juiste app server zoeken, dan de game gaan afhalen vanaf daar en zo opbouwen
-        //AppServer die wordt opgeslaan in de Main en  veranderen
         try {
             Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
             AppServerInterface appServerImpl = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
             AppServer gameAppServer = appServerImpl.findServer(gameID);
 
+            //Save the appServer on the client side, if it is different
             if(!appServer.equals(gameAppServer)){
                 setAppServer(gameAppServer);
             }
 
             GameExtended gameExtended = gameAppServer.getAppServerImpl().findGameExtended(gameID);
+
+            //---------------Add current Player----------------//
+
+            appServerImpl.addPlayer(player, myIndexNumberServerOne, gameExtended.getGame().getIdGame());
+
+            GamePlayer gamePlayer = new GamePlayer(player);
+            gameExtended.addPlayer(gamePlayer,myIndexNumberServerOne);
+
             Card cover = appServer.getAppServerImpl().cardsByTheme(gameExtended.getTheme().concat("_cover")).get(0);
 
 

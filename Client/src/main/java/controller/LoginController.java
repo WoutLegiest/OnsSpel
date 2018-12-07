@@ -47,7 +47,7 @@ public class LoginController {
             String token = appServer.authenticatePlayer(username,password);
 
             if(token != null){
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                /*Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Login Succeeded");
                 alert.setHeaderText(null);
                 alert.setContentText("Sessie token: " + token + "\n Have a happy play");
@@ -55,7 +55,7 @@ public class LoginController {
                 Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
                 stage.getIcons().add(new Image(SceneController.class.getResourceAsStream(ICON_PATH)));
 
-                alert.showAndWait();
+                alert.showAndWait();*/
 
                 viewController.setViewToLobby(username, token);
             }

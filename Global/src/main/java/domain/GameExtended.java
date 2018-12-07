@@ -64,7 +64,9 @@ public class GameExtended implements Serializable {
     }
 
     public boolean addTurn(Turn turn){
+
         turns.add(turn);
+
         if(turn.checkTurn(cards)){
             correctCards.set(turn.getCard1(),true);
             correctCards.set(turn.getCard2(),true);
