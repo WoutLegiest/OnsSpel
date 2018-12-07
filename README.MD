@@ -16,13 +16,19 @@ Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Del
 ** Frank is jammergenoeg overleden vorige week toen hij te lui was en dus rooksignalen wou sturen. Maarja Frank is een duif en tijdens het aansteken van het vuur heeft hij zichzelf geroosterd. Want ja, nog eens, Frank is een duif
 
 ## Huidige problemen 
-* Pelle is op zijn lokale git nog aan het prutsen met de finale gui voor het hele gedoe.
-* Schaalbaarheid is nog een probleem voorlopig.
-* Systeem moet nog op threads worden gebouwd.
-* Spelen onmogelijk maken wanneer er nog niet genoeg spelers in de game zitten.
-* Chat in orde brengen.
-* Score table laten werken.
+###Priority
+- [ ] Mag niet mogelijk zijn op twee clients met hetzelfde account tegelijk in ge loggen.
+- [ ] Correct afsluiten van een game.
+- [ ] Bug in turn in orde krijgen.
+- [ ] 20 games max implementeren.
+- [ ] backupservers. 
+- [ ] Einde van een spel afhandelen.
+- [ ] Zelfde kaart bug.
 
+### Non priority
+- [ ] Chat layout verbeteren
+- [ ] Scaling foto's
+- [ ] Mogelijkheid game op te slaan?
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-crayons.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-java.svg)](https://forthebadge.com)
