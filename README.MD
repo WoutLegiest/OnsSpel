@@ -17,7 +17,9 @@ Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Del
 
 ## Huidige problemen 
 ###Priority
-- [ ] Mag niet mogelijk zijn op twee clients met hetzelfde account tegelijk in ge loggen.
+- [x] Client kan zijn eigen spel niet joinen
+- [ ] Label veranderen als game vol zit
+- [ ] Het kijken naar een spel
 - [ ] Correct afsluiten van een game.
 - [ ] Bug in turn in orde krijgen.
 - [ ] 20 games max implementeren.
@@ -32,7 +34,6 @@ Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Del
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-crayons.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-java.svg)](https://forthebadge.com)
-[![forthebadge](https://forthebadge.com/images/badges/powered-by-electricity.svg)](https://forthebadge.com)
-
 [![forthebadge](https://forthebadge.com/images/badges/mom-made-pizza-rolls.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/powered-by-electricity.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/winter-is-coming.svg)](https://forthebadge.com)

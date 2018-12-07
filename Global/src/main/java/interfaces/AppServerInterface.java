@@ -27,7 +27,7 @@ public interface AppServerInterface extends Remote {
 
     ArrayList<Player> getAllPlayers() throws RemoteException;
 
-    ArrayList<Game> getAllGames()throws RemoteException;
+    ArrayList<Game> getAllGamesFromAppServer()throws RemoteException;
 
     ArrayList<Card> shuffleCards(int range, String theme)throws RemoteException;
 

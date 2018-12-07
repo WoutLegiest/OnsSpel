@@ -5,6 +5,7 @@ import interfaces.DataBaseInterface;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.math.BigInteger;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.NoSuchAlgorithmException;
@@ -289,6 +290,26 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         }
 
         return null;
+    }
+
+    @Override
+    public String getUsername(int idOwn) throws RemoteException{
+
+        String sql = "SELECT * FROM player WHERE id='" + idOwn + "';";
+
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+
+            rs.next();
+
+            return rs.getString("username");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
     }
 
     @Override

@@ -63,8 +63,9 @@ public class Turn implements Serializable {
     }
 
     public boolean checkTurn(ArrayList<Card>cards){
-        if(cards.get(cardIndexOne).getPath().equals(cards.get(cardIndexTwo).getPath()))correct=true;
-        else correct=false;
+
+        correct = cards.get(cardIndexOne).getPath().equals(cards.get(cardIndexTwo).getPath());
+
         return correct;
     }
 }

@@ -25,12 +25,12 @@
                </children></AnchorPane>
           <AnchorPane maxWidth="225.0" minHeight="550.0" minWidth="225.0" prefHeight="160.0" prefWidth="225.0">
                <children>
-                  <TitledPane collapsible="false" layoutX="9.0" layoutY="14.0" prefHeight="250.0" prefWidth="200.0" text="Score">
+                  <TitledPane collapsible="false" layoutX="9.0" layoutY="80.0" prefHeight="189.0" prefWidth="200.0" text="Score">
                      <content>
-                        <TableView fx:id="scoreTableGame" prefHeight="200.0" prefWidth="200.0">
+                        <TableView fx:id="scoreTableGame" prefHeight="176.0" prefWidth="198.0">
                           <columns>
-                            <TableColumn fx:id="usernameColum" prefWidth="98.0" text="Player" />
-                            <TableColumn fx:id="localScoreColumn" prefWidth="50.0" text="Score" />
+                            <TableColumn fx:id="usernameColum" prefWidth="71.0" text="Player" />
+                            <TableColumn fx:id="localScoreColumn" prefWidth="77.0" text="Score" />
                               <TableColumn fx:id="turnColumn" prefWidth="50.0" text="Turn" />
                           </columns>
                         </TableView>

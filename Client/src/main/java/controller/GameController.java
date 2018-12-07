@@ -98,7 +98,7 @@ public class GameController {
 
         //initializes UI
         makeGrid();
-        setLabels();
+        setLabelsStart();
         addToScoreTable();
 
         //set Turn variable
@@ -222,6 +222,7 @@ public class GameController {
 
                 //perform feedback to the user.
                 boolean correct=turn.isCorrect();
+
                 if(correct){
                     title= "Correct move!";
                     contentText= "You have gained a point, congrats mate";
@@ -240,7 +241,6 @@ public class GameController {
                 } catch (RemoteException | NotBoundException e) {
                     e.printStackTrace();
                 }
-
 
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle(title);
@@ -312,6 +312,7 @@ public class GameController {
     private void setLabels(){
         StringBuilder stringBuilder=new StringBuilder();
         Color color;
+
         if(checkForTurn()){
             stringBuilder.append(player.getUsername());
             stringBuilder.append("\t : Your Turn!");
@@ -322,6 +323,19 @@ public class GameController {
             stringBuilder.append("\t Not Your Turn!");
             color=Color.RED;
         }
+
+        changeTurnLabel(color,stringBuilder.toString());
+
+    }
+
+    private void setLabelsStart(){
+
+        StringBuilder stringBuilder=new StringBuilder();
+
+        stringBuilder.append("Waiting for other player: ").append("\t");
+        stringBuilder.append("Players: ").append(game.getGame().getCurNumberOfPlayers());
+        stringBuilder.append("/").append(game.getGame().getMaxNumberOfPlayers());
+        Color color=Color.BLUE;
 
         changeTurnLabel(color,stringBuilder.toString());
 
@@ -426,6 +440,7 @@ public class GameController {
         game.addPlayer(new GamePlayer(player),index);
         addToScoreTable();
         stringBuilder.append(player.getUsername()).append(" joined the game. \n");
+        setLabelsStart();
         Platform.runLater(() ->chatScreen.setText(stringBuilder.toString()));
     }
 

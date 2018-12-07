@@ -90,8 +90,16 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
     }
 
     @Override
-    public ArrayList<Game> getAllGames() throws RemoteException {
-        return dataBase.getDataBaseImpl().getAllGames();
+    public ArrayList<Game> getAllGamesFromAppServer() throws RemoteException {
+
+        ArrayList<Game> temp = new ArrayList<>();
+
+        for (GameExtended ge: games){
+
+            temp.add(ge.getGame());
+        }
+
+        return temp;
     }
 
     @Override
@@ -128,6 +136,8 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
     @Override
     public void gameCreatedExtended(GameExtended gameExtended) throws RemoteException {
+        String username = dataBase.getDataBaseImpl().getUsername(gameExtended.getGame().getOwner());
+        gameExtended.getGame().setOwnerUsername(username);
         games.add(gameExtended);
         dataBase.getDataBaseImpl().saveGameExtended(gameExtended);
 

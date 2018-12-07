@@ -1,8 +1,11 @@
 package controller;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import domain.*;
 import interfaces.AppServerInterface;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -75,7 +78,6 @@ public class LobbyController {
         gameOwner.setCellValueFactory(new PropertyValueFactory<Game,String>("ownerUsername"));
         players.setCellValueFactory(new PropertyValueFactory<Game, String>("maxNumberOfPlayers"));
         freeSpots.setCellValueFactory(new PropertyValueFactory<Game, String>("curNumberOfPlayers"));
-        //join.setCellValueFactory(new PropertyValueFactory<Game,Button>("join"));
 
         loadT2();
 
@@ -131,7 +133,7 @@ public class LobbyController {
             Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
             AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
-            allGames = appServer.getAllGames();
+            allGames = appServer.getAllGamesFromAppServer();
 
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
@@ -157,16 +159,6 @@ public class LobbyController {
 
     private void loadT2(){
 
-        join.setCellValueFactory(features -> new SimpleBooleanProperty(features.getValue() != null));
-
-        // create a cell value factory with an add button for each row in the table.
-        join.setCellFactory(personBooleanTableColumn -> new ButtonCellJoin(currentGames, this));
-
-        watch.setCellValueFactory(features -> new SimpleBooleanProperty(features.getValue() != null));
-
-        // create a cell value factory with an add button for each row in the table.
-        watch.setCellFactory(personBooleanTableColumn -> new ButtonCellWatch(currentGames, this));
-
         if(currentGames!=null){
             for ( int i = 0; i<currentGames.getItems().size(); i++) {
                 currentGames.getItems().clear();
@@ -176,6 +168,17 @@ public class LobbyController {
         ArrayList<Game>allGames = loadGames();
 
         currentGames.getItems().addAll(allGames);
+
+        join.setCellValueFactory(features -> new SimpleBooleanProperty(features.getValue() != null));
+
+        // create a cell value factory with an add button for each row in the table.
+        join.setCellFactory(personBooleanTableColumn -> new ButtonCellJoin(currentGames, this, player.getUsername()));
+
+        watch.setCellValueFactory(features -> new SimpleBooleanProperty(features.getValue() != null));
+
+        // create a cell value factory with an add button for each row in the table.
+        watch.setCellFactory(personBooleanTableColumn -> new ButtonCellWatch(currentGames, this));
+
     }
 
     public void refreshT1(){
@@ -278,10 +281,12 @@ class ButtonCellJoin extends TableCell<Game, Boolean> {
 
     private final Button cellButton = new Button("Join");
     private LobbyController lc;
+    private String usr;
 
-    ButtonCellJoin(final TableView tblView, LobbyController lobbyC){
+    ButtonCellJoin(final TableView<Game> tblView, LobbyController lobbyC, String user){
 
         this.lc = lobbyC;
+        usr= user;
 
         cellButton.setOnAction(t -> {
             lc.joinGame(getTableView().getItems().get(getIndex()).getIdGame());
@@ -293,6 +298,10 @@ class ButtonCellJoin extends TableCell<Game, Boolean> {
     protected void updateItem(Boolean t, boolean empty) {
         super.updateItem(t, empty);
         if(!empty){
+            if(usr.equals(getTableView().getItems().get(getIndex()).getOwnerUsername())){
+                cellButton.setDisable(true);
+                cellButton.setText("Own game");
+            }
             setGraphic(cellButton);
         }
     }
