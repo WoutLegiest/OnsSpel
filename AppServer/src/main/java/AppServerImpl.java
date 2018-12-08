@@ -90,6 +90,11 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
     }
 
     @Override
+    public ArrayList<Game> getAllGamesFromDB() throws RemoteException {
+        return dataBase.getDataBaseImpl().getAllGames();
+    }
+
+    @Override
     public ArrayList<Game> getAllGamesFromAppServer() throws RemoteException {
 
         ArrayList<Game> temp = new ArrayList<>();
@@ -145,10 +150,13 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
     @Override
     public void pushTurn(int gameId, Turn turn) throws RemoteException {
+
         for (GameExtended gameExtended: games){
             if(gameExtended.getGame().getIdGame()==gameId){
+
                 gameExtended.addTurn(turn);
                 performTurn(gameExtended,turn);
+
                 gameExtended.nextPlayer();
                 gameExtended.updateGamePlayer(turn);
                 return;
@@ -158,6 +166,10 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
     @Override
     public void addPlayer(Player gp, int ownIndex, int gameID) throws RemoteException{
+
+        //Doorpushen naar de DB
+        dataBase.getDataBaseImpl().addPlayer(gameID, ownIndex);
+
 
         //Lokaal toevoegen
         GamePlayer temp = new GamePlayer(gp);

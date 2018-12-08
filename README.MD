@@ -18,14 +18,15 @@ Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Del
 ## Huidige problemen 
 ###Priority
 - [x] Client kan zijn eigen spel niet joinen
-- [ ] Label veranderen als game vol zit
+- [ ] Terug  veranderen dat currentGames word gevuld door server
+    - [ ] Label veranderen als game vol zit
 - [ ] Het kijken naar een spel
 - [ ] Correct afsluiten van een game.
 - [ ] Bug in turn in orde krijgen.
 - [ ] 20 games max implementeren.
 - [ ] backupservers. 
 - [ ] Einde van een spel afhandelen.
-- [ ] Zelfde kaart bug.
+- [x] Zelfde kaart bug.
 
 ### Non priority
 - [ ] Chat layout verbeteren

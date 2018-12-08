@@ -88,8 +88,8 @@ public class LobbyController {
         theme.getSelectionModel().select("default");
 
         sizeGame.getItems().removeAll(sizeGame.getItems());
-        sizeGame.getItems().addAll("2x3", "4x4", "6x6");
-        sizeGame.getSelectionModel().select("4x4");
+        sizeGame.getItems().addAll("2x2", "4x4", "6x6");
+        sizeGame.getSelectionModel().select("2x2");
 
         numberOfPlayer.getItems().removeAll(numberOfPlayer.getItems());
         numberOfPlayer.getItems().addAll("2 Players", "3 Players", "4 Players");
@@ -129,11 +129,12 @@ public class LobbyController {
 
     private ArrayList<Game> loadGames(){
         ArrayList<Game> allGames = new ArrayList<>();
+
         try {
             Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
             AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
-            allGames = appServer.getAllGamesFromAppServer();
+            allGames = appServer.getAllGamesFromDB();
 
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
@@ -298,6 +299,13 @@ class ButtonCellJoin extends TableCell<Game, Boolean> {
     protected void updateItem(Boolean t, boolean empty) {
         super.updateItem(t, empty);
         if(!empty){
+
+            //Check of game vol zit
+            if(getTableView().getItems().get(getIndex()).getCurNumberOfPlayers()==getTableView().getItems().get(getIndex()).getMaxNumberOfPlayers()){
+                cellButton.setDisable(true);
+                cellButton.setText("Full");
+            }
+
             if(usr.equals(getTableView().getItems().get(getIndex()).getOwnerUsername())){
                 cellButton.setDisable(true);
                 cellButton.setText("Own game");

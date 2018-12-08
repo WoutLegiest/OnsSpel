@@ -482,6 +482,34 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
 
     }
 
+    @Override
+    public void addPlayer(int gameID, int playerID) throws RemoteException{
+
+        String sqlGame = "UPDATE game SET curNumberOfPlayers = curNumberOfPlayers + 1  WHERE idgame= ?;";
+
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sqlGame);
+            pstmt.setInt(1, gameID);
+            pstmt.executeUpdate();
+        } catch (SQLException se) {
+            se.printStackTrace();
+        }
+
+        String sql = "INSERT INTO gameplayer (game_idgame, player_id, gameScore) VALUES (?,?,0) ;";
+
+        try{
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, gameID);
+            pstmt.setInt(2, playerID);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
     private boolean validatePassword(String originalPassword, String storedPassword) {
         String[] parts = storedPassword.split(":");
         int iterations = Integer.parseInt(parts[0]);

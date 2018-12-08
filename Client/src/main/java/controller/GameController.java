@@ -211,26 +211,14 @@ public class GameController {
                 changeView(idButtonInt);
 
             //Second turn
-            }else if(turn.getCard2()==-1){
+            }else if(turn.getCard2()==-1 && turn.getCard1()!=idButtonInt){
 
                 turn.setCard2(idButtonInt);
 
                 changeView(idButtonInt);
 
-                String title=null;
-                String contentText=null;
-
                 //perform feedback to the user.
                 boolean correct=turn.isCorrect();
-
-                if(correct){
-                    title= "Correct move!";
-                    contentText= "You have gained a point, congrats mate";
-                }else {
-                    title="False move";
-                    contentText="Try again next time!";
-
-                }
 
                 // send turn to app server
                 try {
@@ -242,11 +230,17 @@ public class GameController {
                     e.printStackTrace();
                 }
 
-                Alert alert = new Alert(AlertType.INFORMATION);
+                try{
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                /*Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle(title);
                 alert.setHeaderText(null);
                 alert.setContentText(contentText);
-                alert.showAndWait();
+                alert.showAndWait();*/
 
                 if(!correct) {
                     //wrong guess, flip the cards again.
@@ -291,6 +285,7 @@ public class GameController {
     }
 
     private ImageView swapIV(Button button, int id){
+
         if(button.getGraphic().getId().equals("-1"))
             return images.get(id);
         else
@@ -298,9 +293,11 @@ public class GameController {
     }
 
     private ImageView choseRightIV(int buttonID){
-        ImageView IV=null;
-        if(game.getCorrectCards().get(buttonID))return images.get(buttonID);
-        else return makeImageView(coverImage,-1);
+
+        if(game.getCorrectCards().get(buttonID))
+            return images.get(buttonID);
+        else
+            return makeImageView(coverImage,-1);
 
     }
 
@@ -445,7 +442,9 @@ public class GameController {
     }
 
     private void checkView(){
+
         for (int i=0;i<buttons.size();i++){
+
             Button button= buttons.get(i);
             ImageView tempImageView= choseRightIV(i);
             Platform.runLater(() -> button.setGraphic(tempImageView));

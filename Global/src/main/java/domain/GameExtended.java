@@ -80,15 +80,19 @@ public class GameExtended implements Serializable {
     }
 
     public void nextPlayer(){
+
         int nextPlayerIndex=-1;
         for(int i=0;i<players.size();i++){
+
             if(currentPlayerTurn.getId()==players.get(i).getId()){
                 nextPlayerIndex=i;
             }
         }
 
-        if(nextPlayerIndex==players.size()-1) nextPlayerIndex=0;
-        else nextPlayerIndex++;
+        if(nextPlayerIndex==players.size()-1)
+            nextPlayerIndex=0;
+        else
+            nextPlayerIndex++;
 
         currentPlayerTurn=players.get(nextPlayerIndex);
     }
