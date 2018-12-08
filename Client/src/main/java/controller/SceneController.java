@@ -67,6 +67,8 @@ public final class SceneController {
         Scene newScene = new Scene(root, 900, 600);
         GUI.setScene(newScene);
 
+        controller.checkBeginGame();
+
         GUI.show();
 
 

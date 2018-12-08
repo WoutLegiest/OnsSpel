@@ -14,6 +14,7 @@ import java.rmi.server.UnicastRemoteObject;
  * @author Wouter Legiest on 3/12/2018
  */
 public class ClientImpl extends UnicastRemoteObject implements ClientInterface {
+
     //logic implemented for one game at a time
     GameController gameController;
 
@@ -46,6 +47,11 @@ public class ClientImpl extends UnicastRemoteObject implements ClientInterface {
     public void addPlayer(Player player, int index) throws RemoteException {
         gameController.addPlayer(player,index);
 
+    }
+
+    @Override
+    public void startGame() throws RemoteException {
+        gameController.setLabels();
     }
 
     public void setGameController(GameController gameController) {

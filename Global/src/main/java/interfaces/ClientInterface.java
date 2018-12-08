@@ -21,4 +21,5 @@ public interface ClientInterface extends Remote {
 
     void addPlayer(Player player, int index) throws RemoteException;
 
+    void startGame() throws RemoteException;
 }

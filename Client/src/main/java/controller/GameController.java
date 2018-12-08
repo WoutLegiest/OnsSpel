@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -215,10 +216,13 @@ public class GameController {
 
                 turn.setCard2(idButtonInt);
 
-                changeView(idButtonInt);
+                changeView(turn.getCard1());
+                changeView(turn.getCard2());
 
                 //perform feedback to the user.
                 boolean correct=turn.isCorrect();
+
+                checkView();
 
                 // send turn to app server
                 try {
@@ -230,17 +234,7 @@ public class GameController {
                     e.printStackTrace();
                 }
 
-                try{
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                /*Alert alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle(title);
-                alert.setHeaderText(null);
-                alert.setContentText(contentText);
-                alert.showAndWait();*/
+                //Wachten gebeurt op de andere clients, dus hier hoef je niet te wachten
 
                 if(!correct) {
                     //wrong guess, flip the cards again.
@@ -281,6 +275,7 @@ public class GameController {
     private void changeView(int idButton) {
         Button button= buttons.get(idButton);
         ImageView newIV= swapIV(button, idButton);
+
         Platform.runLater(() ->button.setGraphic(newIV));
     }
 
@@ -306,7 +301,7 @@ public class GameController {
     /**
      * Method to set the label on the bottom of the screen, indicating which player is currently playing.
      */
-    private void setLabels(){
+    public void setLabels(){
         StringBuilder stringBuilder=new StringBuilder();
         Color color;
 
@@ -327,15 +322,13 @@ public class GameController {
 
     private void setLabelsStart(){
 
-        StringBuilder stringBuilder=new StringBuilder();
-
-        stringBuilder.append("Waiting for other player: ").append("\t");
-        stringBuilder.append("Players: ").append(game.getGame().getCurNumberOfPlayers());
-        stringBuilder.append("/").append(game.getGame().getMaxNumberOfPlayers());
         Color color=Color.BLUE;
 
-        changeTurnLabel(color,stringBuilder.toString());
+        String stringBuilder = "Waiting for other player: " + "\t" +
+                "Players: " + game.getGame().getCurNumberOfPlayers() +
+                "/" + game.getGame().getMaxNumberOfPlayers();
 
+        changeTurnLabel(color, stringBuilder);
     }
 
     private void changeTurnLabel(Color color, String text) {
@@ -351,6 +344,47 @@ public class GameController {
         changeTurnLabel(Color.BLUE,"Performing turn of player: " + game.getCurrentPlayerTurn().getUsername());
     }
 
+    public void checkBeginGame(){
+        if(game.getGame().getMaxNumberOfPlayers() == game.getGame().getCurNumberOfPlayers()) {
+            try {
+                Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
+                AppServerInterface appServerImpl = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
+
+                appServerImpl.beginGame(game.getGame().getIdGame());
+            } catch (NotBoundException | RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void beginGame() {
+
+        try{
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Color color=Color.BLUE;
+
+        String stringBuilder = "Enogh Player ! " + "\t" +
+                "Players: " + game.getGame().getCurNumberOfPlayers() +
+                "/" + game.getGame().getMaxNumberOfPlayers() +
+                "\t" + " Good Game!";
+
+        changeTurnLabel(color, stringBuilder);
+
+        try{
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        setLabels();
+
+    }
+
+
     //-------- callback methods --------//
 
     /**
@@ -358,6 +392,7 @@ public class GameController {
      * @param turn turn to process.
      */
     public void performOtherTurn(Turn turn){
+
         checkView();
 
         game.addTurn(turn);
@@ -371,7 +406,7 @@ public class GameController {
         updateScoreTable();
 
         try {
-            TimeUnit.SECONDS.sleep(10);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -434,12 +469,13 @@ public class GameController {
      * @param index Index of the client callback object corresponding to the player.
      */
     public void addPlayer(Player player, int index){
+
         game.addPlayer(new GamePlayer(player),index);
         addToScoreTable();
         stringBuilder.append(player.getUsername()).append(" joined the game. \n");
         setLabelsStart();
         Platform.runLater(() ->chatScreen.setText(stringBuilder.toString()));
-    }
+        }
 
     private void checkView(){
 
@@ -472,5 +508,9 @@ public class GameController {
         }
 
     }
+
+
+
+
 
 }

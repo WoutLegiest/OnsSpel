@@ -82,6 +82,7 @@ public class GameExtended implements Serializable {
     public void nextPlayer(){
 
         int nextPlayerIndex=-1;
+
         for(int i=0;i<players.size();i++){
 
             if(currentPlayerTurn.getId()==players.get(i).getId()){
@@ -98,14 +99,18 @@ public class GameExtended implements Serializable {
     }
 
     public void updateGamePlayer(Turn turn) {
+
         for (GamePlayer player: players){
+
             if(player.getId()==turn.getPlayer().getId()){
                 player.increaseTurns();
+
                 if(turn.checkTurn(cards)){
                     player.increaseScore();
                 }
             }
         }
+
         if (turn.isCorrect()){
             correctCards.set(turn.getCard1(),true);
             correctCards.set(turn.getCard2(),true);
