@@ -6,25 +6,22 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import static controller.MainClient.*;
 import static domain.Constants.*;
 
-
+@SuppressWarnings("Duplicates")
 public class GameController {
 
     //Game
@@ -48,6 +45,7 @@ public class GameController {
 
     //Turn
     private Turn turn;
+    private Runnable task1;
 
     //Chat
     private StringBuilder stringBuilder;
@@ -78,6 +76,9 @@ public class GameController {
         turnColumn.setCellValueFactory(new PropertyValueFactory<GamePlayer, Integer>("turnsPlayed"));
         stringBuilder=new StringBuilder();
         turnLabel.setText("Not ready yet");
+
+        chatScreen.setWrapText(true);
+
     }
 
     /**
@@ -143,18 +144,24 @@ public class GameController {
             images.add(makeImageView(new Image(transformToUrl(cards.get(i))),i));
             ImageView ivCover = makeImageView(coverImage,-1);
 
-            if(i!=0 && i%game.getGame().getSize()==0){
+            if(i!=0 && i%game.getGame().getSize()==0)
                 rowIndex++;
-            }
+
             columnIndex=i-(rowIndex*game.getGame().getSize());
+
             Button button = new Button();
             button.setId(String.valueOf(i));
             buttons.add(button);
+
             button.setPrefHeight(cellHeight-cellHeight/20);
             button.setPrefWidth(cellWidth-cellWidth/20);
             button.setGraphic(ivCover);
 
-            button.setOnAction(e -> performClick(button.getId()));
+            button.setOnAction(e -> {
+                performClick(button.getId());
+                new Thread(task1).start();
+            });
+
             gridGame.add(button, columnIndex, rowIndex);
         }
     }
@@ -210,50 +217,66 @@ public class GameController {
                 turn=new Turn(player,idButtonInt);
                 //change view of card
                 changeView(idButtonInt);
+                task1=null;
 
             //Second turn
             }else if(turn.getCard2()==-1 && turn.getCard1()!=idButtonInt){
 
                 turn.setCard2(idButtonInt);
 
-                changeView(turn.getCard1());
                 changeView(turn.getCard2());
 
+                if(turn.checkTurn(game.getCards())) {
+                    changeTurnLabel(Color.PURPLE,"\t Correct");
+                }
+
                 //perform feedback to the user.
-                boolean correct=turn.isCorrect();
 
-                checkView();
+                //PELLE DURFT HIER AANKOMEN EN IK VIL U LEVEND!
+                task1 = () -> {
 
-                // send turn to app server
-                try {
-                    Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
-                    AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
-                    appServer.pushTurn(game.getGame().getIdGame(),turn);
+                    try {
+                        Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
+                        AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
+                        appServer.pushTurn(game.getGame().getIdGame(),turn);
 
-                } catch (RemoteException | NotBoundException e) {
-                    e.printStackTrace();
-                }
+                    } catch (RemoteException | NotBoundException e) {
+                        e.printStackTrace();
+                    }
 
-                //Wachten gebeurt op de andere clients, dus hier hoef je niet te wachten
+                    if(!turn.isCorrect()) {
 
-                if(!correct) {
-                    //wrong guess, flip the cards again.
-                    changeView(turn.getCard1());
-                    changeView(turn.getCard2());
-                }
+                        try {
+                            Thread.sleep(2500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
 
-                game.nextPlayer();
-                setLabels();
+                        //wrong guess, flip the cards again.
+                        changeView(turn.getCard1());
+                        changeView(turn.getCard2());
+                    }
 
-                game.updateGamePlayer(turn);
-                updateScoreTable();
-                turn=null;
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
-                checkView();
+                    game.nextPlayer();
+                    setLabels();
+
+                    game.updateGamePlayer(turn);
+                    updateScoreTable();
+                    turn=null;
+
+                    checkView();
+                };
+
             }
-
         }
     }
+
 
 
     //-------- checks when button is clicked --------//
@@ -272,14 +295,14 @@ public class GameController {
 
     //-------- flip card methods --------//
 
-    private void changeView(int idButton) {
+    public synchronized void changeView(int idButton) {
         Button button= buttons.get(idButton);
         ImageView newIV= swapIV(button, idButton);
 
         Platform.runLater(() ->button.setGraphic(newIV));
     }
 
-    private ImageView swapIV(Button button, int id){
+    private synchronized ImageView swapIV(Button button, int id){
 
         if(button.getGraphic().getId().equals("-1"))
             return images.get(id);
@@ -357,34 +380,6 @@ public class GameController {
         }
     }
 
-    private void beginGame() {
-
-        try{
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        Color color=Color.BLUE;
-
-        String stringBuilder = "Enogh Player ! " + "\t" +
-                "Players: " + game.getGame().getCurNumberOfPlayers() +
-                "/" + game.getGame().getMaxNumberOfPlayers() +
-                "\t" + " Good Game!";
-
-        changeTurnLabel(color, stringBuilder);
-
-        try{
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        setLabels();
-
-    }
-
-
     //-------- callback methods --------//
 
     /**
@@ -405,14 +400,15 @@ public class GameController {
         game.updateGamePlayer(turn);
         updateScoreTable();
 
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         //if move done is not correct, flip cards again.
         if(!turn.checkTurn(game.getCards())){
+
+            try {
+                Thread.sleep(2500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             changeView(turn.getCard1());
             changeView(turn.getCard2());
         }
@@ -477,12 +473,12 @@ public class GameController {
         Platform.runLater(() ->chatScreen.setText(stringBuilder.toString()));
         }
 
-    private void checkView(){
+    public void checkView(){
 
         for (int i=0;i<buttons.size();i++){
 
-            Button button= buttons.get(i);
-            ImageView tempImageView= choseRightIV(i);
+            Button button = buttons.get(i);
+            ImageView tempImageView = choseRightIV(i);
             Platform.runLater(() -> button.setGraphic(tempImageView));
         }
     }

@@ -22,4 +22,6 @@ public interface ClientInterface extends Remote {
     void addPlayer(Player player, int index) throws RemoteException;
 
     void startGame() throws RemoteException;
+
+    void performImage(Turn turn) throws RemoteException;
 }

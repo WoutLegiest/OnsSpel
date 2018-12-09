@@ -39,7 +39,7 @@ public interface AppServerInterface extends Remote {
 
     void gameCreatedExtended(GameExtended gameExtended) throws RemoteException;
 
-    void pushTurn(int gameId, Turn turn)throws RemoteException;
+    void pushTurn(int gameId, Turn turn) throws RemoteException;
 
     void addPlayer(Player gp, int index, int gameID) throws RemoteException;
 

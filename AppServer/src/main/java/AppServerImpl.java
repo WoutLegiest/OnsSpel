@@ -154,11 +154,11 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
         for (GameExtended gameExtended: games){
             if(gameExtended.getGame().getIdGame()==gameId){
 
+
                 //Turn wordt toegevoegd aan het game object op de appServer
                 gameExtended.addTurn(turn);
 
                 //Turn doorvoeren naar alle andere meevolgende games
-                //TODO: Dees met thread!
                 performTurn(gameExtended,turn);
 
                 //Int van de volgende speler klaarzetten
@@ -261,15 +261,23 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
     private void performTurn(GameExtended gameExtended, Turn turn){
 
-        for(int i=0;i<gameExtended.getPlayers().size();i++){
+        int i =0;
+
+        for(i=0;i<gameExtended.getPlayers().size();i++){
 
             //Naar iedereen doorsturen behalve jezelf
             if(gameExtended.getPlayers().get(i).getId()!=turn.getPlayer().getId()){
-                try {
-                    clientList.get(gameExtended.getClientIndexes().get(i)).performOtherPlayerTurn(turn);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+
+                int finalI = i;
+                Runnable r = () -> {
+                    try {
+                        clientList.get(gameExtended.getClientIndexes().get(finalI)).performOtherPlayerTurn(turn);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                };
+
+                new Thread(r).start();
             }
         }
     }

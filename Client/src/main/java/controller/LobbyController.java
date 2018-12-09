@@ -71,6 +71,8 @@ public class LobbyController {
         dateLastGameColum.setCellValueFactory(new PropertyValueFactory<Player, Timestamp>("lastGameDate"));
         dateJoinColum.setCellValueFactory(new PropertyValueFactory<Player, Timestamp>("joinDate"));
 
+        ranking.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         loadT1();
 
         //Tab2
@@ -78,6 +80,8 @@ public class LobbyController {
         gameOwner.setCellValueFactory(new PropertyValueFactory<Game,String>("ownerUsername"));
         players.setCellValueFactory(new PropertyValueFactory<Game, String>("maxNumberOfPlayers"));
         freeSpots.setCellValueFactory(new PropertyValueFactory<Game, String>("curNumberOfPlayers"));
+
+        currentGames.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         loadT2();
 
@@ -89,7 +93,7 @@ public class LobbyController {
 
         sizeGame.getItems().removeAll(sizeGame.getItems());
         sizeGame.getItems().addAll("2x2", "4x4", "6x6");
-        sizeGame.getSelectionModel().select("2x2");
+        sizeGame.getSelectionModel().select("4x4");
 
         numberOfPlayer.getItems().removeAll(numberOfPlayer.getItems());
         numberOfPlayer.getItems().addAll("2 Players", "3 Players", "4 Players");

@@ -54,6 +54,11 @@ public class ClientImpl extends UnicastRemoteObject implements ClientInterface {
         gameController.setLabels();
     }
 
+    @Override
+    public void performImage(Turn turn) throws RemoteException {
+        gameController.changeView(turn.getCard2());
+    }
+
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
     }

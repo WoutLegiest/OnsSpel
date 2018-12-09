@@ -18,19 +18,21 @@ Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Del
 ## Huidige problemen 
 ###Priority
 - [x] Client kan zijn eigen spel niet joinen
-- [ ] Terug  veranderen dat currentGames word gevuld door server
-    - [ ] Label veranderen als game vol zit
+- [x] Terug  veranderen dat currentGames word gevuld door server
+    - [x] Label veranderen als game vol zit
+- [x] Bug in turn in orde krijgen. 
+- [x] Zelfde kaart bug.
 - [ ] Het kijken naar een spel
-- [ ] Correct afsluiten van een game.
-- [ ] Bug in turn in orde krijgen.
 - [ ] 20 games max implementeren.
 - [ ] backupservers. 
+- [ ] Correct afsluiten van een game.
 - [ ] Einde van een spel afhandelen.
-- [x] Zelfde kaart bug.
+
 
 ### Non priority
 - [ ] Chat layout verbeteren
 - [ ] Scaling foto's
+- [ ] Nieuw verster openen voor game
 - [ ] Mogelijkheid game op te slaan?
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-crayons.svg)](https://forthebadge.com)

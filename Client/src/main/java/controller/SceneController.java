@@ -49,7 +49,7 @@ public final class SceneController {
         Parent root = fxmlLoader.load();
         LobbyController controller =fxmlLoader.getController();
         controller.setCredentials(username,sessieToken);
-        Scene newScene = new Scene(root, 600, 600);
+        Scene newScene = new Scene(root, 650, 600);
         GUI.setScene(newScene);
         GUI.setTitle("Lobby");
 
