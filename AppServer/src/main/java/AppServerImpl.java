@@ -18,6 +18,7 @@ import java.util.Random;
 
 import static domain.Constants.*;
 
+@SuppressWarnings("Duplicates")
 public class AppServerImpl extends UnicastRemoteObject implements AppServerInterface {
 
     //None SessionUID !
@@ -44,10 +45,6 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
         }
     }
 
-    public DataBaseServer getDataBase() throws RemoteException {
-        return dataBase;
-    }
-
     @Override
     public void addOtherAppServer(AppServerInterface appInterface) throws RemoteException{
         appServerList.add(appInterface);
@@ -67,6 +64,16 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
             return clientList.indexOf(callbackClientObject);
         }
         return -1;
+    }
+
+    @Override
+    public void registerWatcher(int gameID, int clientIndex) throws RemoteException{
+
+        for (GameExtended gameExtended: games) {
+            if (gameExtended.getGame().getIdGame() == gameID) {
+                gameExtended.addWatcher(clientIndex);
+            }
+        }
     }
 
     @Override
@@ -154,7 +161,6 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
         for (GameExtended gameExtended: games){
             if(gameExtended.getGame().getIdGame()==gameId){
 
-
                 //Turn wordt toegevoegd aan het game object op de appServer
                 gameExtended.addTurn(turn);
 
@@ -166,6 +172,8 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
                 //Scoreboard updaten door gameplayer up te daten
                 gameExtended.updateGamePlayer(turn);
+
+                //Exit loop
                 return;
             }
         }
@@ -261,9 +269,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
     private void performTurn(GameExtended gameExtended, Turn turn){
 
-        int i =0;
-
-        for(i=0;i<gameExtended.getPlayers().size();i++){
+        for(int i=0;i<gameExtended.getPlayers().size();i++){
 
             //Naar iedereen doorsturen behalve jezelf
             if(gameExtended.getPlayers().get(i).getId()!=turn.getPlayer().getId()){
@@ -279,6 +285,20 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
                 new Thread(r).start();
             }
+        }
+
+        for(int i=0;i<gameExtended.getWatchIndexes().size();i++){
+
+            int finalI = i;
+            Runnable r = () -> {
+                try {
+                    clientList.get(gameExtended.getWatchIndexes().get(finalI)).performOtherPlayerTurn(turn);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            };
+
+            new Thread(r).start();
         }
     }
 

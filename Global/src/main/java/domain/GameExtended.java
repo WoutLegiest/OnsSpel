@@ -12,6 +12,7 @@ public class GameExtended implements Serializable {
     private final ArrayList<Card>cards;
     private final ArrayList<GamePlayer>players;
     private ArrayList<Integer>clientIndexes;
+    private ArrayList<Integer>watchIndexes;
     private ArrayList<Boolean>correctCards;
     private GamePlayer currentPlayerTurn;
     private ArrayList<Turn> turns;
@@ -23,11 +24,13 @@ public class GameExtended implements Serializable {
         this.players=null;
         this.currentPlayerTurn=null;
         clientIndexes=new ArrayList<>();
+        watchIndexes=new ArrayList<>();
         correctCards= new ArrayList<>();
         turns=new ArrayList<>();
     }
 
-    public GameExtended(Game game, String theme, ArrayList<Card> cards, ArrayList<GamePlayer> players, GamePlayer currentPlayerTurn) {
+    public GameExtended(Game game, String theme, ArrayList<Card> cards,
+                        ArrayList<GamePlayer> players, GamePlayer currentPlayerTurn) {
         this.game = game;
         this.theme = theme;
         this.cards = cards;
@@ -35,6 +38,7 @@ public class GameExtended implements Serializable {
         this.currentPlayerTurn=currentPlayerTurn;
         clientIndexes=new ArrayList<>();
         correctCards= new ArrayList<>();
+        watchIndexes= new ArrayList<>();
         for(Card card: cards){
             correctCards.add(false);
         }
@@ -48,6 +52,7 @@ public class GameExtended implements Serializable {
         this.players = gameExtended.players;
         this.currentPlayerTurn = gameExtended.currentPlayerTurn;
         this.clientIndexes = gameExtended.clientIndexes;
+        this.watchIndexes = gameExtended.watchIndexes;
         this.correctCards = gameExtended.correctCards;
         this.turns = gameExtended.turns;
     }
@@ -166,5 +171,11 @@ public class GameExtended implements Serializable {
         this.correctCards = correctCards;
     }
 
+    public void addWatcher(int clientIndex) {
+        watchIndexes.add(clientIndex);
+    }
 
+    public ArrayList<Integer> getWatchIndexes() {
+        return watchIndexes;
+    }
 }

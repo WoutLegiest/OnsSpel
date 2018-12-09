@@ -27,7 +27,7 @@ import static controller.MainClient.appServer;
 import static controller.SceneController.viewController;
 import static domain.Constants.*;
 
-
+@SuppressWarnings("Duplicates")
 public class LobbyController {
 
     //Player credentials
@@ -235,7 +235,7 @@ public class LobbyController {
         }
     }
 
-    public void joinGame(int gameID){
+    void joinGame(int gameID){
         try {
             Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
             AppServerInterface appServerImpl = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
@@ -244,7 +244,7 @@ public class LobbyController {
 
             //Save the appServer on the client side, if it is different
             if(!appServer.equals(gameAppServer)){
-                setAppServer(gameAppServer);
+                migrateToServer(gameAppServer);
             }
 
             GameExtended gameExtended = gameAppServer.getAppServerImpl().findGameExtended(gameID);
@@ -258,6 +258,30 @@ public class LobbyController {
 
             Card cover = appServer.getAppServerImpl().cardsByTheme(gameExtended.getTheme().concat("_cover")).get(0);
 
+
+            viewController.setViewToGame(gameExtended, player, token, cover);
+
+        } catch (NotBoundException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void watchGame(int gameID){
+
+        try {
+            Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
+            AppServerInterface appServerImpl = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
+
+            AppServer gameAppServer = appServerImpl.findServer(gameID);
+
+            //Save the appServer on the client side, if it is different
+            if(!appServer.equals(gameAppServer)){
+                migrateToServer(gameAppServer);
+            }
+
+            GameExtended gameExtended = gameAppServer.getAppServerImpl().findGameExtended(gameID);
+
+            Card cover = appServer.getAppServerImpl().cardsByTheme(gameExtended.getTheme().concat("_cover")).get(0);
 
             viewController.setViewToGame(gameExtended, player, token, cover);
 
@@ -293,9 +317,8 @@ class ButtonCellJoin extends TableCell<Game, Boolean> {
         this.lc = lobbyC;
         usr= user;
 
-        cellButton.setOnAction(t -> {
-            lc.joinGame(getTableView().getItems().get(getIndex()).getIdGame());
-        });
+        cellButton.setOnAction(t ->
+            lc.joinGame(getTableView().getItems().get(getIndex()).getIdGame()));
     }
 
     //Display button if the row is not empty
@@ -326,10 +349,11 @@ class ButtonCellWatch extends TableCell<Game, Boolean> {
 
     ButtonCellWatch(final TableView tblView, LobbyController lobbyC){
 
-        cellButton.setOnAction(t -> {
-            this.lc = lobbyC;
-            System.out.println("Sassy^2");
-        });
+        this.lc = lobbyC;
+
+        cellButton.setOnAction(t ->
+                lc.watchGame(getTableView().getItems().get(getIndex()).getIdGame()));
+
     }
 
     //Display button if the row is not empty

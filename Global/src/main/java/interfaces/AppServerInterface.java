@@ -19,6 +19,8 @@ public interface AppServerInterface extends Remote {
 
     int registerForCallback(ClientInterface callbackClientObject) throws java.rmi.RemoteException;
 
+    void registerWatcher(int gameID, int clientIndex) throws RemoteException;
+
     String authenticatePlayer(String username, String token) throws SQLException, RemoteException;
 
     String registerPlayer(String username, String password, String email) throws RemoteException, UserExistsException, SQLException;

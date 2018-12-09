@@ -16,6 +16,7 @@ import java.rmi.registry.Registry;
 import static controller.SceneController.viewController;
 import static domain.Constants.*;
 
+@SuppressWarnings("Duplicates")
 public class MainClient extends Application {
 
     static AppServer appServer;
@@ -37,7 +38,7 @@ public class MainClient extends Application {
 
         appServer = dispatch.getAppServer(index);
 
-        ClientInterface callbackObj = new ClientImpl();
+        ClientImpl callbackObj = new ClientImpl();
 
         try {
             Registry appRegistry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
@@ -49,10 +50,8 @@ public class MainClient extends Application {
             e.printStackTrace();
         }
 
-        clientImpl= (ClientImpl) callbackObj;
+        clientImpl = callbackObj;
         viewController.setViewToLogin();
-
-
     }
 
     public static void main(String[] args) {
@@ -65,7 +64,20 @@ public class MainClient extends Application {
         return appServer;
     }
 
-    public static void setAppServer(AppServer appServer) {
+    public static void migrateToServer(AppServer appServer) {
+
         MainClient.appServer = appServer;
+
+        try {
+            Registry appRegistry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
+            AppServerInterface appServerImpl = (AppServerInterface) appRegistry.lookup(APPSERVER_SERVICE);
+
+            myIndexNumberServerOne=appServerImpl.registerForCallback(clientImpl);
+
+        } catch (RemoteException | NotBoundException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

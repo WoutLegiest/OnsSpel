@@ -110,7 +110,6 @@ public class GameController {
         chatScreen.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         stringBuilder.append("You Joined the game! " + "\n");
         chatScreen.setText(stringBuilder.toString());
-
     }
 
     /**
@@ -367,7 +366,7 @@ public class GameController {
         changeTurnLabel(Color.BLUE,"Performing turn of player: " + game.getCurrentPlayerTurn().getUsername());
     }
 
-    public void checkBeginGame(){
+    void checkBeginGame(){
         if(game.getGame().getMaxNumberOfPlayers() == game.getGame().getCurNumberOfPlayers()) {
             try {
                 Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
@@ -430,7 +429,7 @@ public class GameController {
     /**
      * Add a newly joined player to the score table.
      */
-    public void addToScoreTable() {
+    private void addToScoreTable() {
         Platform.runLater(() ->{
             scoreTableGame.getItems().clear();
             scoreTableGame.getItems().addAll(game.getPlayers());
@@ -473,7 +472,7 @@ public class GameController {
         Platform.runLater(() ->chatScreen.setText(stringBuilder.toString()));
         }
 
-    public void checkView(){
+    private void checkView(){
 
         for (int i=0;i<buttons.size();i++){
 
