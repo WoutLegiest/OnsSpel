@@ -5,6 +5,9 @@ import javafx.application.Platform;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Thread to update the tableviews of the lobby every 5 seconds
+ */
 public class ScoreBoardThread extends Thread{
 
     private final LobbyController lc;

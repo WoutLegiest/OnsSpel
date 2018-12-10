@@ -1,5 +1,8 @@
 package domain;
 
+/**
+ * All the static final constants used all around the project
+ */
 public final class Constants {
 
     public static final String IP = "localhost";

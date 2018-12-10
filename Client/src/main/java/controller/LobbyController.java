@@ -1,11 +1,8 @@
 package controller;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import domain.*;
 import interfaces.AppServerInterface;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -103,12 +100,17 @@ public class LobbyController {
         thread.start();
     }
 
+    /**
+     * Set the credentials that are cached at the controller
+     * @param username
+     * @param token
+     */
     public void setCredentials(String username, String token){
 
         this.token=token;
 
         try {
-            Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());;
+            Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
             AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
 
             player = appServer.getPlayer(username);
@@ -117,8 +119,13 @@ public class LobbyController {
         }
     }
 
+    /**
+     * Communicates with the appServer to get all the players, to fill the scoreboard
+     * @return a list of all the players
+     */
     private ArrayList<Player> loadPlayers(){
         ArrayList<Player>allPlayers=new ArrayList<>();
+
         try {
             Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
             AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
@@ -131,6 +138,10 @@ public class LobbyController {
         return allPlayers;
     }
 
+    /**
+     * Communicates with the appServer to get all the games, to fill the scoreboard
+     * @return a list of all the games
+     */
     private ArrayList<Game> loadGames(){
         ArrayList<Game> allGames = new ArrayList<>();
 
@@ -146,6 +157,9 @@ public class LobbyController {
         return allGames;
     }
 
+    /**
+     * Fill the tableview with the data
+     */
     private void loadT1(){
 
         if(ranking != null){
@@ -162,6 +176,9 @@ public class LobbyController {
 
     }
 
+    /**
+     * Fill the tableview with the data
+     */
     private void loadT2(){
 
         if(currentGames!=null){
@@ -186,14 +203,25 @@ public class LobbyController {
 
     }
 
+    /**
+     * Public method that calls the private method to load the players tableview
+     */
     public void refreshT1(){
         loadT1();
     }
 
+    /**
+     * Public method that calls the private method to load the game tableview
+     */
     public void refreshT2(){
         loadT2();
     }
 
+    /**
+     * Create a game, push it to the DB, creates a gameExtended a push it to the AppServer.
+     * Set the GUI to the gameview
+     * @param actionEvent
+     */
     public void createGame(ActionEvent actionEvent){
 
         int size=Integer.parseInt(String.valueOf(sizeGame.getValue().charAt(0)));
@@ -220,7 +248,7 @@ public class LobbyController {
             Card cover=null;
 
             gameCards = appServerImpl.shuffleCards(size, themeString);
-            cover= appServerImpl.cardsByTheme(themeString.concat("_cover")).get(0);
+            cover= appServerImpl.getCardsByTheme(themeString.concat("_cover")).get(0);
 
             GamePlayer gamePlayer= new GamePlayer(player);
             GameExtended gameExtended=new GameExtended(game,themeString,gameCards,gamePlayers,gamePlayer);
@@ -235,6 +263,12 @@ public class LobbyController {
         }
     }
 
+    /**
+     * Method to add a player to a game, adds the player to the other gameExtended object, on the other clients and server.
+     * retrive a gameExtended and use it to build the GUI.
+     * Couple this method to the buttons in the tableview in the lobby
+     * @param gameID The game you want to join
+     */
     void joinGame(int gameID){
         try {
             Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
@@ -256,7 +290,7 @@ public class LobbyController {
             GamePlayer gamePlayer = new GamePlayer(player);
             gameExtended.addPlayer(gamePlayer,myIndexNumberServerOne);
 
-            Card cover = appServer.getAppServerImpl().cardsByTheme(gameExtended.getTheme().concat("_cover")).get(0);
+            Card cover = appServer.getAppServerImpl().getCardsByTheme(gameExtended.getTheme().concat("_cover")).get(0);
 
 
             viewController.setViewToGame(gameExtended, player, token, cover);
@@ -266,6 +300,10 @@ public class LobbyController {
         }
     }
 
+    /**
+     * Method to add a watchter a game. Method is couple to the button in the tableview of the games
+     * @param gameID The id of the game you want to watch
+     */
     void watchGame(int gameID){
 
         try {
@@ -285,7 +323,7 @@ public class LobbyController {
 
             GameExtended gameExtended = gameAppServer.getAppServerImpl().findGameExtended(gameID);
 
-            Card cover = appServer.getAppServerImpl().cardsByTheme(gameExtended.getTheme().concat("_cover")).get(0);
+            Card cover = appServer.getAppServerImpl().getCardsByTheme(gameExtended.getTheme().concat("_cover")).get(0);
 
             viewController.setViewToGame(gameExtended, player, token, cover);
 
@@ -310,6 +348,9 @@ public class LobbyController {
     }
 }
 
+/**
+ * Custom created class to embed a button inside a TableCell
+ */
 class ButtonCellJoin extends TableCell<Game, Boolean> {
 
     private final Button cellButton = new Button("Join");

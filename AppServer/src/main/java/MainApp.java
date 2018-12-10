@@ -24,7 +24,7 @@ public class MainApp {
     }
 
     /**
-     * Start up the registry of the AppServer en initionlasie and bound a first appServer to it
+     * Start up the registry of the AppServer en initialise and bound a first appServer to it
      */
     public static void startRegistry(){
         try{

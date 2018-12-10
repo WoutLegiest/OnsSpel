@@ -1,8 +1,11 @@
 package domain;
 
 public class GamePlayer extends Player {
-    int localScore;
-    int turnsPlayed;
+
+    private static final long serialVersionUID = -410566214722294423L;
+
+    private int localScore;
+    private int turnsPlayed;
 
     public GamePlayer(Player other) {
         super(other);
@@ -31,11 +34,11 @@ public class GamePlayer extends Player {
         this.turnsPlayed = turnsPlayed;
     }
 
-    public void increaseScore(){
+    void increaseScore(){
         localScore++;
     }
 
-    public void increaseTurns(){
+    void increaseTurns(){
         turnsPlayed++;
     }
 }

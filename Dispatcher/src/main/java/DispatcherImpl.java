@@ -12,7 +12,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import static domain.Constants.*;
+import static domain.Constants.APPSERVER_SERVICE;
+import static domain.Constants.DATABASE_SERVICE;
 
 public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInterface {
 
@@ -23,6 +24,19 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
         dbServers = new ArrayList<>();
         appServers = new ArrayList<>();
     }
+
+/*    public void startDatabaseServer() {
+        try {
+            Runtime.getRuntime().exec(
+                    new String[]{"cmd","/c","start","cmd","/k","java -jar src/servers/game/server.jar"}
+            new String[]{"cmd","/c","start","cmd","/k","java -jar src/servers/database/database.jar"}
+            );
+        } catch (IOException e) {
+            brokerLogger.severe("could not start new database server...");
+            e.printStackTrace();
+        }
+    }*/
+
 
     /**
      * Find the registry of the DB
@@ -49,6 +63,13 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
 
     }
 
+    /**
+     * Register a AppServer to the dispatcher.
+     * Find a databaseServer and add it to the Appserver
+     * @param port
+     * @param ip
+     * @throws RemoteException
+     */
     @Override
     public void registerAppServer(int port, String ip) throws RemoteException{
 

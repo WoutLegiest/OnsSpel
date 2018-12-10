@@ -35,7 +35,7 @@ public interface AppServerInterface extends Remote {
 
     ArrayList<Card> shuffleCards(int range, String theme)throws RemoteException;
 
-    ArrayList<Card> cardsByTheme(String theme)throws RemoteException;
+    ArrayList<Card> getCardsByTheme(String theme)throws RemoteException;
 
     int gameCreated( int owner, int maxNumberOfPlayer, int size) throws RemoteException;
 

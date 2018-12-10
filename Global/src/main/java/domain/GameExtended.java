@@ -80,7 +80,7 @@ public class GameExtended implements Serializable {
         return false;
     }
 
-    public void addClientIndex(int clientIndex){
+    private void addClientIndex(int clientIndex){
         clientIndexes.add(clientIndex);
     }
 

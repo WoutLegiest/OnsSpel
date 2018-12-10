@@ -89,7 +89,7 @@ public class Game implements Serializable {
         return size;
     }
 
-    public void increaseNumberOfPlayers(){
+    void increaseNumberOfPlayers(){
         curNumberOfPlayers++;
     }
 

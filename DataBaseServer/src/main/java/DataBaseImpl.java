@@ -21,6 +21,10 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
     Connection conn;
     Statement stmt;
 
+    /**
+     * Constructor, sets up the connection with the database. A sqlite is used as database technology
+     * @throws RemoteException
+     */
     public DataBaseImpl() throws RemoteException {
 
         try {
@@ -101,10 +105,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
 
         try {
             ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next())
-                return true;
-            else
-                return false;
+            return rs.next();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -241,6 +242,11 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         return processCards(sql);
     }
 
+    /**
+     * Method that is used to handel a query to retrive a list of cards
+     * @param sql
+     * @return
+     */
     private ArrayList<Card> processCards(String sql) {
 
         ArrayList<Card> allCards = new ArrayList<>();

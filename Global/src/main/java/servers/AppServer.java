@@ -6,9 +6,10 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
+ * Model a Appserver to an object
  * @author Wouter Legiest on 5/12/2018
  */
-public class AppServer  implements Serializable {
+public class AppServer implements Serializable {
 
     private static final long serialVersionUID = -3325140243868020180L;
 

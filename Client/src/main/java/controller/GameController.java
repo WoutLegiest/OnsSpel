@@ -339,7 +339,7 @@ public class GameController {
 
     /**
      * Method to set the label on the bottom of the screen, indicating which player is currently playing.
-     * @param watch
+     * @param watch Is true if the client is a watcher
      */
     public void setLabels(boolean watch){
         StringBuilder stringBuilder=new StringBuilder();
@@ -366,6 +366,9 @@ public class GameController {
 
     }
 
+    /**
+     * Method to set the label at the start of a game.
+     */
     private void setLabelsStart(){
 
         Color color=Color.BLUE;
@@ -496,6 +499,9 @@ public class GameController {
         Platform.runLater(() ->chatScreen.setText(stringBuilder.toString()));
         }
 
+    /**
+     * Set view of the buttons correct. Check every button again
+     */
     private void checkView(){
 
         for (int i=0;i<buttons.size();i++){
@@ -527,9 +533,5 @@ public class GameController {
         }
 
     }
-
-
-
-
 
 }

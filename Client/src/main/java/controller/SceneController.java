@@ -12,6 +12,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import static domain.Constants.ICON_PATH;
 
+/**
+ * Final class that controlles the scene of the GUI
+ */
 public final class SceneController {
 
     public static final SceneController viewController = new SceneController();
@@ -70,9 +73,5 @@ public final class SceneController {
         controller.checkBeginGame();
 
         GUI.show();
-
-
     }
-
-
 }
