@@ -1,6 +1,5 @@
 package client.controller;
 
-import domain.*;
 import global.domain.*;
 import global.interfaces.AppServerInterface;
 import javafx.application.Platform;
@@ -46,7 +45,7 @@ public class GameController {
 
     //Turn
     private Turn turn;
-    private Runnable task1;
+    private Runnable taskFinishTurn;
 
     //Chat
     private StringBuilder stringBuilder;
@@ -79,7 +78,6 @@ public class GameController {
         turnLabel.setText("Not ready yet");
 
         chatScreen.setWrapText(true);
-
     }
 
     /**
@@ -90,6 +88,7 @@ public class GameController {
      * @param cover Image cover
      */
     void setCredentials(GameExtended gameExtended, Player player, String token, Card cover){
+
         //assign variables
         this.game=gameExtended;
         this.player=player;
@@ -160,7 +159,7 @@ public class GameController {
 
             button.setOnAction(e -> {
                 performClick(button.getId());
-                new Thread(task1).start();
+                new Thread(taskFinishTurn).start();
             });
 
             gridGame.add(button, columnIndex, rowIndex);
@@ -218,7 +217,7 @@ public class GameController {
                 turn=new Turn(player,idButtonInt);
                 //change view of card
                 changeView(idButtonInt);
-                task1=null;
+                taskFinishTurn =null;
 
             //Second turn
             }else if(turn.getCard2()==-1 && turn.getCard1()!=idButtonInt){
@@ -236,7 +235,7 @@ public class GameController {
                 //perform feedback to the user.
 
                 //PELLE DURFT HIER AANKOMEN EN IK VIL U LEVEND!
-                task1 = () -> {
+                taskFinishTurn = () -> {
 
                     try {
                         Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
@@ -272,12 +271,14 @@ public class GameController {
                     setLabels(false);
 
                     game.updateGamePlayer(turn);
+
+                    System.out.println(game.checkComplete());
+
                     updateScoreTable();
                     turn=null;
 
                     checkView();
                 };
-
             }
         }
     }
@@ -343,6 +344,7 @@ public class GameController {
      * @param watch Is true if the client is a watcher
      */
     public void setLabels(boolean watch){
+
         StringBuilder stringBuilder=new StringBuilder();
         Color color;
 
@@ -364,7 +366,6 @@ public class GameController {
         }
 
         changeTurnLabel(color,stringBuilder.toString());
-
     }
 
     /**

@@ -1,6 +1,5 @@
 package AppServer;
 
-import domain.*;
 import global.exceptions.UserExistsException;
 import global.domain.*;
 import global.interfaces.AppServerInterface;
@@ -265,16 +264,13 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
         for(GameExtended ge: games){
             if(ge.getGame().getIdGame() == gameID){
                 ge.addPlayer(temp, ownIndex);
-                return;
             }
-
         }
 
         //Toevoegen aan al de andere servers
         for (Integer index :findGameExtended(gameID).getClientIndexes()){
             if(index!=ownIndex){
                 clientList.get(index).addPlayer(gp,ownIndex);
-                return;
             }
         }
     }

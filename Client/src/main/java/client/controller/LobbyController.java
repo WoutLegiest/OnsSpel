@@ -1,6 +1,5 @@
 package client.controller;
 
-import domain.*;
 import global.domain.*;
 import global.interfaces.AppServerInterface;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -21,7 +20,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import static client.controller.MainClient.*;
-import static client.controller.MainClient.appServer;
+import static client.controller.SceneController.viewController;
 import static global.domain.Constants.*;
 
 @SuppressWarnings("Duplicates")
@@ -256,7 +255,7 @@ public class LobbyController {
 
             appServerImpl.gameCreatedExtended(gameExtended);
 
-            SceneController.viewController.setViewToGame(gameExtended, player, token, cover);
+            viewController.setViewToGame(gameExtended, player, token, cover);
 
         } catch (NotBoundException | IOException e) {
             e.printStackTrace();
@@ -293,7 +292,7 @@ public class LobbyController {
             Card cover = appServer.getAppServerImpl().getCardsByTheme(gameExtended.getTheme().concat("_cover")).get(0);
 
 
-            SceneController.viewController.setViewToGame(gameExtended, player, token, cover);
+            viewController.setViewToGame(gameExtended, player, token, cover);
 
         } catch (NotBoundException | IOException e) {
             e.printStackTrace();
@@ -325,7 +324,7 @@ public class LobbyController {
 
             Card cover = appServer.getAppServerImpl().getCardsByTheme(gameExtended.getTheme().concat("_cover")).get(0);
 
-            SceneController.viewController.setViewToGame(gameExtended, player, token, cover);
+            viewController.setViewToGame(gameExtended, player, token, cover);
 
         } catch (NotBoundException | IOException e) {
             e.printStackTrace();
@@ -341,7 +340,7 @@ public class LobbyController {
         thread.stopThread();
 
         try {
-            SceneController.viewController.setViewToLogin();
+            viewController.setViewToLogin();
         } catch (IOException e) {
             e.printStackTrace();
         }

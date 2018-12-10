@@ -1,6 +1,5 @@
 package DataBaseServer;
 
-import domain.*;
 import global.exceptions.UserExistsException;
 import global.domain.*;
 import global.interfaces.DataBaseInterface;

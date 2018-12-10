@@ -1,6 +1,5 @@
 package global.interfaces;
 
-import domain.*;
 import global.exceptions.UserExistsException;
 import global.domain.*;
 import global.servers.AppServer;

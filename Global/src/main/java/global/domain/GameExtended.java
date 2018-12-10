@@ -121,6 +121,14 @@ public class GameExtended implements Serializable {
         }
     }
 
+    /**
+     * Return true is there are no False in the array, false is there are false'es in the array
+     * @return
+     */
+    public boolean checkComplete(){
+        return !correctCards.contains(Boolean.FALSE);
+    }
+
     //-----getters and setters-----//
 
     public Game getGame() {

@@ -37,7 +37,7 @@ public final class SceneController {
 
     public void setViewToRegister() throws IOException {
 
-        Parent root = FXMLLoader.load(getClass().getResource("../fxml/register.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/register.fxml"));
         Scene newScene = new Scene(root, 321, 320);
         GUI.setScene(newScene);
         GUI.setTitle("Register");
@@ -48,7 +48,7 @@ public final class SceneController {
 
     public void setViewToLobby(String username,String sessieToken) throws IOException {
 
-        FXMLLoader fxmlLoader = new FXMLLoader( getClass().getResource("../fxml/lobby.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader( getClass().getResource("/fxml/lobby.fxml"));
         Parent root = fxmlLoader.load();
         LobbyController controller =fxmlLoader.getController();
         controller.setCredentials(username,sessieToken);
@@ -62,7 +62,7 @@ public final class SceneController {
 
     public void setViewToGame(GameExtended gameExtended, Player player, String token, Card cover) throws IOException {
 
-        FXMLLoader fxmlLoader = new FXMLLoader( getClass().getResource("../fxml/game.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader( getClass().getResource("/fxml/game.fxml"));
         Parent root = fxmlLoader.load();
         GameController controller =fxmlLoader.getController();
         controller.setCredentials(gameExtended,player,token,cover);
