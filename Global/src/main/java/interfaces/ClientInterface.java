@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
  */
 public interface ClientInterface extends Remote {
 
-    void performOtherPlayerTurn(Turn turn) throws RemoteException;
+    void performOtherPlayerTurn(Turn turn, boolean watch) throws RemoteException;
 
     void yourTurn()throws RemoteException;
 

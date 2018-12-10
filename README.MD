@@ -22,7 +22,7 @@ Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Del
     - [x] Label veranderen als game vol zit
 - [x] Bug in turn in orde krijgen. 
 - [x] Zelfde kaart bug.
-- [ ] Het kijken naar een spel
+- [x] Het kijken naar een spel
 - [ ] 20 games max implementeren.
 - [ ] backupservers. 
 - [ ] Correct afsluiten van een game.

@@ -5,6 +5,7 @@ import interfaces.AppServerInterface;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -41,7 +42,6 @@ public class GameController {
     //Grid variables
     private ArrayList<Button> buttons;
     private ArrayList<ImageView> images;
-    private ArrayList<Card> cards;
 
     //Turn
     private Turn turn;
@@ -88,7 +88,7 @@ public class GameController {
      * @param token Player toke
      * @param cover Image cover
      */
-    public void setCredentials(GameExtended gameExtended, Player player, String token, Card cover){
+    void setCredentials(GameExtended gameExtended, Player player, String token, Card cover){
         //assign variables
         this.game=gameExtended;
         this.player=player;
@@ -128,7 +128,7 @@ public class GameController {
         }
 
         //variables for the card images
-        cards=game.getCards();
+        ArrayList<Card> cards = game.getCards();
         images= new ArrayList<>();
 
         //load cover image
@@ -138,6 +138,7 @@ public class GameController {
 
         buttons =new ArrayList<>();
         int size=game.getGame().getSize();
+
         for(int i = 0;i<size*size;i++){
 
             images.add(makeImageView(new Image(transformToUrl(cards.get(i))),i));
@@ -221,6 +222,8 @@ public class GameController {
             //Second turn
             }else if(turn.getCard2()==-1 && turn.getCard1()!=idButtonInt){
 
+                disableAllButton();
+
                 turn.setCard2(idButtonInt);
 
                 changeView(turn.getCard2());
@@ -255,15 +258,17 @@ public class GameController {
                         changeView(turn.getCard1());
                         changeView(turn.getCard2());
                     }
-
-                    try {
-                        Thread.sleep(1500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    else{
+                        try {
+                            Thread.sleep(1500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
 
+
                     game.nextPlayer();
-                    setLabels();
+                    setLabels(false);
 
                     game.updateGamePlayer(turn);
                     updateScoreTable();
@@ -275,8 +280,6 @@ public class GameController {
             }
         }
     }
-
-
 
     //-------- checks when button is clicked --------//
 
@@ -290,6 +293,20 @@ public class GameController {
 
     private boolean checkForOtherPlayers() {
         return game.getGame().getCurNumberOfPlayers() == game.getGame().getMaxNumberOfPlayers();
+    }
+
+    private void disableAllButton(){
+
+        for(Node button: gridGame.getChildren()){
+            button.setDisable(true);
+        }
+    }
+
+    private void enableAllButton(){
+
+        for(Node button: gridGame.getChildren()){
+            button.setDisable(false);
+        }
     }
 
     //-------- flip card methods --------//
@@ -322,8 +339,9 @@ public class GameController {
 
     /**
      * Method to set the label on the bottom of the screen, indicating which player is currently playing.
+     * @param watch
      */
-    public void setLabels(){
+    public void setLabels(boolean watch){
         StringBuilder stringBuilder=new StringBuilder();
         Color color;
 
@@ -332,10 +350,16 @@ public class GameController {
             stringBuilder.append("\t : Your Turn!");
             color=Color.GREEN;
 
+            if(!watch)
+                enableAllButton();
+
         }else{
             stringBuilder.append(game.getCurrentPlayerTurn().getUsername());
             stringBuilder.append("\t Not Your Turn!");
             color=Color.RED;
+
+            if(!watch)
+                disableAllButton();
         }
 
         changeTurnLabel(color,stringBuilder.toString());
@@ -385,7 +409,7 @@ public class GameController {
      * Perform a turn by another player.
      * @param turn turn to process.
      */
-    public void performOtherTurn(Turn turn){
+    public void performOtherTurn(Turn turn, boolean watch){
 
         checkView();
 
@@ -413,7 +437,7 @@ public class GameController {
         }
 
         game.nextPlayer();
-        setLabels();
+        setLabels(watch);
 
         checkView();
 

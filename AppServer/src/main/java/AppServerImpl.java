@@ -277,7 +277,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
                 int finalI = i;
                 Runnable r = () -> {
                     try {
-                        clientList.get(gameExtended.getClientIndexes().get(finalI)).performOtherPlayerTurn(turn);
+                        clientList.get(gameExtended.getClientIndexes().get(finalI)).performOtherPlayerTurn(turn, false);
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
@@ -292,7 +292,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
             int finalI = i;
             Runnable r = () -> {
                 try {
-                    clientList.get(gameExtended.getWatchIndexes().get(finalI)).performOtherPlayerTurn(turn);
+                    clientList.get(gameExtended.getWatchIndexes().get(finalI)).performOtherPlayerTurn(turn, true);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }

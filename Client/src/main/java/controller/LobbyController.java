@@ -279,6 +279,10 @@ public class LobbyController {
                 migrateToServer(gameAppServer);
             }
 
+            //Watcher toevoegen
+
+            appServerImpl.registerWatcher(gameID, myIndexNumberServerOne);
+
             GameExtended gameExtended = gameAppServer.getAppServerImpl().findGameExtended(gameID);
 
             Card cover = appServer.getAppServerImpl().cardsByTheme(gameExtended.getTheme().concat("_cover")).get(0);

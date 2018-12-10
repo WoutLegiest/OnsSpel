@@ -1,10 +1,8 @@
 package callBack;
 
 import controller.GameController;
-import domain.GameExtended;
 import domain.Player;
 import domain.Turn;
-import interfaces.AppServerInterface;
 import interfaces.ClientInterface;
 
 import java.rmi.RemoteException;
@@ -23,8 +21,8 @@ public class ClientImpl extends UnicastRemoteObject implements ClientInterface {
     }
 
     @Override
-    public void performOtherPlayerTurn(Turn turn) throws RemoteException {
-        gameController.performOtherTurn(turn);
+    public void performOtherPlayerTurn(Turn turn, boolean watch) throws RemoteException {
+        gameController.performOtherTurn(turn, watch);
     }
 
     @Override
@@ -51,7 +49,7 @@ public class ClientImpl extends UnicastRemoteObject implements ClientInterface {
 
     @Override
     public void startGame() throws RemoteException {
-        gameController.setLabels();
+        gameController.setLabels(false);
     }
 
     @Override
