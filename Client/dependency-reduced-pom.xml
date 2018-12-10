@@ -29,7 +29,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>controller.MainClient</mainClass>
+                  <mainClass>client.controller.MainClient</mainClass>
                 </transformer>
               </transformers>
             </configuration>

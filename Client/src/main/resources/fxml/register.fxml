@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="320.0" prefWidth="320.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.RegisterController">
+<AnchorPane prefHeight="320.0" prefWidth="320.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="client.controller.RegisterController">
    <children>
       <Button fx:id="buttonRegister" layoutX="129.0" layoutY="235.0" mnemonicParsing="false" onAction="#register" text="Register" />
       <Label layoutX="45.0" layoutY="35.0" text="BAD ASS MEMORY GAME" textOverrun="LEADING_ELLIPSIS" underline="true">
