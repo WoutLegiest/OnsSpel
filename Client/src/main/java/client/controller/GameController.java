@@ -267,6 +267,10 @@ public class GameController {
                     }
 
 
+                    if(game.checkComplete()){
+                        completeGame();
+                    }
+
                     game.nextPlayer();
                     setLabels(false);
 
@@ -281,6 +285,27 @@ public class GameController {
                 };
             }
         }
+    }
+
+    private void completeGame(){
+
+        //Push all score's to database
+
+        try {
+            Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
+            AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
+            appServer.endGame(game.getGame().getIdGame());
+        } catch (RemoteException | NotBoundException e) {
+            e.printStackTrace();
+        }
+
+        //Alert
+
+        //Close view players
+
+        //Close own view
+
+
     }
 
     //-------- checks when button is clicked --------//

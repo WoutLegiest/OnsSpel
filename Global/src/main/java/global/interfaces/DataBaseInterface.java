@@ -37,5 +37,7 @@ public interface DataBaseInterface extends Remote {
     GameExtended getGameExtended(int gameID) throws RemoteException;
 
     void addPlayer(int gameID, int playerID) throws RemoteException;
+
+    void updatePlayerScore(int localScore, int id) throws RemoteException;
 }
 

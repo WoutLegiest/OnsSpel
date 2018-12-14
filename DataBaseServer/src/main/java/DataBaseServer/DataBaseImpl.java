@@ -517,6 +517,37 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
 
     }
 
+    @Override
+    public void updatePlayerScore(int localScore, int id) throws RemoteException {
+
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+
+        String sql = "UPDATE player SET totalScore = totalScore + ? WHERE id= ?; " ;
+
+
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, localScore);
+            pstmt.setInt(2, id);
+            pstmt.executeUpdate();
+        } catch (SQLException se) {
+            se.printStackTrace();
+        }
+
+        String sqlDate = "INSERT INTO player (lastGameDate) VALUES (?)";
+
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sqlDate);
+            pstmt.setTimestamp(1, now);
+            pstmt.executeUpdate();
+        } catch (SQLException se) {
+            se.printStackTrace();
+        }
+
+
+
+    }
+
     private boolean validatePassword(String originalPassword, String storedPassword) {
         String[] parts = storedPassword.split(":");
         int iterations = Integer.parseInt(parts[0]);

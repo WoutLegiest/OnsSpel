@@ -54,4 +54,6 @@ public interface AppServerInterface extends Remote {
     GameExtended findGameExtended(int gameId) throws RemoteException;
 
     void beginGame(int idGame) throws RemoteException;
+
+    void endGame(int idGame) throws RemoteException;
 }
