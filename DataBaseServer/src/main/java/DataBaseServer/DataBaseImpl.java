@@ -520,6 +520,45 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         }
     }
 
+    @Override
+    public void deleteGame(int GameId) throws RemoteException{
+
+        String sqlGame = "DELETE FROM game WHERE idgame = ?";
+
+        try{
+            PreparedStatement pstmt = conn.prepareStatement(sqlGame);
+            pstmt.setInt(1, GameId);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String sqlCard = "DELETE FROM cardgame WHERE game_idgame = ?";
+
+        try{
+            PreparedStatement pstmt = conn.prepareStatement(sqlCard);
+            pstmt.setInt(1, GameId);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String sqlGamePlayer = "DELETE FROM gameplayer WHERE game_idgame= ?";
+
+        try{
+            PreparedStatement pstmt = conn.prepareStatement(sqlGamePlayer);
+            pstmt.setInt(1, GameId);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     private boolean validatePassword(String originalPassword, String storedPassword) {
         String[] parts = storedPassword.split(":");
         int iterations = Integer.parseInt(parts[0]);

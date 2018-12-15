@@ -428,6 +428,14 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
     }
 
+    /**
+     * Method that is called by the winner client en handels the end of the game by calling al the client and send a
+     * message to the server to delete the current game
+     * @param idGame
+     * @param idWinner
+     * @param winner
+     * @throws RemoteException
+     */
     @Override
     public void endGame(int idGame, int idWinner, String winner) throws RemoteException{
 
@@ -459,8 +467,8 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
             }
         }
 
-
-
+        //Records gaan verwijderen
+        dataBase.getDataBaseImpl().deleteGame(idGame);
 
     }
 
