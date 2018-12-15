@@ -15,15 +15,12 @@ public class MainDBS {
     //Beginnen op 27182 enzo
     private static int dbPort;
 
-
-
     public static void main(String[] args) {
 
         dbPort = Integer.parseInt(args[0]);
 
         startRegistry();
         registerDispatcher();
-
     }
 
     /**
@@ -41,8 +38,6 @@ public class MainDBS {
         catch(RemoteException re){
             re.printStackTrace();
         }
-
-
     }
 
     /**

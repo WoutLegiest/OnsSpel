@@ -16,7 +16,7 @@ public interface DataBaseInterface extends Remote {
 
     void addDataBaseServer(DataBaseInterface dataBaseInterface) throws RemoteException;
 
-    void updateDataBase() throws RemoteException,SQLException;
+    void updateDataBase() throws RemoteException;
 
     String getVariableDatabaseContent()throws RemoteException;
 

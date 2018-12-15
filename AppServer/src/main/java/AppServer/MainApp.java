@@ -14,13 +14,13 @@ public class MainApp {
 
     private static int appPort;
 
+    //beginnen van af 6626
     public static void main(String[] args) throws RemoteException {
 
         appPort = Integer.parseInt(args[0]);
 
         startRegistry();
         registerDispatcher();
-
     }
 
     /**

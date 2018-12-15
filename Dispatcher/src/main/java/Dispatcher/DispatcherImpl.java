@@ -56,20 +56,18 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
                 dataBaseServer.notifyOfNewDatabase(dataBaseImpl);
                 dataBaseImpl.addDataBaseServer(dataBaseServer.getDataBaseImpl());
             }
+
             if(dbServers.size()>0){
                 dataBaseImpl.updateDataBase();
             }
+
             dbServers.add(new DataBaseServer(port, ip, dataBaseImpl));
 
         } catch (NotBoundException e) {
             e.printStackTrace();
         }
 
-
         System.out.println("DB toegevoegd aan Dispatch");
-
-
-
 
     }
 

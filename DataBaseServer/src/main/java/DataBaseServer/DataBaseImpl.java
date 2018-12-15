@@ -57,12 +57,13 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
 
         System.out.println("connection opened");
 
-        String s            = new String();
-        StringBuffer sb = new StringBuffer();
+        String s;
+        StringBuilder sb = new StringBuilder();
 
         try
         {
-            FileReader fr = new FileReader(new File("DataBaseServer/src/main/resources/SQLite scripts/databaseScript.sql"));
+            FileReader fr = new FileReader(
+                    new File("DataBaseServer/src/main/resources/SQLite scripts/databaseScript.sql"));
             // be sure to not have line starting with "--" or "/*" or any other non aplhabetical character
 
             BufferedReader br = new BufferedReader(fr);
@@ -79,14 +80,12 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
 
             stmt= conn.createStatement();
 
-            for(int i = 0; i<inst.length; i++)
-            {
+            for (String s1 : inst) {
                 // we ensure that there is no spaces before or after the request string
                 // in order to not execute empty statements
-                if(!inst[i].trim().equals(""))
-                {
-                    stmt.executeUpdate(inst[i]);
-                    System.out.println(">>"+inst[i]);
+                if (!s1.trim().equals("")) {
+                    stmt.executeUpdate(s1);
+                    System.out.println(">>" + s1);
                 }
             }
 
@@ -108,7 +107,8 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
     }
 
     @Override
-    public void updateDataBase() throws RemoteException,SQLException {
+    public void updateDataBase() throws RemoteException {
+
         for(DataBaseInterface dataBaseInterface:dataBaseServerList){
             if(dataBaseInterface!=this){
                 ArrayList<Game> existingGames=dataBaseInterface.getAllGames();
@@ -116,71 +116,75 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
                 ArrayList<GamePlayerDB>existingGamePlayers=dataBaseInterface.getAllGamePlayers();
                 ArrayList<CardGame>existingCardGames=dataBaseInterface.getAllCardGames();
 
-                for(PlayerDB player : existingPlayers){
-                    String sql = "INSERT INTO player (username,password,email, totalScore, joinDate) " +
-                            "VALUES(?,?,?,?,?)";
-
-                    PreparedStatement pstmt = conn.prepareStatement(sql);
-                    pstmt.setString(1, player.getUsername());
-                    pstmt.setString(2, player.gethPasswd());
-                    pstmt.setString(3, player.getEmail());
-                    pstmt.setInt(4, player.getTotalScore());
-                    pstmt.setTimestamp(5, player.getJoinDate());
-
-                    pstmt.executeUpdate();
-
-                }
-
-                for(Game game :existingGames){
-                    String sql = "INSERT INTO game (owner,maxNumberOfPlayers, size, curNumberOfPlayers, createDate ) " +
-                            "VALUES(?,?,?,?,?)";
+                try {
 
 
-                    try {
+                    for (PlayerDB player : existingPlayers) {
+                        String sql = "INSERT INTO player (username,password,email, totalScore, joinDate) " +
+                                "VALUES(?,?,?,?,?)";
+
                         PreparedStatement pstmt = conn.prepareStatement(sql);
-
-                        pstmt.setInt(1, game.getOwner());
-                        pstmt.setInt(2, game.getMaxNumberOfPlayers());
-                        pstmt.setInt(3, game.getSize());
-                        pstmt.setInt(4, game.getCurNumberOfPlayers());
-                        pstmt.setLong(5, game.getCreateDate().getTime());
+                        pstmt.setString(1, player.getUsername());
+                        pstmt.setString(2, player.gethPasswd());
+                        pstmt.setString(3, player.getEmail());
+                        pstmt.setInt(4, player.getTotalScore());
+                        pstmt.setTimestamp(5, player.getJoinDate());
 
                         pstmt.executeUpdate();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
+
                     }
+
+                    for (Game game : existingGames) {
+                        String sql = "INSERT INTO game (owner,maxNumberOfPlayers, size, curNumberOfPlayers, createDate ) " +
+                                "VALUES(?,?,?,?,?)";
+
+
+                        try {
+                            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+                            pstmt.setInt(1, game.getOwner());
+                            pstmt.setInt(2, game.getMaxNumberOfPlayers());
+                            pstmt.setInt(3, game.getSize());
+                            pstmt.setInt(4, game.getCurNumberOfPlayers());
+                            pstmt.setLong(5, game.getCreateDate().getTime());
+
+                            pstmt.executeUpdate();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    for (GamePlayerDB gamePlayerDB : existingGamePlayers) {
+
+                        String sql = "INSERT INTO gameplayer (game_idgame,player_id,gameScore) " +
+                                "VALUES(?,?,?)";
+
+                        PreparedStatement pstmt = conn.prepareStatement(sql);
+                        pstmt.setInt(1, gamePlayerDB.getGame_idGame());
+                        pstmt.setInt(2, gamePlayerDB.getPlayer_id());
+                        pstmt.setInt(3, gamePlayerDB.getScore());
+
+
+                        pstmt.executeUpdate();
+                    }
+
+                    for (CardGame cardGame : existingCardGames) {
+                        String sql = "INSERT INTO cardgame (game_idgame,card_idcard,index,isTurned) " +
+                                "VALUES(?,?,?,?)";
+
+                        PreparedStatement pstmt = conn.prepareStatement(sql);
+                        pstmt.setInt(1, cardGame.getGame_idgame());
+                        pstmt.setInt(2, cardGame.getCard_idcard());
+                        pstmt.setInt(3, cardGame.getIndex());
+                        if (cardGame.getIsTurned() == 0) pstmt.setBoolean(4, false);
+                        else pstmt.setBoolean(4, true);
+
+                        pstmt.executeUpdate();
+                    }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
-
-                for(GamePlayerDB gamePlayerDB : existingGamePlayers){
-
-                    String sql = "INSERT INTO gameplayer (game_idgame,player_id,gameScore) " +
-                            "VALUES(?,?,?)";
-
-                    PreparedStatement pstmt = conn.prepareStatement(sql);
-                    pstmt.setInt(1, gamePlayerDB.getGame_idGame());
-                    pstmt.setInt(2, gamePlayerDB.getPlayer_id());
-                    pstmt.setInt(3, gamePlayerDB.getScore());
-
-
-                    pstmt.executeUpdate();
-                }
-
-                for(CardGame cardGame:existingCardGames){
-                    String sql = "INSERT INTO cardgame (game_idgame,card_idcard,index,isTurned) " +
-                            "VALUES(?,?,?,?)";
-
-                    PreparedStatement pstmt = conn.prepareStatement(sql);
-                    pstmt.setInt(1, cardGame.getGame_idgame());
-                    pstmt.setInt(2, cardGame.getCard_idcard());
-                    pstmt.setInt(3, cardGame.getIndex());
-                    if(cardGame.getIsTurned()==0)pstmt.setBoolean(4,false);
-                    else pstmt.setBoolean(4,true);
-
-                    pstmt.executeUpdate();
-                }
-
-
-
             }
         }
     }
@@ -809,7 +813,6 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         }
 
     }
-
 
     private boolean validatePassword(String originalPassword, String storedPassword) {
         String[] parts = storedPassword.split(":");

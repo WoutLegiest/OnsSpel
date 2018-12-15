@@ -7,7 +7,7 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- Table: card
-DROP TABLE IF EXISTS card;
+DROP TABLE IF EXISTS "card";
 CREATE TABLE "card"
 (
 	idcard integer not null
