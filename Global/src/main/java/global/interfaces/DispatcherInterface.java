@@ -9,8 +9,8 @@ import java.rmi.RemoteException;
 public interface DispatcherInterface extends Remote {
 
     void registerDataBaseServer(int port, String ip) throws RemoteException;
-    void registerAppServer(int port, String ip) throws RemoteException;
 
+    void registerAppServer(int port, String ip) throws RemoteException;
 
     AppServer getAppServer(int index) throws RemoteException;
 

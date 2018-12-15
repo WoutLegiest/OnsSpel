@@ -3,6 +3,7 @@ package global.servers;
 import global.interfaces.DataBaseInterface;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 
 /**
  * @author Wouter Legiest on 5/12/2018
@@ -44,5 +45,13 @@ public class DataBaseServer implements Serializable {
 
     public void setnAppServers(int nAppServers) {
         this.nAppServers = nAppServers;
+    }
+
+    public void notifyOfNewDatabase(DataBaseInterface dataBaseImpl) {
+        try {
+            this.dataBaseImpl.addDataBaseServer(dataBaseImpl);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 }

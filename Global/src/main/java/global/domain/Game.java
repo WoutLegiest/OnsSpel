@@ -15,7 +15,18 @@ public class Game implements Serializable {
     private final int size;
     private final Timestamp createDate;
 
+
     public Game(int idGame, int owner, String ownerUsername, int maxNumberOfPlayers, int curNumberOfPlayers, int size, Timestamp createDate) {
+        this.idGame = idGame;
+        this.owner = owner;
+        this.ownerUsername = ownerUsername;
+        this.maxNumberOfPlayers = maxNumberOfPlayers;
+        this.curNumberOfPlayers = curNumberOfPlayers;
+        this.size = size;
+        this.createDate = createDate;
+    }
+
+    public Game(int idGame, int owner, int maxNumberOfPlayers, int curNumberOfPlayers, int size, String ownerUsername, Timestamp createDate) {
         this.idGame = idGame;
         this.owner = owner;
         this.ownerUsername = ownerUsername;
@@ -73,6 +84,10 @@ public class Game implements Serializable {
         this.curNumberOfPlayers = curNumberOfPlayers;
         this.size = -1;
         createDate = null;
+    }
+
+    public Timestamp getCreateDate() {
+        return createDate;
     }
 
     public int getIdGame() {

@@ -19,7 +19,7 @@ Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Del
 ### Priority
 - [x] Client kan zijn eigen spel niet joinen
 - [x] Terug  veranderen dat currentGames word gevuld door server
-    - [x] Label veranderen als game vol zit
+- [x] Label veranderen als game vol zit
 - [x] Bug in turn in orde krijgen. 
 - [x] Zelfde kaart bug.
 - [x] Het kijken naar een spel

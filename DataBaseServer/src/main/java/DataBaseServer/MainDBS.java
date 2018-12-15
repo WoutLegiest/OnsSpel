@@ -15,6 +15,8 @@ public class MainDBS {
     //Beginnen op 27182 enzo
     private static int dbPort;
 
+
+
     public static void main(String[] args) {
 
         dbPort = Integer.parseInt(args[0]);
@@ -31,6 +33,7 @@ public class MainDBS {
     public static void startRegistry(){
         try{
             DataBaseInterface databaseImp = new DataBaseImpl();
+            databaseImp.settingUpDataBaseServer(dbPort);
             Registry registry = LocateRegistry.createRegistry(dbPort);
             registry.rebind(DATABASE_SERVICE, databaseImp);
             System.out.println("DataBaseServer gekoppeld op poort: " + dbPort);

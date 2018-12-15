@@ -16,6 +16,7 @@ public class ClientImpl extends UnicastRemoteObject implements ClientInterface {
     //logic implemented for one game at a time
     GameController gameController;
 
+
     public ClientImpl()throws RemoteException{
         gameController=null;
     }

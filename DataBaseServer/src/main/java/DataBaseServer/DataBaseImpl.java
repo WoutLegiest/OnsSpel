@@ -6,6 +6,9 @@ import global.interfaces.DataBaseInterface;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -19,8 +22,11 @@ import java.util.Random;
 @SuppressWarnings("Duplicates")
 public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterface{
 
+
     Connection conn;
     Statement stmt;
+    private int portNumber;
+    private ArrayList<DataBaseInterface> dataBaseServerList;
 
     /**
      * Constructor, sets up the connection with the database. A sqlite is used as database technology
@@ -28,9 +34,16 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
      */
     public DataBaseImpl() throws RemoteException {
 
+        dataBaseServerList=new ArrayList<>();
+        dataBaseServerList.add(this);
+    }
+
+    @Override
+    public void settingUpDataBaseServer(int portNumber) throws RemoteException{
+        this.portNumber=portNumber;
         try {
             String workingDir = System.getProperty("user.dir");
-            String url = "jdbc:sqlite:" + workingDir + "/.db/database1.db";
+            String url = "jdbc:sqlite:" + workingDir + "/.db/database"+ portNumber +".db";
 
             if (conn == null || conn.isClosed()) {
                 conn = DriverManager.getConnection(url);
@@ -41,7 +54,157 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
             System.out.println(e.getMessage());
             System.out.println("error in connect() methode");
         }
+
         System.out.println("connection opened");
+
+        String s            = new String();
+        StringBuffer sb = new StringBuffer();
+
+        try
+        {
+            FileReader fr = new FileReader(new File("DataBaseServer/src/main/resources/SQLite scripts/databaseScript.sql"));
+            // be sure to not have line starting with "--" or "/*" or any other non aplhabetical character
+
+            BufferedReader br = new BufferedReader(fr);
+
+            while((s = br.readLine()) != null)
+            {
+                sb.append(s);
+            }
+            br.close();
+
+            // here is our splitter ! We use ";" as a delimiter for each request
+            // then we are sure to have well formed statements
+            String[] inst = sb.toString().split(";");
+
+            stmt= conn.createStatement();
+
+            for(int i = 0; i<inst.length; i++)
+            {
+                // we ensure that there is no spaces before or after the request string
+                // in order to not execute empty statements
+                if(!inst[i].trim().equals(""))
+                {
+                    stmt.executeUpdate(inst[i]);
+                    System.out.println(">>"+inst[i]);
+                }
+            }
+
+        }
+        catch(Exception e)
+        {
+            System.out.println("*** Error : "+e.toString());
+            System.out.println("*** ");
+            System.out.println("*** Error : ");
+            e.printStackTrace();
+            System.out.println("################################################");
+            System.out.println(sb.toString());
+        }
+    }
+
+    @Override
+    public void addDataBaseServer(DataBaseInterface dataBaseInterface) throws RemoteException {
+        dataBaseServerList.add(dataBaseInterface);
+    }
+
+    @Override
+    public void updateDataBase() throws RemoteException,SQLException {
+        for(DataBaseInterface dataBaseInterface:dataBaseServerList){
+            if(dataBaseInterface!=this){
+                ArrayList<Game> existingGames=dataBaseInterface.getAllGames();
+                ArrayList<PlayerDB>existingPlayers=dataBaseInterface.getAllPlayersDB();
+                ArrayList<GamePlayerDB>existingGamePlayers=dataBaseInterface.getAllGamePlayers();
+                ArrayList<CardGame>existingCardGames=dataBaseInterface.getAllCardGames();
+
+                for(PlayerDB player : existingPlayers){
+                    String sql = "INSERT INTO player (username,password,email, totalScore, joinDate) " +
+                            "VALUES(?,?,?,?,?)";
+
+                    PreparedStatement pstmt = conn.prepareStatement(sql);
+                    pstmt.setString(1, player.getUsername());
+                    pstmt.setString(2, player.gethPasswd());
+                    pstmt.setString(3, player.getEmail());
+                    pstmt.setInt(4, player.getTotalScore());
+                    pstmt.setTimestamp(5, player.getJoinDate());
+
+                    pstmt.executeUpdate();
+
+                }
+
+                for(Game game :existingGames){
+                    String sql = "INSERT INTO game (owner,maxNumberOfPlayers, size, curNumberOfPlayers, createDate ) " +
+                            "VALUES(?,?,?,?,?)";
+
+
+                    try {
+                        PreparedStatement pstmt = conn.prepareStatement(sql);
+
+                        pstmt.setInt(1, game.getOwner());
+                        pstmt.setInt(2, game.getMaxNumberOfPlayers());
+                        pstmt.setInt(3, game.getSize());
+                        pstmt.setInt(4, game.getCurNumberOfPlayers());
+                        pstmt.setLong(5, game.getCreateDate().getTime());
+
+                        pstmt.executeUpdate();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                for(GamePlayerDB gamePlayerDB : existingGamePlayers){
+
+                    String sql = "INSERT INTO gameplayer (game_idgame,player_id,gameScore) " +
+                            "VALUES(?,?,?)";
+
+                    PreparedStatement pstmt = conn.prepareStatement(sql);
+                    pstmt.setInt(1, gamePlayerDB.getGame_idGame());
+                    pstmt.setInt(2, gamePlayerDB.getPlayer_id());
+                    pstmt.setInt(3, gamePlayerDB.getScore());
+
+
+                    pstmt.executeUpdate();
+                }
+
+                for(CardGame cardGame:existingCardGames){
+                    String sql = "INSERT INTO cardgame (game_idgame,card_idcard,index,isTurned) " +
+                            "VALUES(?,?,?,?)";
+
+                    PreparedStatement pstmt = conn.prepareStatement(sql);
+                    pstmt.setInt(1, cardGame.getGame_idgame());
+                    pstmt.setInt(2, cardGame.getCard_idcard());
+                    pstmt.setInt(3, cardGame.getIndex());
+                    if(cardGame.getIsTurned()==0)pstmt.setBoolean(4,false);
+                    else pstmt.setBoolean(4,true);
+
+                    pstmt.executeUpdate();
+                }
+
+
+
+            }
+        }
+    }
+
+    @Override
+    public String getVariableDatabaseContent() throws RemoteException {
+
+        return null;
+    }
+
+    @Override
+    public void executeOwnStatement(PreparedStatement statement) throws RemoteException {
+        for (DataBaseInterface dataBaseInterface:dataBaseServerList){
+            dataBaseInterface.executeStatement(statement);
+        }
+    }
+
+    @Override
+    public void executeStatement(PreparedStatement statement) throws RemoteException {
+        try {
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -93,7 +256,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         pstmt.setInt(4, 0);
         pstmt.setTimestamp(5, today);
 
-        pstmt.executeUpdate();
+        executeOwnStatement(pstmt);
         //System.out.println("Goed toegevoegd");
 
 
@@ -125,9 +288,11 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, token);
             pstmt.setString(2, username);
-            pstmt.executeUpdate();
+            executeOwnStatement(pstmt);
         } catch (SQLException se) {
             se.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
 
         return String.valueOf(tokenNumber);
@@ -189,6 +354,36 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
     }
 
     @Override
+    public ArrayList<PlayerDB> getAllPlayersDB() throws RemoteException {
+        String sql = "SELECT * FROM player";
+
+        ArrayList<PlayerDB> allPlayers = new ArrayList<>();
+
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()){
+                int id=rs.getInt("id");
+                String username = rs.getString("username");
+                int totalScore = rs.getInt("totalScore");
+                Timestamp date = rs.getTimestamp("joinDate");
+                String email = rs.getString("email");
+                String token = rs.getString("token");
+                String passws =rs.getString("password");
+                Timestamp lastGameDate = rs.getTimestamp("lastGameDate");
+
+
+                allPlayers.add(new PlayerDB(id,username,email,totalScore,date, token,lastGameDate,passws));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return allPlayers;
+    }
+
+    @Override
     public ArrayList<Game> getAllGames() throws RemoteException {
 
         String sql = "SELECT * FROM game INNER JOIN player p on game.owner = p.id;";
@@ -204,8 +399,10 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
                 int maxNumberOfPlayers= rs.getInt("maxNumberOfPlayers");
                 int curNumberOfPlayers=rs.getInt("curNumberOfPlayers");
                 String username = rs.getString("username");
+                long createDate=rs.getLong("createDate");
+                int size = rs.getInt("size");
 
-                allGames.add(new Game(idGame,owner,maxNumberOfPlayers,curNumberOfPlayers, username));
+                allGames.add(new Game(idGame,owner,maxNumberOfPlayers,curNumberOfPlayers,size, username,new Timestamp(createDate)));
             }
 
         } catch (SQLException e) {
@@ -219,6 +416,19 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
     public ArrayList<Card> getAllCards() throws RemoteException {
         String sql = "SELECT * FROM card";
         return processCards(sql);
+    }
+
+    @Override
+    public ArrayList<GamePlayerDB> getAllGamePlayers() throws RemoteException {
+        String sql = "SELECT * FROM gameplayer";
+        return processGamePlayers(sql);
+
+    }
+
+    @Override
+    public ArrayList<CardGame> getAllCardGames() throws RemoteException {
+        String sql = "SELECT * FROM cardgame";
+        return processCardGames(sql);
     }
 
     @Override
@@ -252,6 +462,48 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         }
 
         return allCards;
+    }
+
+    private ArrayList<GamePlayerDB> processGamePlayers(String sql) {
+        ArrayList<GamePlayerDB> allGamePlayers = new ArrayList<>();
+
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while(rs.next()){
+                int game_id = rs.getInt("game_idgame");
+                int player_id = rs.getInt("player_id");
+                int score = rs.getInt("gameScore");
+
+                allGamePlayers.add(new GamePlayerDB(game_id,player_id, score));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return allGamePlayers;
+    }
+
+    private ArrayList<CardGame> processCardGames(String sql) {
+        ArrayList<CardGame> allGameCards = new ArrayList<>();
+
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while(rs.next()){
+                int game_id = rs.getInt("game_idgame");
+                int card_id = rs.getInt("card_idcard");
+                int index = rs.getInt("index");
+                int isTurned = rs.getInt("isTurned");
+
+                allGameCards.add(new CardGame(game_id,card_id, index,isTurned));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allGameCards;
     }
 
     @Override
@@ -320,7 +572,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
             pstmt.setInt(4, 1);
             pstmt.setLong(5, now);
 
-            pstmt.executeUpdate();
+            executeOwnStatement(pstmt);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -352,7 +604,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
                 pstmt = conn.prepareStatement(sqlGamePlayer);
                 pstmt.setInt(1, gameExtended.getGame().getIdGame());
                 pstmt.setInt(2, gameExtended.getPlayers().get(i).getId());
-                pstmt.executeUpdate();
+                executeOwnStatement(pstmt);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -367,7 +619,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
                 pstmt.setInt(1, gameExtended.getGame().getIdGame());
                 pstmt.setInt(2, gameExtended.getCards().get(i).getIdcard());
                 pstmt.setInt(3, i);
-                pstmt.executeUpdate();
+                executeOwnStatement(pstmt);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -481,7 +733,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         try {
             PreparedStatement pstmt = conn.prepareStatement(sqlGame);
             pstmt.setInt(1, gameID);
-            pstmt.executeUpdate();
+            executeOwnStatement(pstmt);
         } catch (SQLException se) {
             se.printStackTrace();
         }
@@ -493,7 +745,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
             pstmt.setInt(1, gameID);
             pstmt.setInt(2, playerID);
 
-            pstmt.executeUpdate();
+            executeOwnStatement(pstmt);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -514,7 +766,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
             pstmt.setInt(1, localScore);
             pstmt.setTimestamp(2, now);
             pstmt.setInt(3, id);
-            pstmt.executeUpdate();
+            executeOwnStatement(pstmt);
         } catch (SQLException se) {
             se.printStackTrace();
         }
@@ -529,7 +781,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
             PreparedStatement pstmt = conn.prepareStatement(sqlGame);
             pstmt.setInt(1, GameId);
 
-            pstmt.executeUpdate();
+            executeOwnStatement(pstmt);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -540,7 +792,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
             PreparedStatement pstmt = conn.prepareStatement(sqlCard);
             pstmt.setInt(1, GameId);
 
-            pstmt.executeUpdate();
+            executeOwnStatement(pstmt);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -551,7 +803,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
             PreparedStatement pstmt = conn.prepareStatement(sqlGamePlayer);
             pstmt.setInt(1, GameId);
 
-            pstmt.executeUpdate();
+            executeOwnStatement(pstmt);
         } catch (SQLException e) {
             e.printStackTrace();
         }

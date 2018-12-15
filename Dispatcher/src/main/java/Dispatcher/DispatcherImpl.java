@@ -51,6 +51,14 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
         try {
             Registry registry = LocateRegistry.getRegistry(ip, port);
             DataBaseInterface dataBaseImpl = (DataBaseInterface) registry.lookup(DATABASE_SERVICE);
+
+            for(DataBaseServer dataBaseServer: dbServers){
+                dataBaseServer.notifyOfNewDatabase(dataBaseImpl);
+                dataBaseImpl.addDataBaseServer(dataBaseServer.getDataBaseImpl());
+            }
+            if(dbServers.size()>0){
+                dataBaseImpl.updateDataBase();
+            }
             dbServers.add(new DataBaseServer(port, ip, dataBaseImpl));
 
         } catch (NotBoundException e) {

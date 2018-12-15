@@ -1,17 +1,28 @@
 package global.interfaces;
 
-import global.domain.Card;
-import global.domain.Game;
-import global.domain.GameExtended;
-import global.domain.Player;
+import global.domain.*;
 import global.exceptions.UserExistsException;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public interface DataBaseInterface extends Remote {
+
+    void settingUpDataBaseServer(int portNumber) throws RemoteException;
+
+    void addDataBaseServer(DataBaseInterface dataBaseInterface) throws RemoteException;
+
+    void updateDataBase() throws RemoteException,SQLException;
+
+    String getVariableDatabaseContent()throws RemoteException;
+
+    void executeOwnStatement(PreparedStatement statement) throws RemoteException;
+
+    void executeStatement(PreparedStatement statement) throws RemoteException;
 
     String authenticatePlayer(String username, String password) throws RemoteException, SQLException;
 
@@ -20,9 +31,15 @@ public interface DataBaseInterface extends Remote {
 
     ArrayList<Player> getAllPlayers() throws RemoteException;
 
+    ArrayList<PlayerDB> getAllPlayersDB() throws RemoteException;
+
     ArrayList<Game> getAllGames() throws RemoteException;
 
     ArrayList<Card> getAllCards()throws RemoteException;
+
+    ArrayList<GamePlayerDB> getAllGamePlayers()throws RemoteException;
+
+    ArrayList<CardGame>getAllCardGames()throws RemoteException;
 
     ArrayList<Card> getCardsByTheme(String theme)throws RemoteException;
 
@@ -41,5 +58,7 @@ public interface DataBaseInterface extends Remote {
     void updatePlayerScore(int localScore, int id) throws RemoteException;
 
     void deleteGame(int GameId) throws RemoteException;
+
+
 }
 
