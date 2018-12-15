@@ -55,5 +55,5 @@ public interface AppServerInterface extends Remote {
 
     void beginGame(int idGame) throws RemoteException;
 
-    void endGame(int idGame) throws RemoteException;
+    void endGame(int idGame, int idWinner, String winner) throws RemoteException;
 }

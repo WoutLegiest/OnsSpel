@@ -255,6 +255,8 @@ public class LobbyController {
 
             appServerImpl.gameCreatedExtended(gameExtended);
 
+            thread.stopThread();
+
             viewController.setViewToGame(gameExtended, player, token, cover);
 
         } catch (NotBoundException | IOException e) {
@@ -291,6 +293,7 @@ public class LobbyController {
 
             Card cover = appServer.getAppServerImpl().getCardsByTheme(gameExtended.getTheme().concat("_cover")).get(0);
 
+            thread.stopThread();
 
             viewController.setViewToGame(gameExtended, player, token, cover);
 
@@ -323,6 +326,8 @@ public class LobbyController {
             GameExtended gameExtended = gameAppServer.getAppServerImpl().findGameExtended(gameID);
 
             Card cover = appServer.getAppServerImpl().getCardsByTheme(gameExtended.getTheme().concat("_cover")).get(0);
+
+            thread.stopThread();
 
             viewController.setViewToGame(gameExtended, player, token, cover);
 

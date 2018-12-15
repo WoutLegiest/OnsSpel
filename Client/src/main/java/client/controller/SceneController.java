@@ -3,6 +3,7 @@ package client.controller;
 import global.domain.Card;
 import global.domain.GameExtended;
 import global.domain.Player;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -53,11 +54,13 @@ public final class SceneController {
         LobbyController controller =fxmlLoader.getController();
         controller.setCredentials(username,sessieToken);
         Scene newScene = new Scene(root, 650, 600);
-        GUI.setScene(newScene);
-        GUI.setTitle("Lobby");
 
-        GUI.show();
+        Platform.runLater(() -> {
+            GUI.setScene(newScene);
+            GUI.setTitle("Lobby");
 
+            GUI.show();
+        });
     }
 
     public void setViewToGame(GameExtended gameExtended, Player player, String token, Card cover) throws IOException {

@@ -429,7 +429,7 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
     }
 
     @Override
-    public void endGame(int idGame) throws RemoteException{
+    public void endGame(int idGame, int idWinner, String winner) throws RemoteException{
 
         for(GameExtended ge: games){
             if(ge.getGame().getIdGame() == idGame){
@@ -438,9 +438,29 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
                     dataBase.getDataBaseImpl().updatePlayerScore(gp.getLocalScore(), gp.getId());
                 }
 
-                return;
+                //Alert sturen naar iedereen
+                for(int i=0;i<ge.getPlayers().size();i++){
+
+                    //Naar iedereen doorsturen behalve jezelf
+                    if(ge.getPlayers().get(i).getId()!=idWinner){
+
+                        int finalI = i;
+                        Runnable r = () -> {
+                            try {
+                                clientList.get(ge.getClientIndexes().get(finalI)).alertWinner(winner);
+                            } catch (RemoteException e) {
+                                e.printStackTrace();
+                            }
+                        };
+
+                        new Thread(r).start();
+                    }
+                }
             }
         }
+
+
+
 
     }
 

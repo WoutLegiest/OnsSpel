@@ -65,6 +65,16 @@ public class Game implements Serializable {
         createDate = null;
     }
 
+    public Game(int idGame, int owner, int maxNumberOfPlayers, int curNumberOfPlayers, String username) {
+        this.idGame = idGame;
+        this.owner = owner;
+        this.ownerUsername = username;
+        this.maxNumberOfPlayers = maxNumberOfPlayers;
+        this.curNumberOfPlayers = curNumberOfPlayers;
+        this.size = -1;
+        createDate = null;
+    }
+
     public int getIdGame() {
         return idGame;
     }

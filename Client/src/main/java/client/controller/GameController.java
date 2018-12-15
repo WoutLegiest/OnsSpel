@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -20,6 +21,7 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 
 import static client.controller.MainClient.*;
+import static client.controller.SceneController.viewController;
 import static global.domain.Constants.*;
 
 @SuppressWarnings("Duplicates")
@@ -266,11 +268,6 @@ public class GameController {
                         }
                     }
 
-
-                    if(game.checkComplete()){
-                        completeGame();
-                    }
-
                     game.nextPlayer();
                     setLabels(false);
 
@@ -282,6 +279,10 @@ public class GameController {
                     turn=null;
 
                     checkView();
+
+                    if(game.checkComplete()){
+                        completeGame();
+                    }
                 };
             }
         }
@@ -294,18 +295,26 @@ public class GameController {
         try {
             Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
             AppServerInterface appServer = (AppServerInterface) registry.lookup(APPSERVER_SERVICE);
-            appServer.endGame(game.getGame().getIdGame());
+            appServer.endGame(game.getGame().getIdGame(), player.getId(), player.getUsername());
         } catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
         }
 
         //Alert
+        Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("End of the Game");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Congratulations, you win the game !");
 
-        //Close view players
+                    alert.showAndWait();
+                });
 
-        //Close own view
-
-
+        try {
+            viewController.setViewToLobby(player.getUsername(), player.getToken());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //-------- checks when button is clicked --------//
@@ -561,4 +570,21 @@ public class GameController {
 
     }
 
+    public void alertEndGam(String winner) {
+
+        //Alert
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("End of the Game");
+            alert.setHeaderText(null);
+            alert.setContentText(winner + "haze won the game !");
+
+            alert.showAndWait();
+        });
+        try {
+            viewController.setViewToLobby(player.getUsername(), player.getToken());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

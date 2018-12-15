@@ -26,7 +26,7 @@ Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Del
 - [ ] 20 games max implementeren.
 - [ ] backupservers. 
 - [ ] Correct afsluiten van een game.
-- [ ] Einde van een spel afhandelen.
+- [x] Einde van een spel afhandelen.
 
 
 ### Non priority

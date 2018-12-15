@@ -166,7 +166,8 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         ArrayList<Player> allPlayers = new ArrayList<>();
 
         try {
-            ResultSet rs = stmt.executeQuery(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
 
             while(rs.next()){
                 String username = rs.getString("username");
@@ -192,7 +193,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
     @Override
     public ArrayList<Game> getAllGames() throws RemoteException {
 
-        String sql = "SELECT * FROM game";
+        String sql = "SELECT * FROM game INNER JOIN player p on game.owner = p.id;";
 
         ArrayList<Game> allGames = new ArrayList<>();
 
@@ -204,27 +205,12 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
                 int owner = rs.getInt("owner");
                 int maxNumberOfPlayers= rs.getInt("maxNumberOfPlayers");
                 int curNumberOfPlayers=rs.getInt("curNumberOfPlayers");
+                String username = rs.getString("username");
 
-                allGames.add(new Game(idGame,owner,maxNumberOfPlayers,curNumberOfPlayers));
+                allGames.add(new Game(idGame,owner,maxNumberOfPlayers,curNumberOfPlayers, username));
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try{
-            for(Game game: allGames){
-                int owner = game.getOwner();
-
-                sql = "SELECT username FROM player WHERE id=" + owner + ";";
-
-                ResultSet rs = stmt.executeQuery(sql);
-
-                rs.next();
-                game.setOwnerUsername(rs.getString("username"));
-
-            }
-        }catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -522,30 +508,18 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
 
         Timestamp now = new Timestamp(System.currentTimeMillis());
 
-        String sql = "UPDATE player SET totalScore = totalScore + ? WHERE id= ?; " ;
+        String sql = "UPDATE player SET totalScore = totalScore + ?, lastGameDate = ? WHERE id= ?; " ;
 
 
         try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, localScore);
-            pstmt.setInt(2, id);
+            pstmt.setTimestamp(2, now);
+            pstmt.setInt(3, id);
             pstmt.executeUpdate();
         } catch (SQLException se) {
             se.printStackTrace();
         }
-
-        String sqlDate = "INSERT INTO player (lastGameDate) VALUES (?)";
-
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sqlDate);
-            pstmt.setTimestamp(1, now);
-            pstmt.executeUpdate();
-        } catch (SQLException se) {
-            se.printStackTrace();
-        }
-
-
-
     }
 
     private boolean validatePassword(String originalPassword, String storedPassword) {
