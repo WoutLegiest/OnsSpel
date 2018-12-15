@@ -498,7 +498,6 @@ public class GameController {
             scoreTableGame.getItems().addAll(game.getPlayers());
             scoreTableGame.getSortOrder().add(localScoreColumn);
         });
-
     }
 
     /**
