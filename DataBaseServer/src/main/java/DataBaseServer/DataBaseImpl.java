@@ -186,8 +186,6 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         }
 
         return allPlayers;
-
-
     }
 
     @Override
