@@ -276,6 +276,12 @@ public class LobbyController {
 
             thread.stopThread();
 
+            //Vertellen aan dispatch
+            Registry registryDispatch = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
+            DispatcherInterface dispatcherInterface = (DispatcherInterface) registryDispatch.lookup(DISPATCH_SERVICE);
+
+            dispatcherInterface.addGame(appServer.getPort());
+
             viewController.setViewToGame(gameExtended, player, token, cover);
 
         } catch (NotBoundException | IOException e) {

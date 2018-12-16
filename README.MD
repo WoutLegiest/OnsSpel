@@ -23,7 +23,7 @@ Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Del
 - [x] Bug in turn in orde krijgen. 
 - [x] Zelfde kaart bug.
 - [x] Het kijken naar een spel
-- [ ] 20 games max implementeren.
+- [x] 20 games max implementeren.
 - [x] backupservers. 
 - [ ] Correct afsluiten van een game.
 - [x] Einde van een spel afhandelen.

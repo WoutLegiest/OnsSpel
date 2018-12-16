@@ -24,4 +24,5 @@ public interface DispatcherInterface extends Remote {
 
     void startAppServer() throws RemoteException;
 
+    void addGame(int port) throws RemoteException;
 }

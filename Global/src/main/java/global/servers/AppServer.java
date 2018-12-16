@@ -22,6 +22,7 @@ public class AppServer implements Serializable {
         this.port = port;
         this.IP = IP;
         this.appServerImpl = appServerImpl;
+        nGames =0;
     }
 
     public int getPort() {
@@ -57,6 +58,10 @@ public class AppServer implements Serializable {
                 getnGames() == appServer.getnGames() &&
                 Objects.equals(getIP(), appServer.getIP()) &&
                 Objects.equals(getAppServerImpl(), appServer.getAppServerImpl());
+    }
+
+    public void addGame() {
+        nGames++;
     }
 }
 

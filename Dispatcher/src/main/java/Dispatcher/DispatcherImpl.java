@@ -184,6 +184,21 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
         increaseAppPort();
     }
 
+    @Override
+    public void addGame(int port) throws RemoteException {
+
+        for(AppServer as: appServers){
+
+            if (as.getPort() == port){
+
+                as.addGame();
+
+            }
+        }
+
+
+    }
+
     private void increaseAppPort() throws RemoteException{
         nextAppPort++;
     }
