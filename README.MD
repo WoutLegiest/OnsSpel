@@ -15,6 +15,10 @@ Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Del
 
 ** Frank is jammergenoeg overleden vorige week toen hij te lui was en dus rooksignalen wou sturen. Maarja Frank is een duif en tijdens het aansteken van het vuur heeft hij zichzelf geroosterd. Want ja, nog eens, Frank is een duif
 
+# Docs
+
+Onze code is gedocumenteerd te vinden op https://woutlegiest.github.io/OnsSpel/.
+
 ## Huidige problemen 
 ### Priority
 - [x] Client kan zijn eigen spel niet joinen
