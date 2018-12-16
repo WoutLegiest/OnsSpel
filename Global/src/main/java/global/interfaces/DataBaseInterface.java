@@ -20,9 +20,10 @@ public interface DataBaseInterface extends Remote {
 
     String getVariableDatabaseContent()throws RemoteException;
 
-    void executeOwnStatement(PreparedStatement statement) throws RemoteException;
+    void executeOwnStatement(String statement) throws RemoteException;
 
-    void executeStatement(PreparedStatement statement) throws RemoteException;
+
+    void executeStatement(String statement) throws RemoteException;
 
     String authenticatePlayer(String username, String password) throws RemoteException, SQLException;
 

@@ -23,7 +23,6 @@ import java.util.Random;
 @SuppressWarnings("Duplicates")
 public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterface{
 
-
     Connection conn;
     Statement stmt;
     private int portNumber;
@@ -69,8 +68,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
 
             BufferedReader br = new BufferedReader(fr);
 
-            while((s = br.readLine()) != null)
-            {
+            while((s = br.readLine()) != null) {
                 sb.append(s);
             }
             br.close();
@@ -197,16 +195,18 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
     }
 
     @Override
-    public void executeOwnStatement(PreparedStatement statement) throws RemoteException {
+    public void executeOwnStatement(String statement) throws RemoteException {
         for (DataBaseInterface dataBaseInterface:dataBaseServerList){
             dataBaseInterface.executeStatement(statement);
         }
     }
 
     @Override
-    public void executeStatement(PreparedStatement statement) throws RemoteException {
+    public void executeStatement(String statement) throws RemoteException {
+
         try {
-            statement.executeUpdate();
+            PreparedStatement pstmt = conn.prepareStatement(statement);
+            pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -248,22 +248,15 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         if(isValidUsername(username))
             throw new UserExistsException();
 
-        Timestamp today = new Timestamp(System.currentTimeMillis());
+        long today = System.currentTimeMillis();
 
         String passwordHashed = generateStrongPasswordHash(password);
+
         String sql = "INSERT INTO player (username,password,email, totalScore, joinDate) " +
-                "VALUES(?,?,?,?,?)";
+                "VALUES (\"" + username + "\",\"" + passwordHashed + "\",\"" + email + "\"," + 0 + "," + today + ");";
 
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, username);
-        pstmt.setString(2, passwordHashed);
-        pstmt.setString(3, email);
-        pstmt.setInt(4, 0);
-        pstmt.setTimestamp(5, today);
-
-        executeOwnStatement(pstmt);
+        executeOwnStatement(sql);
         //System.out.println("Goed toegevoegd");
-
 
         return addToken(username);
     }
@@ -290,15 +283,10 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
 
         String token = String.valueOf(now) + ':' + sha256hex;
 
-        String sql = "UPDATE player SET token = ? WHERE username= ?;";
+        String sql = "UPDATE player SET token = \""+ token +"\" WHERE username= \"" + username +"\";";
 
         try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, token);
-            pstmt.setString(2, username);
-            executeOwnStatement(pstmt);
-        } catch (SQLException se) {
-            se.printStackTrace();
+            executeOwnStatement(sql);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -566,12 +554,14 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
     @Override
     public int registerGame(int owner, int maxNumberOfPlayer, int size) throws RemoteException{
 
-        String sql = "INSERT INTO game (owner,maxNumberOfPlayers, size, curNumberOfPlayers, createDate ) " +
-                "VALUES(?,?,?,?,?)";
-
         long now = System.currentTimeMillis();
 
-        try {
+        String sql = "INSERT INTO game (owner,maxNumberOfPlayers, size, curNumberOfPlayers, createDate ) " +
+                "VALUES (" + owner + "," + maxNumberOfPlayer + "," + size + "," + 1 + "," + now + ");";
+
+        executeOwnStatement(sql);
+
+        /*try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1, owner);
@@ -580,10 +570,10 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
             pstmt.setInt(4, 1);
             pstmt.setLong(5, now);
 
-            executeOwnStatement(pstmt);
+            executeOwnStatement(pstmt.toString());
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
 
         sql = "SELECT * FROM game WHERE createDate='" + now + "';";
         try {
@@ -607,30 +597,41 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         PreparedStatement pstmt;
         for(int i = 0; i<gameExtended.getPlayers().size(); i++){
             pstmt = null;
-            String sqlGamePlayer = "INSERT INTO gameplayer (game_idgame,player_id) VALUES(?,?)";
-            try {
+            String sqlGamePlayer = "INSERT INTO gameplayer (game_idgame,player_id) "
+                    +"VALUES (" + gameExtended.getGame().getIdGame() + "," + gameExtended.getPlayers().get(i).getId() + ");";
+
+            executeOwnStatement(sqlGamePlayer);
+
+
+/*            try {
                 pstmt = conn.prepareStatement(sqlGamePlayer);
                 pstmt.setInt(1, gameExtended.getGame().getIdGame());
                 pstmt.setInt(2, gameExtended.getPlayers().get(i).getId());
-                executeOwnStatement(pstmt);
+                executeOwnStatement(pstmt.toString());
             } catch (SQLException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
 
         //Insert GameCards
         for(int i=0;i<gameExtended.getCards().size();i++){
-            pstmt = null;
-            String sqlCardgGame = "INSERT INTO cardgame (game_idgame,card_idcard,`index`) VALUES(?,?,?)";
-            try {
+
+            //pstmt = null;
+
+            String sqlCardgGame = "INSERT INTO cardgame (game_idgame,card_idcard,`index`) +" +
+                    "VALUES (" + gameExtended.getGame().getIdGame() + "," + gameExtended.getCards().get(i).getIdcard()  + "," + i +");";
+
+            executeOwnStatement(sqlCardgGame);
+
+/*            try {
                 pstmt = conn.prepareStatement(sqlCardgGame);
                 pstmt.setInt(1, gameExtended.getGame().getIdGame());
                 pstmt.setInt(2, gameExtended.getCards().get(i).getIdcard());
                 pstmt.setInt(3, i);
-                executeOwnStatement(pstmt);
+                executeOwnStatement(pstmt.toString());
             } catch (SQLException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
 
     }
@@ -736,27 +737,32 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
     @Override
     public void addPlayer(int gameID, int playerID) throws RemoteException{
 
-        String sqlGame = "UPDATE game SET curNumberOfPlayers = curNumberOfPlayers + 1  WHERE idgame= ?;";
+        String sqlGame = "UPDATE game SET curNumberOfPlayers = curNumberOfPlayers + 1  WHERE idgame="+ gameID +";";
 
-        try {
+        executeOwnStatement(sqlGame);
+
+/*        try {
             PreparedStatement pstmt = conn.prepareStatement(sqlGame);
             pstmt.setInt(1, gameID);
-            executeOwnStatement(pstmt);
+            executeOwnStatement(pstmt.toString());
         } catch (SQLException se) {
             se.printStackTrace();
-        }
+        }*/
 
-        String sql = "INSERT INTO gameplayer (game_idgame, player_id, gameScore) VALUES (?,?,0) ;";
+        String sql = "INSERT INTO gameplayer (game_idgame, player_id, gameScore) " +
+                "VALUES (" + gameID + "," + playerID  + "," + 0 +");";
 
-        try{
+        executeOwnStatement(sql);
+
+/*        try{
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, gameID);
             pstmt.setInt(2, playerID);
 
-            executeOwnStatement(pstmt);
+            executeOwnStatement(pstmt.toString());
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
 
 
     }
@@ -764,57 +770,60 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
     @Override
     public void updatePlayerScore(int localScore, int id) throws RemoteException {
 
-        Timestamp now = new Timestamp(System.currentTimeMillis());
+        long now = System.currentTimeMillis();
 
-        String sql = "UPDATE player SET totalScore = totalScore + ?, lastGameDate = ? WHERE id= ?; " ;
+        String sql = "UPDATE player SET totalScore = totalScore + " + localScore +", lastGameDate = "+ now
+                +" WHERE id= " + id + ";";
 
+        executeOwnStatement(sql);
 
-        try {
+/*        try {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, localScore);
             pstmt.setTimestamp(2, now);
             pstmt.setInt(3, id);
-            executeOwnStatement(pstmt);
+            executeOwnStatement(pstmt.toString());
         } catch (SQLException se) {
             se.printStackTrace();
-        }
+        }*/
     }
 
     @Override
     public void deleteGame(int GameId) throws RemoteException{
 
-        String sqlGame = "DELETE FROM game WHERE idgame = ?";
+        String sqlGame = "DELETE FROM game WHERE idgame = " + GameId + ";";
+        executeOwnStatement(sqlGame);
 
-        try{
+        /*        try{
             PreparedStatement pstmt = conn.prepareStatement(sqlGame);
             pstmt.setInt(1, GameId);
 
-            executeOwnStatement(pstmt);
+            executeOwnStatement(pstmt.toString());
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
 
-        String sqlCard = "DELETE FROM cardgame WHERE game_idgame = ?";
-
-        try{
+        String sqlCard = "DELETE FROM cardgame WHERE game_idgame ="+GameId+";";
+        executeOwnStatement(sqlCard);
+/*        try{
             PreparedStatement pstmt = conn.prepareStatement(sqlCard);
             pstmt.setInt(1, GameId);
 
-            executeOwnStatement(pstmt);
+            executeOwnStatement(pstmt.toString());
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
 
-        String sqlGamePlayer = "DELETE FROM gameplayer WHERE game_idgame= ?";
-
-        try{
+        String sqlGamePlayer = "DELETE FROM gameplayer WHERE game_idgame= "+GameId+";";
+        executeOwnStatement(sqlGamePlayer);
+/*        try{
             PreparedStatement pstmt = conn.prepareStatement(sqlGamePlayer);
             pstmt.setInt(1, GameId);
 
-            executeOwnStatement(pstmt);
+            executeOwnStatement(pstmt.toString());
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 
