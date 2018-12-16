@@ -6,6 +6,7 @@ import global.interfaces.DispatcherInterface;
 import global.servers.AppServer;
 import global.servers.DataBaseServer;
 
+import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -22,23 +23,15 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
     private ArrayList<DataBaseServer> dbServers;
     private ArrayList<AppServer> appServers;
 
-    public DispatcherImpl() throws RemoteException {
+    private int currentAppPort;
+    private int currentDBPort;
+
+    public DispatcherImpl(int appport, int dbport) throws RemoteException {
         dbServers = new ArrayList<>();
         appServers = new ArrayList<>();
+        currentAppPort = appport;
+        currentDBPort = dbport;
     }
-
-/*    public void startDatabaseServer() {
-        try {
-            Runtime.getRuntime().exec(
-                    new String[]{"cmd","/c","start","cmd","/k","java -jar src/servers/game/server.jar"}
-            new String[]{"cmd","/c","start","cmd","/k","java -jar src/servers/database/database.jar"}
-            );
-        } catch (IOException e) {
-            brokerLogger.severe("could not start new database server...");
-            e.printStackTrace();
-        }
-    }*/
-
 
     /**
      * Find the registry of the DB
@@ -135,7 +128,39 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
         return dbServers.get(0);
     }
 
+    @Override
+    public void startDatabaseServer(int port) throws RemoteException {
+        try {
+           Runtime.getRuntime().exec(
+                   new String[]{"cmd", "/c", "start", "cmd", "/k", "java -jar " +
+                           "C:\\Users\\woute\\Dropbox\\IdeaProjects\\OnsSpel\\out\\artifacts" +
+                           "\\DataBaseServer_jar\\DataBaseServer.jar " + port}
+           );
+        } catch (IOException e) {
+           e.printStackTrace();
+        }
+    }
 
+    @Override
+    public void startAppServer(int port) throws RemoteException {
+        try {
+            Runtime.getRuntime().exec(
+                    new String[]{"cmd", "/c", "start", "cmd", "/k", "java -jar " +
+                            "C:\\Users\\woute\\Dropbox\\IdeaProjects\\OnsSpel\\out\\artifacts" +
+                            "\\AppServer_jar\\AppServer.jar" + port}
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    @Override
+    public void increaseAppPort() throws RemoteException{
+        currentAppPort++;
+    }
 
+    @Override
+    public void increaseDBPort() throws RemoteException{
+        currentDBPort++;
+    }
 }

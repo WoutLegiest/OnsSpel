@@ -42,8 +42,8 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
     public void settingUpDataBaseServer(int portNumber) throws RemoteException{
         this.portNumber=portNumber;
         try {
-            String workingDir = System.getProperty("user.dir");
-            String url = "jdbc:sqlite:" + workingDir + "/.db/database"+ portNumber +".db";
+            //String workingDir = System.getProperty("user.dir");
+            String url = "jdbc:sqlite:C:\\Users\\woute\\Dropbox\\IdeaProjects\\OnsSpel\\.db\\"+ portNumber +".db";
 
             if (conn == null || conn.isClosed()) {
                 conn = DriverManager.getConnection(url);
@@ -63,7 +63,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         try
         {
             FileReader fr = new FileReader(
-                    new File("DataBaseServer/src/main/resources/SQLite scripts/databaseScript.sql"));
+                    new File("C:\\Users\\woute\\Dropbox\\IdeaProjects\\OnsSpel\\DataBaseServer\\src\\main\\resources\\SQLite scripts\\databaseScript.sql"));
             // be sure to not have line starting with "--" or "/*" or any other non aplhabetical character
 
             BufferedReader br = new BufferedReader(fr);

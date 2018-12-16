@@ -24,7 +24,7 @@ Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Del
 - [x] Zelfde kaart bug.
 - [x] Het kijken naar een spel
 - [ ] 20 games max implementeren.
-- [ ] backupservers. 
+- [x] backupservers. 
 - [ ] Correct afsluiten van een game.
 - [x] Einde van een spel afhandelen.
 
