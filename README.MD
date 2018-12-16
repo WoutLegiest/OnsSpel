@@ -25,7 +25,6 @@ Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Del
 - [x] Het kijken naar een spel
 - [x] 20 games max implementeren.
 - [x] backupservers. 
-- [ ] Correct afsluiten van een game.
 - [x] Einde van een spel afhandelen.
 
 
@@ -34,6 +33,7 @@ Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Del
 - [ ] Scaling foto's
 - [ ] Nieuw verster openen voor game
 - [ ] Mogelijkheid game op te slaan?
+- [ ] Correct afsluiten van een game.
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-crayons.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-java.svg)](https://forthebadge.com)
