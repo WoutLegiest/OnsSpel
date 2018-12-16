@@ -197,6 +197,8 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
      */
     @Override
     public int gameCreated( int owner, int maxNumberOfPlayer, int size) throws RemoteException {
+
+
         return dataBase.getDataBaseImpl().registerGame(owner, maxNumberOfPlayer, size);
     }
 

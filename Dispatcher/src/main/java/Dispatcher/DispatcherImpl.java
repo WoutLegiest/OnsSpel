@@ -143,6 +143,34 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
     }
 
     @Override
+    public AppServer checkAppServer(int port) throws RemoteException{
+
+        int nextport=0;
+
+        for(AppServer as: appServers){
+
+            if (as.getPort() == port){
+                if (as.getnGames() >= 20){
+
+                    nextport = nextAppPort;
+
+                    startAppServer();
+                }
+            }
+        }
+
+        for(AppServer as: appServers){
+
+            if (as.getPort() == nextport){
+              return as;
+            }
+        }
+
+        return null;
+
+    }
+
+    @Override
     public void startAppServer() throws RemoteException {
         try {
             Runtime.getRuntime().exec(

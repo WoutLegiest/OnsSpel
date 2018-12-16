@@ -20,6 +20,8 @@ public interface DispatcherInterface extends Remote {
 
     void startDatabaseServer() throws RemoteException;
 
+    AppServer checkAppServer(int port) throws RemoteException;
+
     void startAppServer() throws RemoteException;
 
 }

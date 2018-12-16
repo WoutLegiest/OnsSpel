@@ -2,6 +2,7 @@ package client.controller;
 
 import global.domain.*;
 import global.interfaces.AppServerInterface;
+import global.interfaces.DispatcherInterface;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +12,7 @@ import global.servers.AppServer;
 import client.threads.ScoreBoardThread;
 
 import java.io.IOException;
+import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -233,6 +235,23 @@ public class LobbyController {
             themeString="EMMA";
         else
             themeString="mario";
+
+        //Eerst checken of dat er niet al teveel spellen op de server staan.
+
+        try {
+            Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
+            DispatcherInterface dispatcherInterface = (DispatcherInterface) registry.lookup(DISPATCH_SERVICE);
+
+            AppServer more = dispatcherInterface.checkAppServer(appServer.getPort());
+
+            if(more != null){
+                migrateToServer(more);
+            }
+
+        } catch (RemoteException | NotBoundException e) {
+            e.printStackTrace();
+        }
+
 
         try {
             Registry registry = LocateRegistry.getRegistry(appServer.getIP(), appServer.getPort());
