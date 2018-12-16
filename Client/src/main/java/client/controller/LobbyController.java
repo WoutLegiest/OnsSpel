@@ -286,7 +286,9 @@ public class LobbyController {
 
             //---------------Add current Player----------------//
 
-            appServerImpl.addPlayer(player, myIndexNumberServerOne, gameExtended.getGame().getIdGame());
+            //appServerImpl.addPlayer(player, myIndexNumberServerOne, gameExtended.getGame().getIdGame());
+
+            gameAppServer.getAppServerImpl().addPlayer(player, myIndexNumberServerOne, gameExtended.getGame().getIdGame());
 
             GamePlayer gamePlayer = new GamePlayer(player);
             gameExtended.addPlayer(gamePlayer,myIndexNumberServerOne);

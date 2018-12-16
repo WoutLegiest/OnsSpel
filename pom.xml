@@ -109,6 +109,13 @@
             <artifactId>javafx-fxml</artifactId>
             <version>11</version>
         </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.11</version>
+        </dependency>
+
     </dependencies>
 
     <properties>

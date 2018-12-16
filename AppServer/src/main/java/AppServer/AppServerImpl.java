@@ -267,12 +267,24 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
             }
         }
 
+        ArrayList<Integer> clientListGame = findGameExtended(gameID).getClientIndexes();
+
+        for (Integer i: clientListGame) {
+            if(i!=ownIndex){
+                clientList.get(i).addPlayer(gp,ownIndex);
+            }
+        }
+
+
         //Toevoegen aan al de andere servers
-        for (Integer index :findGameExtended(gameID).getClientIndexes()){
+/*        for (Integer index :findGameExtended(gameID).getClientIndexes()){
             if(index!=ownIndex){
                 clientList.get(index).addPlayer(gp,ownIndex);
             }
-        }
+        }*/
+
+
+
     }
 
     @Override

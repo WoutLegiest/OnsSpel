@@ -3,6 +3,7 @@ package DataBaseServer;
 import global.exceptions.UserExistsException;
 import global.domain.*;
 import global.interfaces.DataBaseInterface;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -284,7 +285,10 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
 
         long now = System.currentTimeMillis();
         int tokenNumber = new Random().nextInt(999);
-        String token = String.valueOf(now) + ':' + tokenNumber;
+
+        String sha256hex = DigestUtils.sha256Hex(String.valueOf(tokenNumber));
+
+        String token = String.valueOf(now) + ':' + sha256hex;
 
         String sql = "UPDATE player SET token = ? WHERE username= ?;";
 

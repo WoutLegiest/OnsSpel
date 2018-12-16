@@ -45,7 +45,7 @@ public class RegisterController {
 
             token = appServer.registerPlayer(username,password,email);
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            /*Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Registy completed");
             alert.setHeaderText(null);
             alert.setContentText("Sessie token: " + token + "\n Have a happy play");
@@ -53,7 +53,7 @@ public class RegisterController {
             Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
             stage.getIcons().add(new Image(SceneController.class.getResourceAsStream(ICON_PATH)));
 
-            alert.showAndWait();
+            alert.showAndWait();*/
 
             SceneController.viewController.setViewToLobby(username, token);
 
