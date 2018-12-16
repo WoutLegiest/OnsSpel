@@ -576,7 +576,7 @@ public class GameController {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("End of the Game");
             alert.setHeaderText(null);
-            alert.setContentText(winner + "haze won the game !");
+            alert.setContentText(winner + " haze won the game !");
 
             alert.showAndWait();
         });

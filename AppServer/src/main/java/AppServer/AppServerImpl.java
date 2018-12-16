@@ -275,16 +275,6 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
             }
         }
 
-
-        //Toevoegen aan al de andere servers
-/*        for (Integer index :findGameExtended(gameID).getClientIndexes()){
-            if(index!=ownIndex){
-                clientList.get(index).addPlayer(gp,ownIndex);
-            }
-        }*/
-
-
-
     }
 
     @Override
@@ -475,6 +465,21 @@ public class AppServerImpl extends UnicastRemoteObject implements AppServerInter
 
                         new Thread(r).start();
                     }
+                }
+
+                //Ook alle watcher toedoen
+                for(int i=0;i<ge.getWatchIndexes().size();i++){
+
+                    int finalI = i;
+                    Runnable r = () -> {
+                        try {
+                            clientList.get(ge.getWatchIndexes().get(finalI)).alertWinner(winner);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    };
+
+                    new Thread(r).start();
                 }
             }
         }

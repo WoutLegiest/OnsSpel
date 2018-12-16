@@ -618,7 +618,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
 
             //pstmt = null;
 
-            String sqlCardgGame = "INSERT INTO cardgame (game_idgame,card_idcard,`index`) +" +
+            String sqlCardgGame = "INSERT INTO cardgame (game_idgame,card_idcard,`index`) " +
                     "VALUES (" + gameExtended.getGame().getIdGame() + "," + gameExtended.getCards().get(i).getIdcard()  + "," + i +");";
 
             executeOwnStatement(sqlCardgGame);
@@ -791,10 +791,7 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
     @Override
     public void deleteGame(int GameId) throws RemoteException{
 
-        String sqlGame = "DELETE FROM game WHERE idgame = " + GameId + ";";
-        executeOwnStatement(sqlGame);
-
-        /*        try{
+                /*        try{
             PreparedStatement pstmt = conn.prepareStatement(sqlGame);
             pstmt.setInt(1, GameId);
 
@@ -824,6 +821,9 @@ public class DataBaseImpl extends UnicastRemoteObject implements DataBaseInterfa
         } catch (SQLException e) {
             e.printStackTrace();
         }*/
+
+        String sqlGame = "DELETE FROM game WHERE idgame = " + GameId + ";";
+        executeOwnStatement(sqlGame);
 
     }
 

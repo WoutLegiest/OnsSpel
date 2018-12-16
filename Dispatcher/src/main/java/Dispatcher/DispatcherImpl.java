@@ -23,14 +23,14 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
     private ArrayList<DataBaseServer> dbServers;
     private ArrayList<AppServer> appServers;
 
-    private int currentAppPort;
-    private int currentDBPort;
+    private int nextAppPort;
+    private int nextDBPort;
 
     public DispatcherImpl(int appport, int dbport) throws RemoteException {
         dbServers = new ArrayList<>();
         appServers = new ArrayList<>();
-        currentAppPort = appport;
-        currentDBPort = dbport;
+        nextAppPort = appport;
+        nextDBPort = dbport;
     }
 
     /**
@@ -129,38 +129,38 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
     }
 
     @Override
-    public void startDatabaseServer(int port) throws RemoteException {
+    public void startDatabaseServer() throws RemoteException {
         try {
            Runtime.getRuntime().exec(
                    new String[]{"cmd", "/c", "start", "cmd", "/k", "java -jar " +
                            "C:\\Users\\woute\\Dropbox\\IdeaProjects\\OnsSpel\\out\\artifacts" +
-                           "\\DataBaseServer_jar\\DataBaseServer.jar " + port}
+                           "\\DataBaseServer_jar\\DataBaseServer.jar " + nextDBPort}
            );
         } catch (IOException e) {
            e.printStackTrace();
         }
+        increaseDBPort();
     }
 
     @Override
-    public void startAppServer(int port) throws RemoteException {
+    public void startAppServer() throws RemoteException {
         try {
             Runtime.getRuntime().exec(
                     new String[]{"cmd", "/c", "start", "cmd", "/k", "java -jar " +
                             "C:\\Users\\woute\\Dropbox\\IdeaProjects\\OnsSpel\\out\\artifacts" +
-                            "\\AppServer_jar\\AppServer.jar" + port}
+                            "\\AppServer_jar\\AppServer.jar " + nextAppPort}
             );
         } catch (IOException e) {
             e.printStackTrace();
         }
+        increaseAppPort();
     }
 
-    @Override
-    public void increaseAppPort() throws RemoteException{
-        currentAppPort++;
+    private void increaseAppPort() throws RemoteException{
+        nextAppPort++;
     }
 
-    @Override
-    public void increaseDBPort() throws RemoteException{
-        currentDBPort++;
+    private void increaseDBPort() throws RemoteException{
+        nextDBPort++;
     }
 }

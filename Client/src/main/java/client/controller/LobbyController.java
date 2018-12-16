@@ -323,7 +323,7 @@ public class LobbyController {
 
             //Watcher toevoegen
 
-            appServerImpl.registerWatcher(gameID, myIndexNumberServerOne);
+            gameAppServer.getAppServerImpl().registerWatcher(gameID, myIndexNumberServerOne);
 
             GameExtended gameExtended = gameAppServer.getAppServerImpl().findGameExtended(gameID);
 

@@ -4,12 +4,14 @@ import global.domain.Constants;
 import global.interfaces.DispatcherInterface;
 
 import java.io.IOException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-import static global.domain.Constants.DISPATCH_PORT;
+import static global.domain.Constants.*;
 
+@SuppressWarnings("Duplicates")
 public class MainDisp {
 
     /**
@@ -24,35 +26,46 @@ public class MainDisp {
         try {
             DispatcherInterface dispatcherImp = new DispatcherImpl(appport,dbport);
             Registry registry = LocateRegistry.createRegistry(DISPATCH_PORT);
-            registry.rebind("dispatchService", dispatcherImp);
+            registry.rebind(DISPATCH_SERVICE, dispatcherImp);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
         System.out.println("Dispatch gekoppeld op poort: " + DISPATCH_PORT);
 
-        try {
-            Runtime.getRuntime().exec(
-                    new String[]{"cmd", "/c", "start", "cmd", "/k", "java -jar " +
-                            "C:\\Users\\woute\\Dropbox\\IdeaProjects\\OnsSpel\\out\\artifacts" +
-                            "\\DataBaseServer_jar\\DataBaseServer.jar " + dbport}
-            );
 
-            Thread.sleep(1500);
+        try{
+            Registry registry = LocateRegistry.getRegistry(IP, DISPATCH_PORT);
+            DispatcherInterface dispatcherImp = (DispatcherInterface) registry.lookup(DISPATCH_SERVICE);
 
-        } catch (IOException | InterruptedException e) {
+            dispatcherImp.startDatabaseServer();
+
+            try {
+                Thread.sleep(1500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            dispatcherImp.startAppServer();
+
+            try {
+                Thread.sleep(1500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            dispatcherImp.startDatabaseServer();
+
+            try {
+                Thread.sleep(1500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            dispatcherImp.startAppServer();
+
+        }
+        catch(NotBoundException | RemoteException e){
             e.printStackTrace();
         }
-
-
-        try {
-            Runtime.getRuntime().exec(
-                    new String[]{"cmd", "/c", "start", "cmd", "/k", "java -jar " +
-                            "C:\\Users\\woute\\Dropbox\\IdeaProjects\\OnsSpel\\out\\artifacts" +
-                            "\\AppServer_jar\\AppServer.jar " + appport}
-            );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 }
