@@ -102,11 +102,23 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
         System.out.println("AppServer toegevoegd aan Dispatch");
     }
 
+    /**
+     * Get the appServer withs is locaded at that index
+     * @param index
+     * @return
+     * @throws RemoteException
+     */
     @Override
     public AppServer getAppServer(int index) throws RemoteException {
         return appServers.get(index);
     }
 
+    /**
+     * Get a AppServer from a appServerInterface
+     * @param appServerInterface
+     * @return
+     * @throws RemoteException
+     */
     @Override
     public AppServer getAppServer(AppServerInterface appServerInterface) throws RemoteException{
 
@@ -119,6 +131,11 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
         return null;
     }
 
+    /**
+     * Get the Database with the smallest amout of AppServer connected to
+     * @return
+     * @throws RemoteException
+     */
     @Override
     public DataBaseServer getDataBaseServer() throws RemoteException {
 
@@ -128,6 +145,10 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
         return dbServers.get(0);
     }
 
+    /**
+     * Start up a databaseServer, using de cmd in windows
+     * @throws RemoteException
+     */
     @Override
     public void startDatabaseServer() throws RemoteException {
         try {
@@ -142,6 +163,13 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
         increaseDBPort();
     }
 
+    /**
+     * Checks if a AppServer haze more than 20 games, if there are more,
+     * starts up a new Server and gives back the appServer object. If not, return null
+     * @param port
+     * @return
+     * @throws RemoteException
+     */
     @Override
     public AppServer checkAppServer(int port) throws RemoteException{
 
@@ -170,6 +198,10 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
 
     }
 
+    /**
+     * Start up a AppServer using the cmd of Windows
+     * @throws RemoteException
+     */
     @Override
     public void startAppServer() throws RemoteException {
         try {
@@ -184,6 +216,11 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
         increaseAppPort();
     }
 
+    /**
+     * Increase the number of Games, kept in the appServer object
+     * @param port
+     * @throws RemoteException
+     */
     @Override
     public void addGame(int port) throws RemoteException {
 
@@ -192,11 +229,8 @@ public class DispatcherImpl extends UnicastRemoteObject implements DispatcherInt
             if (as.getPort() == port){
 
                 as.addGame();
-
             }
         }
-
-
     }
 
     private void increaseAppPort() throws RemoteException{
