@@ -15,6 +15,10 @@ Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Del
 
 ** Frank is jammergenoeg overleden vorige week toen hij te lui was en dus rooksignalen wou sturen. Maarja Frank is een duif en tijdens het aansteken van het vuur heeft hij zichzelf geroosterd. Want ja, nog eens, Frank is een duif
 
+# Docs
+
+Onze code is gedocumenteerd te vinden op https://woutlegiest.github.io/OnsSpel/.
+
 ## Huidige problemen 
 ### Priority
 - [x] Client kan zijn eigen spel niet joinen
@@ -25,7 +29,6 @@ Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Del
 - [x] Het kijken naar een spel
 - [x] 20 games max implementeren.
 - [x] backupservers. 
-- [ ] Correct afsluiten van een game.
 - [x] Einde van een spel afhandelen.
 
 
@@ -34,6 +37,7 @@ Medemogelijk gemaakt door: Cara Premium Beer; Legiest Logistics; Ons moeder; Del
 - [ ] Scaling foto's
 - [ ] Nieuw verster openen voor game
 - [ ] Mogelijkheid game op te slaan?
+- [ ] Correct afsluiten van een game.
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-crayons.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-java.svg)](https://forthebadge.com)
